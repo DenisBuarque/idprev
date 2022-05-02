@@ -97,6 +97,17 @@ class FileController extends Controller
         //
     }
 
+    public function download($id)
+    {
+        $record = $this->file->find($id);
+
+        if(Storage::exists($record['arquivo'])){
+            return Storage::download($record['arquivo']);
+        } 
+
+        return redirect('admin/training/files')->with('alert', 'Desculpe! Não encontramos o arquivo!');
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

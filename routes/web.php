@@ -11,6 +11,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\ActionController;
 use GuzzleHttp\Middleware;
 
 /*
@@ -77,7 +79,21 @@ Route::post('/admin/training/file/store', [FileController::class, 'store'])->nam
 Route::get('/admin/training/file/edit/{id}', [FileController::class, 'edit'])->name('admin.training.files.edit');
 Route::put('/admin/training/file/update/{id}', [FileController::class, 'update'])->name('admin.training.files.update');
 Route::delete('/admin/training/file/delete/{id}', [FileController::class, 'destroy'])->name('admin.training.files.destroy');
-Route::delete('/admin/training/file/document/remove', [FileController::class, 'remove'])->name('admin.training.file.document.remove');
+Route::get('/admin/training/file/download/{id}', [FileController::class, 'download'])->name('admin.training.files.download');
+
+Route::get('/admin/training/events', [EventController::class, 'index'])->name('admin.training.events.index');
+Route::get('/admin/training/event/create', [EventController::class, 'create'])->name('admin.training.events.create');
+Route::post('/admin/training/event/store', [EventController::class, 'store'])->name('admin.training.events.store');
+Route::get('/admin/training/event/edit/{id}', [EventController::class, 'edit'])->name('admin.training.events.edit');
+Route::put('/admin/training/event/update/{id}', [EventController::class, 'update'])->name('admin.training.events.update');
+Route::delete('/admin/training/event/delete/{id}', [EventController::class, 'destroy'])->name('admin.training.events.destroy');
+
+Route::get('/admin/document/actions', [ActionController::class, 'index'])->name('admin.document.actions.index');
+Route::get('/admin/document/action/create', [ActionController::class, 'create'])->name('admin.document.actions.create');
+Route::post('/admin/document/action/store', [ActionController::class, 'store'])->name('admin.document.actions.store');
+Route::get('/admin/document/action/edit/{id}', [ActionController::class, 'edit'])->name('admin.document.actions.edit');
+Route::put('/admin/document/action/update/{id}', [ActionController::class, 'update'])->name('admin.document.actions.update');
+Route::delete('/admin/document/action/delete/{id}', [ActionController::class, 'destroy'])->name('admin.document.actions.destroy');
 
 Route::get('/admin/clients', [ClientController::class, 'index'])->name('admin.clients.index');
 Route::get('/admin/client/create', [ClientController::class, 'create'])->name('admin.clients.create');

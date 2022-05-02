@@ -271,19 +271,27 @@ return [
             ],
         ],
         [
+            'text'    => 'Documentos',
+            'icon'    => 'fas fa-fw fa-share',
+            'submenu' => [
+                [
+                    'text' => 'Ação Doc.',
+                    'url'  => 'admin/document/actions',
+                ],
+                [
+                    'text' => 'Modelos Doc.',
+                    'url'  => 'admin/document/models',
+                ],
+                [
+                    'text' => 'Planilha de Calc.',
+                    'url'  => 'admin/document/worksheets',
+                ],
+            ],
+        ],
+        [
             'text'        => 'Clientes',
             'url'         => 'admin/clients',
             'icon'        => 'fas fa-fw fa-business-time',
-        ],
-        [
-            'text'        => 'Modelo Doc.',
-            'url'         => 'admin/documents',
-            'icon'        => 'fas fa-fw fa-pen-nib',
-        ],
-        [
-            'text'        => 'Planilha de Calc.',
-            'url'         => 'admin/worksheets',
-            'icon'        => 'fas fa-fw fa-pen-nib',
         ],
         [
             'text'        => 'Comunicação',
