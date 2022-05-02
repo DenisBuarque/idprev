@@ -146,7 +146,7 @@ return [
     */
 
     'sidebar_mini' => 'lg',
-    'sidebar_collapse' => true,
+    'sidebar_collapse' => false, // expande o menu lateral
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => false,
     'sidebar_collapse_remember_no_transition' => true,
@@ -242,9 +242,9 @@ return [
             'text' => 'search',
         ],
         [
-            'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
+            'text'        => 'Dashboard',
+            'url'         => 'dashboard',
+            'icon'        => 'far fa-fw fa-user',
         ],
         [
             'text'        => 'Usuários',
@@ -252,14 +252,68 @@ return [
             'icon'        => 'far fa-fw fa-user',
         ],
         [
-            'text'        => 'Serviços',
-            'url'         => 'admin/services',
-            'icon'        => 'fas fa-fw fa-pen-nib',
+            'text'        => 'Leads',
+            'url'         => 'admin/leads',
+            'icon'        => 'far fa-fw fa-user',
+        ],
+        [
+            'text'    => 'Treinamento',
+            'icon'    => 'fas fa-fw fa-share',
+            'submenu' => [
+                [
+                    'text' => 'Arquivos',
+                    'url'  => 'admin/training/files',
+                ],
+                [
+                    'text' => 'Eventos',
+                    'url'  => 'admin/training/events',
+                ],
+            ],
         ],
         [
             'text'        => 'Clientes',
             'url'         => 'admin/clients',
             'icon'        => 'fas fa-fw fa-business-time',
+        ],
+        [
+            'text'        => 'Modelo Doc.',
+            'url'         => 'admin/documents',
+            'icon'        => 'fas fa-fw fa-pen-nib',
+        ],
+        [
+            'text'        => 'Planilha de Calc.',
+            'url'         => 'admin/worksheets',
+            'icon'        => 'fas fa-fw fa-pen-nib',
+        ],
+        [
+            'text'        => 'Comunicação',
+            'url'         => 'admin/communication',
+            'icon'        => 'fas fa-fw fa-pen-nib',
+        ],
+        [
+            'text'        => 'Financeiro',
+            'url'         => 'admin/financial',
+            'icon'        => 'fas fa-fw fa-pen-nib',
+        ],
+        [
+            'text'        => 'Arq. Convertidos',
+            'url'         => 'admin/converted',
+            'icon'        => 'fas fa-fw fa-pen-nib',
+        ],
+        [
+            'text'        => 'Prazos',
+            'url'         => 'admin/term',
+            'icon'        => 'fas fa-fw fa-pen-nib',
+        ],
+        [
+            'text'        => 'Arq. Auto Findos',
+            'url'         => 'admin/files',
+            'icon'        => 'fas fa-fw fa-pen-nib',
+        ],
+        [
+            'text'        => 'Obrigações',
+            'url'         => 'admin/obligations',
+            'icon'        => 'fas fa-fw fa-address-card',
         ],
         [
             'text'        => 'Franqueados',
@@ -271,6 +325,12 @@ return [
             'url'         => 'admin/processes',
             'icon'        => 'fas fa-fw fa-book',
         ],
+        [
+            'text'        => 'Serviços',
+            'url'         => 'admin/services',
+            'icon'        => 'fas fa-fw fa-pen-nib',
+        ],
+        
         /*[
             'text'        => 'Contratos',
             'url'         => 'admin/contracts',

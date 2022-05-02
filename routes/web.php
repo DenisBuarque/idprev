@@ -8,6 +8,9 @@ use App\Http\Controllers\AdvisorController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LeadController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FileController;
 use GuzzleHttp\Middleware;
 
 /*
@@ -25,9 +28,9 @@ use GuzzleHttp\Middleware;
     return view('site');
 });*/
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+/*Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
-})->name('dashboard');
+})->name('dashboard');*/
 
 Auth::routes();
 
@@ -36,6 +39,9 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::post('/franqueado/login',[HomeController::class, 'login'])->name('login.franchisee');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth:sanctum', 'verified'])->name('dashboard');
+Route::post('/dashboard/create', [DashboardController::class, 'store'])->middleware(['auth:sanctum', 'verified'])->name('dashboard.store');
 
 Route::group(['middleware' => 'advisor'], function () {
     Route::get('/franqueado/logout',[HomeController::class, 'logout'])->name('logout.franchisee');
@@ -56,6 +62,22 @@ Route::post('/admin/service/store', [ServiceController::class, 'store'])->name('
 Route::get('/admin/service/edit/{id}', [ServiceController::class, 'edit'])->name('admin.services.edit');
 Route::put('/admin/service/update/{id}', [ServiceController::class, 'update'])->name('admin.services.update');
 Route::delete('/admin/service/delete/{id}', [ServiceController::class, 'destroy'])->name('admin.services.destroy');
+
+Route::get('/admin/leads', [LeadController::class, 'index'])->name('admin.leads.index');
+Route::get('/admin/lead/create', [LeadController::class, 'create'])->name('admin.leads.create');
+Route::post('/admin/lead/store', [LeadController::class, 'store'])->name('admin.leads.store');
+Route::get('/admin/lead/edit/{id}', [LeadController::class, 'edit'])->name('admin.leads.edit');
+Route::put('/admin/lead/update/{id}', [LeadController::class, 'update'])->name('admin.leads.update');
+Route::delete('/admin/lead/delete/{id}', [LeadController::class, 'destroy'])->name('admin.leads.destroy');
+Route::delete('/admin/lead/document/remove', [LeadController::class, 'remove'])->name('admin.lead.document.remove');
+
+Route::get('/admin/training/files', [FileController::class, 'index'])->name('admin.training.files.index');
+Route::get('/admin/training/file/create', [FileController::class, 'create'])->name('admin.training.files.create');
+Route::post('/admin/training/file/store', [FileController::class, 'store'])->name('admin.training.files.store');
+Route::get('/admin/training/file/edit/{id}', [FileController::class, 'edit'])->name('admin.training.files.edit');
+Route::put('/admin/training/file/update/{id}', [FileController::class, 'update'])->name('admin.training.files.update');
+Route::delete('/admin/training/file/delete/{id}', [FileController::class, 'destroy'])->name('admin.training.files.destroy');
+Route::delete('/admin/training/file/document/remove', [FileController::class, 'remove'])->name('admin.training.file.document.remove');
 
 Route::get('/admin/clients', [ClientController::class, 'index'])->name('admin.clients.index');
 Route::get('/admin/client/create', [ClientController::class, 'create'])->name('admin.clients.create');

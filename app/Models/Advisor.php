@@ -23,6 +23,11 @@ class Advisor extends Authenticatable
         return $this->belongsToMany(Client::class);
     }
 
+    public function leads()
+    {
+        return $this->belongsToMany(Lead::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
