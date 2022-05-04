@@ -10,4 +10,8 @@ class Action extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function modeldocs(){
+        return $this->hasMany(ModelDoc::class);
+    }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\ClientPhotos;
 use App\Models\Advisor;
+use App\Models\Action;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
@@ -14,11 +15,13 @@ class LeadController extends Controller
 {
     private $lead;
     private $advisor;
+    private $action;
 
-    public function __construct(Lead $lead, Advisor $advisor)
+    public function __construct(Lead $lead, Advisor $advisor, Action $action)
     {   
         $this->lead = $lead;
         $this->advisor = $advisor;
+        $this->action = $action;
     }
 
     /**
@@ -55,8 +58,9 @@ class LeadController extends Controller
      */
     public function create()
     {
+        $actions = $this->action->all();
         $advisors = $this->advisor->all();
-        return view('admin.leads.create',['advisors' => $advisors]);
+        return view('admin.leads.create',['advisors' => $advisors, 'actions' => $actions]);
     }
 
     /**
@@ -124,10 +128,15 @@ class LeadController extends Controller
      */
     public function edit($id)
     {
+        $actions = $this->action->all();
         $advisors = $this->advisor->all();
         $lead = $this->lead->find($id);
         if($lead){
-            return view('admin.leads.edit',['lead' => $lead, 'advisors' => $advisors]);
+            return view('admin.leads.edit',[
+                'lead' => $lead, 
+                'advisors' => $advisors, 
+                'actions' => $actions]
+            );
         } else {
             return redirect('admin/leads')->with('alert', 'Desculpe! Não encontramos o registro!');
         }

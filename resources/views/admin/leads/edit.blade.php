@@ -164,10 +164,13 @@
                         <div class="form-group m-0">
                             <small>Tipo de Ação:</small>
                             <select name="action" class="form-control">
-                                <option value="">Selecione um tipo</option>
-                                <option value="1">Danos emprestimo</option>
-                                <option value="2">Auxilio doença</option>
-                                <option value="3">Aposentadoria por idade</option>
+                                 @foreach ($actions as $action)
+                                 @if ($action->id == $lead->action) 
+                                    <option value="{{$action->id}}" selected>{{$action->name}}</option>
+                                 @else
+                                    <option value="{{$action->id}}">{{$action->name}}</option>
+                                 @endif
+                                @endforeach
                             </select>
                         </div>
                     </div>

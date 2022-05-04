@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ActionController;
+use App\Http\Controllers\ModelController;
 use GuzzleHttp\Middleware;
 
 /*
@@ -80,6 +81,14 @@ Route::get('/admin/training/file/edit/{id}', [FileController::class, 'edit'])->n
 Route::put('/admin/training/file/update/{id}', [FileController::class, 'update'])->name('admin.training.files.update');
 Route::delete('/admin/training/file/delete/{id}', [FileController::class, 'destroy'])->name('admin.training.files.destroy');
 Route::get('/admin/training/file/download/{id}', [FileController::class, 'download'])->name('admin.training.files.download');
+
+Route::get('/admin/document/models', [ModelController::class, 'index'])->name('admin.document.models.index');
+Route::get('/admin/document/model/create', [ModelController::class, 'create'])->name('admin.document.models.create');
+Route::post('/admin/document/model/store', [ModelController::class, 'store'])->name('admin.document.models.store');
+Route::get('/admin/document/model/edit/{id}', [ModelController::class, 'edit'])->name('admin.document.models.edit');
+Route::put('/admin/document/model/update/{id}', [ModelController::class, 'update'])->name('admin.document.models.update');
+Route::delete('/admin/document/model/delete/{id}', [ModelController::class, 'destroy'])->name('admin.document.models.destroy');
+Route::get('/admin/document/model/download/{id}', [ModelController::class, 'download'])->name('admin.document.models.download');
 
 Route::get('/admin/training/events', [EventController::class, 'index'])->name('admin.training.events.index');
 Route::get('/admin/training/event/create', [EventController::class, 'create'])->name('admin.training.events.create');
