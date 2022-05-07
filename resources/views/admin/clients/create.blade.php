@@ -23,15 +23,15 @@
 
     <form method="POST" action="{{ route('admin.clients.store') }}" enctype="multipart/form-data">
         @csrf
-        <div class="card card-info" style="max-width: 700px; margin: auto">
+        <div class="card card-info">
             <div class="card-header">
                 <h3 class="card-title">Formulário cadastro de cliente:</h3>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         <div class="form-group m-0">
-                            <small>Nome completo:</small>
+                            <small>Nome completo: *</small>
                             <input type="text" name="name" value="{{ old('name') }}"
                                 class="form-control @error('name') is-invalid @enderror" maxlength="100" />
                             @error('name')
@@ -39,114 +39,163 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>CPF:</small>
-                            <input type="text" name="cpf" value="{{ old('cpf') }}"
-                                class="form-control @error('cpf') is-invalid @enderror" placeholder="nº" maxlength="14"
-                                onkeypress="mascara(this, '###.###.###-##')" />
-                            @error('cpf')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Telefone:</small>
+                            <small>Telefones: *</small>
                             <input type="text" name="phone" value="{{ old('phone') }}"
-                                class="form-control @error('phone') is-invalid @enderror" placeholder="Ex: 82 90000-0000"
-                                maxlength="13" onkeypress="mascara(this, '## #####-####')" />
+                                class="form-control @error('phone') is-invalid @enderror" maxlength="50"
+                                placeholder="Ex: 82 99925-8977, 98854-7889 ..." />
                             @error('phone')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-8">
-                        <div class="form-group m-0">
-                            <small>E-mail:</small>
-                            <input type="email" name="email" value="{{ old('email') }}"
-                                class="form-control @error('email') is-invalid @enderror" maxlength="100" />
-                            @error('email')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
+                            <small>E-mail:</small>
+                            <input type="email" name="email" value="{{ old('email') }}" class="form-control"
+                                maxlength="100" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <small>Comentários:</small>
+                            <textarea name="comments" class="form-control">{{ old('comments') }}</textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
                             <small>Cep:</small>
-                            <input type="text" 
-                                   name="zip_code" 
-                                   id="cep" 
-                                   value="{{ old('zip_code') }}" 
-                                   class="form-control" 
-                                   maxlength="9" 
-                                   onkeypress="mascara(this, '#####-###')" 
-                                   onblur="pesquisacep(this.value);"  />
+                            <input type="text" name="cep" id="cep" value="{{ old('cep') }}" class="form-control"
+                                maxlength="9" onkeypress="mascara(this, '#####-###')" onblur="pesquisacep(this.value);" />
                         </div>
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
                             <small>Endreço:</small>
                             <input type="text" name="address" id="address" value="{{ old('address') }}"
-                                class="form-control @error('address') is-invalid @enderror" maxlength="250" />
-                            @error('address')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
+                                class="form-control" maxlength="250" />
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <div class="form-group m-0">
+                        <div class="form-group">
                             <small>Número:</small>
-                            <input type="text" name="number" value="{{ old('number') }}"
-                                class="form-control @error('number') is-invalid @enderror" placeholder="nº" maxlength="5" />
-                            @error('number')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
+                            <input type="text" name="number" value="{{ old('number') }}" class="form-control"
+                                placeholder="nº" maxlength="5" />
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="form-group m-0">
+                        <div class="form-group">
                             <small>Bairro:</small>
                             <input type="text" name="district" id="district" value="{{ old('district') }}"
-                                class="form-control @error('district') is-invalid @enderror" maxlength="50" />
-                            @error('district')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
+                                class="form-control" maxlength="50" />
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="form-group m-0">
+                        <div class="form-group">
                             <small>Cidade:</small>
-                            <input type="text" name="city" id="city" value="{{ old('city') }}"
-                                class="form-control @error('city') is-invalid @enderror" maxlength="50" />
-                            @error('city')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
+                            <input type="text" name="city" id="city" value="{{ old('city') }}" class="form-control"
+                                maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <small>Estado:</small>
+                            <input type="text" name="state" id="state" value="{{ old('state') }}" class="form-control"
+                                maxlength="2" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
+                            <small>Franqueado:</small>
+                            <select name="advisor_id" class="form-control">
+                                <option value="">Selecione um franqueado</option>
+                                @foreach ($advisors as $advisor)
+                                    <option value="{{ $advisor->id }}">{{ $advisor->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group m-0">
-                            <small>Estado:</small>
-                            <input type="text" name="state" id="state" value="{{ old('state') }}"
-                                class="form-control @error('state') is-invalid @enderror" maxlength="2" />
-                            @error('state')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
+                            <small>Etiqueta:</small>
+                            <select name="tag" class="form-control">
+                                <option value="1">Novo</option>
+                                <option value="2">Aguardando</option>
+                                <option value="3">Convertido</option>
+                                <option value="4">Não Convertido</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="col-sm-12">
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
+                            <small>Situação:</small>
+                            <select name="situation" class="form-control">
+                                <option value="1">Andamento em ordem</option>
+                                <option value="2">Aguardando</option>
+                                <option value="3">Finalizado Procedente</option>
+                                <option value="4">Finalizado Improcedente</option>
+                                <option value="5">Recursos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group m-0">
+                            <small>Processo Nº:</small>
+                            <input type="text" name="process" id="process" value="{{ old('process') }}"
+                                class="form-control" maxlength="30" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <div class="form-group m-0">
+                            <small>Financeiro:</small>
+                            <input type="text" name="financial" id="financial" onkeyup="moeda(this);"
+                                value="{{ old('financial') }}" class="form-control" maxlength="13"
+                                placeholder="0,00" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
+                            <small>Tipo de Ação:</small>
+                            <select name="action" class="form-control" onchange="showDocuments(this.value)">
+                                <option value="">Selecione um tipo</option>
+                                @foreach ($actions as $action)
+                                    <option value="{{ $action->id }}">{{ $action->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
+                            <small>Tribunal:</small>
+                            <input type="text" name="court" id="court" value="{{ old('court') }}" class="form-control"
+                                maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
                         <div class="form-group">
-                            <small>Complemento do endereço:</small>
-                            <input type="text" name="complement" value="{{ old('complement') }}" class="form-control"
-                                placeholder="(opcional)" maxlength="200" />
+                            <small>Vara:</small>
+                            <input type="text" name="stick" id="stick" value="{{ old('stick') }}" class="form-control"
+                                maxlength="50" />
                         </div>
                     </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <small>Prazo:</small>
+                            <input type="date" name="term" id="term" value="{{ old('term') }}" class="form-control" />
+                        </div>
+                    </div>
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <small>Anexo de documentos do cliente:</small>
-                            <br/>
-                            <input type="file" name="photos[]" multiple/>
+                            <br />
+                            <input type="file" name="photos[]" multiple />
                         </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="todo-list"></div>
                     </div>
 
                 </div>
@@ -154,13 +203,15 @@
             <div class="card-footer">
                 <a href="{{ route('admin.clients.index') }}" type="submit" class="btn btn-default">Cancelar</a>
                 <button type="submit" class="btn btn-md btn-info float-right">
-                    <i class="fas fa-save"></i>
+                    <i class="fas fa-save mr-2"></i>
                     Salvar dados
                 </button>
             </div>
         </div>
 
     </form>
+
+    <br />
 
 @stop
 
@@ -169,7 +220,38 @@
 @stop
 
 @section('js')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
     <script>
+        function showDocuments(id) {
+            if (id == "") {
+                document.getElementById("todo-list").innerHTML = "";
+                return;
+            }
+            if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else { // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    document.getElementById("todo-list").innerHTML = xmlhttp.responseText;
+                }
+            }
+            xmlhttp.open("GET", "/admin/lead/documents/"+id, true);
+            xmlhttp.send();
+        }
+
+        function moeda(i) {
+            var v = i.value.replace(/\D/g, '');
+            v = (v / 100).toFixed(2) + '';
+            v = v.replace(".", ",");
+            v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");
+            v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");
+            i.value = v;
+        }
+
         //criação de mascara
         function mascara(t, mask) {
             var i = t.value.length;
@@ -203,8 +285,7 @@
             }
         }
 
-        function pesquisacep(valor) 
-        {
+        function pesquisacep(valor) {
             //Nova variável "cep" somente com dígitos.
             var cep = valor.replace(/\D/g, '');
             //Verifica se campo cep possui valor informado.

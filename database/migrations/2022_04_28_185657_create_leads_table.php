@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name',50);
             $table->string('phone',50);
             $table->string('email',100)->nullable();
-            $table->char('cep',9)->nullable();
+            $table->char('zip_code',9)->nullable();
             $table->string('address')->nullable();
             $table->string('number',5)->nullable();
             $table->string('district',50)->nullable();
@@ -33,8 +33,8 @@ return new class extends Migration
             $table->string('stick',50)->nullable(); //vara
             $table->date('term')->nullable(); // prazo
 
-            $table->unsignedBigInteger('advisor_id')->nullable()->default(NULL);
-            $table->foreign('advisor_id')->references('id')->on('advisors');
+            $table->unsignedBigInteger('user_id')->nullable()->default(NULL);
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });

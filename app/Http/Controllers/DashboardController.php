@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Lead;
-use App\Models\Advisor;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
+    private $user;
     private $lead;
-    private $advisor;
 
-    public function __construct(Lead $lead, Advisor $advisor)
+    public function __construct(User $user, Lead $lead)
     {
+        $this->user = $user;
         $this->lead = $lead;
-        $this->advisor = $advisor;
     }
 
     /**
@@ -33,9 +33,10 @@ class DashboardController extends Controller
         $unfounded_customers = $this->lead->where('situation','4')->get();
         $resources = $this->lead->where('situation','5')->get();
 
-        $advisors = $this->advisor->all();
+        $users = $this->user->all();
 
-        $leads = $this->lead->orderBy('id','DESC')->get();
+        $leads = $this->lead->whereIn('tag', [1,2])->orderBy('id','DESC')->get();
+        
         return view('dashboard',[
             'leads' => $leads, 
             'waiting' => $waiting, 
@@ -44,7 +45,7 @@ class DashboardController extends Controller
             'originating_customers' => $originating_customers,
             'unfounded_customers' => $unfounded_customers,
             'resources' => $resources,
-            'advisors' => $advisors
+            'users' => $users
         ]);
     }
 

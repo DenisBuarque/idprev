@@ -3,22 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Client;
+use App\Models\Lead;
 use App\Models\ClientPhotos;
+use App\Models\Advisor;
+use App\Models\Action;
+use App\models\ModelDoc;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class ClientController extends Controller
 {
-    private $client;
+    private $lead;
+    private $advisor;
+    private $action;
 
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
+    public function __construct(Lead $lead, Advisor $advisor, Action $action, ModelDoc $modeldoc)
+    {   
+        $this->lead = $lead;
+        $this->advisor = $advisor;
+        $this->action = $action;
+        $this->modeldoc = $modeldoc;
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -30,22 +37,39 @@ class ClientController extends Controller
         if(isset($request->search))
         {
             $search = $request->search;
-            $query = $this->client;
+            $query = $this->lead;
 
-            $columns = ['name','phone','email','address','district','city','state'];
+            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
             foreach($columns as $key => $value):
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $clients = $query->orderBy('id','DESC')->get();
+            $leads = $query->whereIn('tag',[2,3,4])->orderBy('id','DESC')->get();
 
-            //$clients = $this->findWereLike(['name','phone','email','address','district','city','state'], $search, 'id','DESC');
         } else {
-            $clients = $this->client->orderBy('id','DESC')->paginate(5);
+            $leads = $this->lead->whereIn('tag',[2,3,4])->orderBy('id','DESC')->paginate(10);
         }
         
-        return view('admin.clients.index',['clients' => $clients, 'search' => $search]);
+        return view('admin.clients.index',['leads' => $leads, 'search' => $search]);
     }
+
+    public function documents($id)
+    {
+        $documents = $this->modeldoc->where('action_id',$id)->get();
+        return view('admin.clients.documents',['documents' => $documents]);
+    }
+
+     public function download($id)
+    {
+        $record = $this->modeldoc->find($id);
+
+        if(Storage::exists($record['document'])){
+            return Storage::download($record['document']);
+        } 
+
+        return redirect('admin/client/create')->with('alert', 'Desculpe! Não encontramos o documento!');
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -54,7 +78,9 @@ class ClientController extends Controller
      */
     public function create()
     {
-        return view('admin.clients.create');
+        $actions = $this->action->all();
+        $advisors = $this->advisor->all();
+        return view('admin.clients.create',['advisors' => $advisors, 'actions' => $actions]);
     }
 
     /**
@@ -63,31 +89,41 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
         $data = $request->all();
 
         Validator::make($data, [
-            'name' => 'required|string|min:3|unique:clients',
-            'cpf' => 'required|string|unique:clients',
+            'name' => 'required|string|min:3',
             'phone' => 'required|string',
-            'email' => 'required|string|email|unique:clients|max:50',
-            'address' => 'required|string',
-            'number' => 'required|string',
-            'district' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string'
         ])->validate();
 
-        $client = $this->client->create($data);
-        if($client)
+        if(isset($data['financial'])):
+            $data['financial'] = str_replace(['.', ','], ['', '.'], $data['financial']);
+        else:
+            $data['financial'] = 0;
+        endif;
+
+        if(empty($data['advisor_id'])){
+            $data['advisor_id'] = null;
+        }
+
+        $lead = $this->lead->create($data);
+        if($lead)
         {
+            if(isset($data['comments'])){
+                $lead->feedbackLeads()->create([
+                    'comments' => $data['comments']
+                ]);
+            }
+            
             if($request->hasFile('photos')){
                 $images = $this->imageUpload($request,'image');
-                $client->photos()->createMany($images);
+                $lead->photos()->createMany($images);
             }
 
-            return redirect('admin/client/create')->with('success', 'Registro inserido com sucesso!');
+            return redirect('admin/clients')->with('success', 'Registro inserido com sucesso!');
         } else {
             return redirect('admin/client/create')->with('error', 'Erro ao inserir o registro!');
         }
@@ -112,9 +148,15 @@ class ClientController extends Controller
      */
     public function edit($id)
     {
-        $client = $this->client->find($id);
-        if($client){
-            return view('admin.clients.edit',['client' => $client]);
+        $actions = $this->action->all();
+        $advisors = $this->advisor->all();
+        $lead = $this->lead->find($id);
+        if($lead){
+            return view('admin.clients.edit',[
+                'lead' => $lead, 
+                'advisors' => $advisors, 
+                'actions' => $actions]
+            );
         } else {
             return redirect('admin/clients')->with('alert', 'Desculpe! Não encontramos o registro!');
         }
@@ -130,21 +172,30 @@ class ClientController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-        $record = $this->client->find($id);
+        $record = $this->lead->find($id);
 
         Validator::make($data, [
-            'name' => ['required','string','min:3',Rule::unique('clients')->ignore($id)],
-            'cpf' => ['required','string',Rule::unique('clients')->ignore($id)],
+            'name' => 'required|string|min:3',
             'phone' => 'required|string',
-            'email' => ['required','string','email','max:100',Rule::unique('clients')->ignore($id)],
-            'address' => 'required|string',
-            'number' => 'required|string',
-            'district' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string'
         ])->validate();
 
+        if(isset($data['financial'])):
+            $data['financial'] = str_replace(['.', ','], ['', '.'], $data['financial']);
+        else:
+            $data['financial'] = 0;
+        endif;
+
+        if(empty($data['advisor_id'])){
+            $data['advisor_id'] = null;
+        }
+
         if($record->update($data)):
+
+            if(isset($data['comments'])){
+                $record->feedbackLeads()->create([
+                    'comments' => $data['comments']
+                ]);
+            }
 
             if($request->hasFile('photos'))
             {
@@ -166,26 +217,7 @@ class ClientController extends Controller
      */
     public function destroy($id)
     {
-        $data = $this->client->find($id);
-        
-        if($data->delete())
-        {
-            foreach($data->photos as $foto)
-            {
-                $photo = $foto->image;
-
-                if(Storage::disk('public')->exists($photo)){
-                    Storage::disk('public')->delete($photo);
-                }
-        
-                $removePhoto = ClientPhotos::where('image', $photo);
-                $removePhoto->delete();
-            }
-
-            return redirect('admin/clients')->with('success', 'Registro excluído com sucesso!');
-        } else {
-            return redirect('admin/clients')->with('alert', 'Erro ao excluir o registro!');
-        }
+        //
     }
 
     // realiza o upload da imagem do produto
@@ -209,10 +241,10 @@ class ClientController extends Controller
         }
 
         $removePhoto = ClientPhotos::where('image', $photo);
-        $client_id = $removePhoto->first()->client_id;
+        $lead_id = $removePhoto->first()->lead_id;
 
         $removePhoto->delete();
 
-        return redirect()->route('admin.clients.edit',['id' => $client_id]); 
+        return redirect()->route('admin.clients.edit',['id' => $lead_id]); 
     }
 }

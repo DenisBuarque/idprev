@@ -3,19 +3,16 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <form method="GET" action="{{ route('admin.leads.index') }}">
+    <form method="GET" action="{{ route('admin.lawyers.index') }}">
         <div style="display: flex; justify-content: space-between;">
             <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
-                    required />
+                <input type="search" name="search" value="{{ $search }}" class="form-control"
+                    placeholder="Nome advogado ou OAB" required />
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">
-                        <i class="fa fa-search mr-"></i>
-                        Buscar
-                    </button>
+                    <button type="submit" class="btn btn-info btn-flat">Buscar</button>
                 </span>
             </div>
-            <a href="{{ route('admin.leads.create') }}" class="btn bg-info">Adicionar Registro</a>
+            <a href="{{ route('admin.lawyers.create') }}" class="btn bg-info">Adicionar Registro</a>
         </div>
     </form>
 @stop
@@ -38,45 +35,32 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Lista de Leads</h3>
+            <h3 class="card-title">Lista de advogados relacionado aos franqueado:</h3>
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Data</th>
-                        <th>Nome</th>
-                        <th class='text-center'>Telefone</th>
-                        <th>Etiqueta</th>
-                        <th class="text-center">Comentários</th>
-                        <th class='text-center'>Ações</th>
+                        <th>Nome do Advogado</th>
+                        <th class="text-center">OAB</th>
+                        <th class="text-center">Franqueado</th>
+                        <th class='text-center' style="width: 100px;" >Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($leads as $lead)
+                    @foreach ($lawyers as $lawyer)
                         <tr>
-                            <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
-                            <td>{{ $lead->name }}</td>
-                            <td class='text-center'>{{ $lead->phone }}</td>
-                            <td>
-                                @php
-                                    $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
-                                    foreach ($array_tags as $key => $value) {
-                                        if ($key == $lead->tag) {
-                                            echo $value;
-                                        }
-                                    }
-                                @endphp
-                            </td>
-                            <td class="text-center"><i class="fa fa-comments"></i> {{ count($lead->feedbackLeads) }}</td>
+                            <td>{{ $lawyer->name }}</td>
+                            <td class="text-center">{{ $lawyer->oab }}</td>
+                            <td class="text-center">{{ $lawyer->advisor->name }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
-                                <a href="{{ route('admin.leads.edit', ['id' => $lead->id]) }}"
+                                <a href="{{ route('admin.lawyers.edit', ['id' => $lawyer->id]) }}"
                                     class="btn btn-info btn-sm mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form method="POST" onsubmit="return(confirmaExcluir())"
-                                    action="{{ route('admin.leads.destroy', ['id' => $lead->id]) }}">
+                                    action="{{ route('admin.lawyers.destroy', ['id' => $lawyer->id]) }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
@@ -90,8 +74,8 @@
             </table>
 
             <div class="mt-3 mr-3 ml-3">
-                @if (!$search && $leads)
-                    {{ $leads->links() }}
+                @if (!$search && $lawyers)
+                    {{ $lawyers->links() }}
                 @endif
             </div>
 

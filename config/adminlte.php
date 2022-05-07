@@ -284,19 +284,33 @@ return [
                 ],
                 [
                     'text' => 'Planilha de Calc.',
-                    'url'  => 'admin/document/worksheets',
+                    'url'  => 'admin/worksheets',
+                ],
+            ],
+        ],
+        [
+            'text'    => 'Franqueados',
+            'icon'    => 'fas fa-fw fa-share',
+            'submenu' => [
+                [
+                    'text' => 'Conveniados',
+                    'url'  => 'admin/franchisees',
+                ],
+                [
+                    'text' => 'Advogados',
+                    'url'  => 'admin/lawyers',
                 ],
             ],
         ],
         [
             'text'        => 'Clientes',
             'url'         => 'admin/clients',
-            'icon'        => 'fas fa-fw fa-business-time',
+            'icon'        => 'fas fa-fw fa-users',
         ],
         [
-            'text'        => 'Comunicação',
-            'url'         => 'admin/communication',
-            'icon'        => 'fas fa-fw fa-pen-nib',
+            'text'        => 'Tickets',
+            'url'         => 'admin/tickets',
+            'icon'        => 'fas fa-fw fa-tag',
         ],
         [
             'text'        => 'Financeiro',
@@ -322,16 +336,6 @@ return [
             'text'        => 'Obrigações',
             'url'         => 'admin/obligations',
             'icon'        => 'fas fa-fw fa-address-card',
-        ],
-        [
-            'text'        => 'Franqueados',
-            'url'         => 'admin/advisors',
-            'icon'        => 'fas fa-fw fa-address-card',
-        ],
-        [
-            'text'        => 'Processos',
-            'url'         => 'admin/processes',
-            'icon'        => 'fas fa-fw fa-book',
         ],
         [
             'text'        => 'Serviços',

@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Advisor;
+use App\Models\User;
 use App\Models\Client;
 use App\Notifications\AdvisorNotification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 
-class AdvisorController extends Controller
+class FranchiseeController extends Controller
 {
-    private $advisor;
+    private $user;
     private $client;
 
-    public function __construct(Advisor $advisor, Client $client)
+    public function __construct(User $user, Client $client)
     {
-        $this->advisor = $advisor;
+        $this->user = $user;
         $this->client = $client;
         
         $this->middleware('auth');
@@ -34,21 +34,20 @@ class AdvisorController extends Controller
         if (isset($request->search)) {
             $search = $request->search;
 
-            $query = $this->advisor;
+            $query = $this->user;
             
             $columns = ['name','phone','email','address','district','city','state'];
             foreach($columns as $key => $value):
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $advisors = $query->orderBy('id','DESC')->get();
+            $users = $query->orderBy('id','DESC')->get();
 
-            //$advisors = $this->advisor->where('name', 'LIKE', '%' . $search . '%')->get();
         } else {
-            $advisors = $this->advisor->orderBy('id', 'DESC')->paginate(5);
+            $users = $this->user->orderBy('id', 'DESC')->paginate(10);
         }
 
-        return view('admin.advisors.index', ['advisors' => $advisors, 'search' => $search]);
+        return view('admin.franchisees.index', ['users' => $users, 'search' => $search]);
     }
 
     /**
@@ -59,10 +58,10 @@ class AdvisorController extends Controller
     public function create()
     {
         //compara duas tabelas e pega a disferença entre elas...
-        $advisorClient = \App\Models\AdvisorClient::select('client_id')->get()->toArray();
-        $clients = $this->client->whereNotIn('id', $advisorClient)->get();
+        //$advisorClient = \App\Models\AdvisorClient::select('client_id')->get()->toArray();
+        //$clients = $this->client->whereNotIn('id', $advisorClient)->get();
 
-        return view('admin.advisors.create', ['clients' => $clients]);
+        return view('admin.franchisees.create');
     }
 
     /**
@@ -89,18 +88,15 @@ class AdvisorController extends Controller
 
         $data['password'] =  bcrypt($request->password);
 
-        $create = $this->advisor->create($data);
-        if ($create) 
+        if ($create = $this->user->create($data)) 
         {
-            //$create->notify(new AdvisorNotification);
-            
-            if(!empty($data['client_id'])){
+            //$create->notify(new userNotification);
+            /*if(!empty($data['client_id'])){
                 $create->clients()->sync($data['client_id']);
-            }
-
-            return redirect('admin/advisors')->with('success', 'Registro inserido com sucesso!');
+            }*/
+            return redirect('admin/franchisees')->with('success', 'Registro inserido com sucesso!');
         } else {
-            return redirect('admin/advisor/create')->with('error', 'Erro ao inserido o registro!');
+            return redirect('admin/franchisee/create')->with('error', 'Erro ao inserido o registro!');
         }
     }
 
@@ -123,20 +119,20 @@ class AdvisorController extends Controller
      */
     public function edit($id)
     {
-        $clients = $this->client->all();
+        //$clients = $this->client->all();
         //compara duas tabelas e pega a disferença entre elas...
-        $advisorClient = \App\Models\AdvisorClient::select('client_id')->get()->toArray();
-        $clientsNotIn = $this->client->whereNotIn('id', $advisorClient)->get();
+        //$advisorClient = \App\Models\AdvisorClient::select('client_id')->get()->toArray();
+        //$clientsNotIn = $this->client->whereNotIn('id', $advisorClient)->get();
 
-        $advisor = $this->advisor->find($id);
-        if ($advisor) {
-            return view('admin.advisors.edit', [
-                'advisor' => $advisor, 
-                'clients' => $clients, 
-                'clientsNotIn' => $clientsNotIn
+        $user = $this->user->find($id);
+        if ($user) {
+            return view('admin.franchisees.edit', [
+                'user' => $user, 
+                //'clients' => $clients, 
+                //'clientsNotIn' => $clientsNotIn
             ]);
         } else {
-            return redirect('admin/advisors')->with('alert', 'Não encontramos o registro, tente outra vez!');
+            return redirect('admin/franchisees')->with('alert', 'Não encontramos o registro, tente outra vez!');
         }
     }
 
@@ -150,15 +146,15 @@ class AdvisorController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-        $record = $this->advisor->findOrFail($id);
+        $record = $this->user->find($id);
 
         if(!$data['password']):
             unset($data['password']);
         endif;
 
         Validator::make($data, [
-            'name' => ['required', 'string', 'min:3', Rule::unique('advisors')->ignore($id)],
-            'email' => ['required', 'string', 'email', 'max:100', Rule::unique('advisors')->ignore($id)],
+            'name' => ['required', 'string', 'min:3', Rule::unique('users')->ignore($id)],
+            'email' => ['required', 'string', 'email', 'max:100', Rule::unique('users')->ignore($id)],
             'password' => 'sometimes|required|string|min:6|confirmed',
             'phone' => 'required|string',
             'address' => 'required|string',
@@ -172,14 +168,13 @@ class AdvisorController extends Controller
             $data['password'] =  bcrypt($request->password);
         }
 
-        $update = $record->update($data);
-        if ($update) :
-            if(!empty($data['client_id'])){
+        if ($record->update($data)) :
+            /*if(!empty($data['client_id'])){
                 $record->clients()->sync($data['client_id']);
-            }
-            return redirect('admin/advisors')->with('success', 'Registro alterado com sucesso!');
+            }*/
+            return redirect('admin/franchisees')->with('success', 'Registro alterado com sucesso!');
         else :
-            return redirect('admin/advisors')->with('error', 'Erro ao alterar o registro!');
+            return redirect('admin/franchisees')->with('error', 'Erro ao alterar o registro!');
         endif;
     }
 
@@ -191,11 +186,11 @@ class AdvisorController extends Controller
      */
     public function destroy($id)
     {
-        $data = $this->advisor->find($id);
+        $data = $this->user->find($id);
         if ($data->delete()) {
-            return redirect('admin/advisors')->with('success', 'Registro excluído com sucesso!');
+            return redirect('admin/franchisees')->with('success', 'Registro excluído com sucesso!');
         } else {
-            return redirect('admin/advisors')->with('error', 'Erro ao excluir o registro!');
+            return redirect('admin/franchisees')->with('error', 'Erro ao excluir o registro!');
         }
     }
 }

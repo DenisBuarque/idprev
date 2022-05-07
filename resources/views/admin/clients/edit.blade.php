@@ -4,133 +4,195 @@
 
 @section('content_header')
     <div style="display: flex; justify-content: space-between">
-        <h4>Meu Cliente</h4>
+        <h4>Meu Cliente (Lead)</h4>
         <a href="{{ route('admin.clients.index') }}" class="btn btn-md bg-info">Listar Registros</a>
     </div>
 @stop
 
 @section('content')
 
-    <form method="POST" action="{{ route('admin.clients.update', ['id' => $client->id]) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.clients.update', ['id' => $lead->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        <div class="card card-info" style="max-width: 700px; margin: auto">
+        <div class="card card-info">
             <div class="card-header">
-                <h3 class="card-title">Formulário edição de cliente:</h3>
+                <h3 class="card-title">Formulário cadastro de cliente:</h3>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         <div class="form-group m-0">
-                            <small>Nome completo:</small>
-                            <input type="text" name="name" value="{{ $client->name ?? old('name') }}"
+                            <small>Nome completo: *</small>
+                            <input type="text" name="name" value="{{ $lead->name ?? old('name') }}"
                                 class="form-control @error('name') is-invalid @enderror" maxlength="100" />
                             @error('name')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>CPF:</small>
-                            <input type="text" name="cpf" value="{{ $client->cpf ?? old('cpf') }}"
-                                onkeypress="mascara(this, '###.###.###-##')"
-                                class="form-control @error('cpf') is-invalid @enderror" placeholder="nº"
-                                maxlength="14" />
-                            @error('cpf')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Telefone:</small>
-                            <input type="text" name="phone" value="{{ $client->phone ?? old('phone') }}"
-                                onkeypress="mascara(this, '## #####-####')"
-                                class="form-control @error('phone') is-invalid @enderror" placeholder="Ex: 82 90000-0000"
-                                maxlength="13" />
+                            <small>Telefones: *</small>
+                            <input type="text" name="phone" value="{{ $lead->phone ?? old('phone') }}"
+                                class="form-control @error('phone') is-invalid @enderror" maxlength="50" placeholder="Ex: 82 99925-8977, 98854-7889 ..."/>
                             @error('phone')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-8">
-                        <div class="form-group m-0">
-                            <small>E-mail:</small>
-                            <input type="email" name="email" value="{{ $client->email ?? old('email') }}"
-                                class="form-control @error('email') is-invalid @enderror" maxlength="100" />
-                            @error('email')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
+                            <small>E-mail:</small>
+                            <input type="email" name="email" value="{{ $lead->email ?? old('email') }}"
+                                class="form-control" maxlength="100" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+
+                        <div class="form-group m-0">
+                            <small>Comentários:</small>
+                            <textarea name="comments" class="form-control">{{ $lead->comments ?? old('comments') }}</textarea>
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            @foreach ($lead->feedbackLeads as $comment)
+                                <li class="list-group-item">{{ $comment->comments }}</li>
+                            @endforeach
+                        </ul>
+                        
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
                             <small>Cep:</small>
-                            <input type="text" name="zip_code" id="cep"
-                                value="{{ $client->zip_code ?? old('zip_code') }}"
-                                onkeypress="mascara(this, '#####-###')" class="form-control" maxlength="9" />
+                            <input type="text" 
+                                   name="cep" 
+                                   id="cep" 
+                                   value="{{ $lead->cep ?? old('cep') }}" 
+                                   class="form-control" 
+                                   maxlength="9" 
+                                   onkeypress="mascara(this, '#####-###')" 
+                                   onblur="pesquisacep(this.value);"  />
                         </div>
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Endereço:</small>
-                            <input type="text" name="address" id="address"
-                                value="{{ $client->address ?? old('address') }}" onblur="pesquisacep(this.value);"
-                                class="form-control @error('address') is-invalid @enderror" maxlength="250" />
-                            @error('address')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
+                            <small>Endreço:</small>
+                            <input type="text" name="address" id="address" value="{{ $lead->address ?? old('address') }}"
+                                class="form-control" maxlength="250" />
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <small>Número:</small>
-                        <div class="form-group m-0">
-                            <input type="text" name="number" value="{{ $client->number ?? old('number') }}"
-                                class="form-control @error('number') is-invalid @enderror" placeholder="nº" maxlength="5" />
-                            @error('number')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Bairro:</small>
-                            <input type="text" name="district" id="district"
-                                value="{{ $client->district ?? old('district') }}"
-                                class="form-control @error('district') is-invalid @enderror" maxlength="50" />
-                            @error('district')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Cidade:</small>
-                            <input type="text" name="city" id="city" value="{{ $client->city ?? old('city') }}"
-                                class="form-control @error('city') is-invalid @enderror" maxlength="50" />
-                            @error('city')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group m-0">
-                            <small>Estado:</small>
-                            <input type="text" name="state" id="state" value="{{ $client->state ?? old('state') }}"
-                                class="form-control @error('state') is-invalid @enderror" maxlength="2" />
-                            @error('state')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
                         <div class="form-group">
-                            <small>Complemento do endereço:</small>
-                            <input type="text" name="complement" value="{{ $client->complement ?? old('complement') }}"
-                                class="form-control" placeholder="(opcional)" maxlength="200" />
+                            <small>Número:</small>
+                            <input type="text" name="number" value="{{ $lead->number ?? old('number') }}"
+                                class="form-control" placeholder="nº" maxlength="5" />
                         </div>
                     </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <small>Bairro:</small>
+                            <input type="text" name="district" id="district" value="{{ $lead->district ?? old('district') }}"
+                                class="form-control" maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <small>Cidade:</small>
+                            <input type="text" name="city" id="city" value="{{ $lead->city ?? old('city') }}"
+                                class="form-control" maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <small>Estado:</small>
+                            <input type="text" name="state" id="state" value="{{ $lead->state ?? old('state') }}"
+                                class="form-control" maxlength="2" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
+                            <small>Franqueado:</small>
+                            <select name="advisor_id" class="form-control">
+                                <option value="">Selecione um franqueado</option>
+                                @foreach ($advisors as $advisor)
+                                    @if ($advisor->id == $lead->advisor_id)
+                                        <option value="{{$advisor->id}}" selected>{{$advisor->name}}</option>
+                                    @else
+                                        <option value="{{$advisor->id}}">{{$advisor->name}}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group m-0">
+                            <small>Etiqueta:</small>
+                            <select name="tag" class="form-control">
+                                <option value="1" @if($lead->tag == 1) selected @endif>Novo</option>
+                                <option value="2" @if($lead->tag == 2) selected @endif>Aguardando</option>
+                                <option value="3" @if($lead->tag == 3) selected @endif>Convertido</option>
+                                <option value="4" @if($lead->tag == 4) selected @endif>Não Convertido</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
+                            <small>Situação:</small>
+                            <select name="situation" class="form-control">
+                                <option value="1">Andamento em ordem</option>
+                                <option value="2">Aguardando</option>
+                                <option value="3">Finalizado Procedente</option>
+                                <option value="4">Finalizado Improcedente</option>
+                                <option value="5">Recursos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group m-0">
+                            <small>Processo Nº:</small>
+                            <input type="text" name="process" id="process" value="{{ $lead->process ?? old('process') }}" class="form-control" maxlength="30" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <div class="form-group m-0">
+                            <small>Financeiro:</small>
+                            <input type="text" name="financial" id="financial" onkeyup="moeda(this);" value="{{ $lead->finencial ?? old('financial') }}" class="form-control" maxlength="13" placeholder="0,00" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
+                            <small>Tipo de Ação:</small>
+                            <select name="action" class="form-control" onchange="showDocuments(this.value)">
+                                 @foreach ($actions as $action)
+                                 @if ($action->id == $lead->action) 
+                                    <option value="{{$action->id}}" selected>{{$action->name}}</option>
+                                 @else
+                                    <option value="{{$action->id}}">{{$action->name}}</option>
+                                 @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
+                            <small>Tribunal:</small>
+                            <input type="text" name="court" id="court" value="{{ $lead->court ?? old('court') }}" class="form-control" maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <small>Vara:</small>
+                            <input type="text" name="stick" id="stick" value="{{ $lead->stick ?? old('stick') }}" class="form-control" maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <small>Prazo:</small>
+                            <input type="date" name="term" id="term" value="{{ $lead->term ?? old('term') }}" class="form-control" />
+                        </div>
+                    </div>
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <small>Anexo de documentos do cliente:</small>
@@ -139,28 +201,32 @@
                         </div>
                     </div>
 
+                    <div class="col-md-12">
+                        <div id="todo-list"></div>
+                    </div>
+
                 </div>
             </div>
             <div class="card-footer">
                 <a href="{{ route('admin.clients.index') }}" type="submit" class="btn btn-default">Cancelar</a>
                 <button type="submit" class="btn btn-md btn-info float-right">
-                    <i class="fas fa-save"></i>
+                    <i class="fas fa-save mr-2"></i>
                     Salvar dados
                 </button>
             </div>
         </div>
     </form>
 
-    <div class="card" style="max-width: 700px; margin: auto; margin-top: 10px;">
+    <div class="card" style="margin-top: 10px;">
         <div class="card-header">
             <h3 class="card-title">Imagens de documentos</h3>
         </div>
         <div class="card-body">
             <div class="row">
-                @foreach ($client->photos as $photo)
+                @foreach ($lead->photos as $photo)
                     <div class="col-md-3">
                         <img src="{{asset('storage/'.$photo->image)}}" alt="foto" class="img-fluid" />
-                        <form action="{{route('admin.client.document.remove')}}" method="POST">
+                        <form action="{{route('admin.cliente.document.remove')}}" method="POST">
                             @csrf
                             @method('DELETE')
                             <input type="hidden" name="photo" value="{{$photo->image}}" />
@@ -173,6 +239,7 @@
             </div>
         </div>
     </div>
+    <br/>
 
 @stop
 
@@ -181,7 +248,39 @@
 @stop
 
 @section('js')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
     <script>
+
+function showDocuments(id) {
+            if (id == "") {
+                document.getElementById("todo-list").innerHTML = "";
+                return;
+            }
+            if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else { // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    document.getElementById("todo-list").innerHTML = xmlhttp.responseText;
+                }
+            }
+            xmlhttp.open("GET", "/admin/lead/documents/"+id, true);
+            xmlhttp.send();
+        }
+
+        function moeda(i) {
+            var v = i.value.replace(/\D/g,'');
+            v = (v/100).toFixed(2) + '';
+            v = v.replace(".", ",");
+            v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");
+            v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");
+            i.value = v;
+        }
+
         // cria mascara
         function mascara(t, mask) {
             var i = t.value.length;

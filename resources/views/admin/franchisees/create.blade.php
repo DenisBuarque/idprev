@@ -4,135 +4,155 @@
 
 @section('content_header')
     <div style="display: flex; justify-content: space-between">
-        <h4>Meu Lead</h4>
-        <a href="{{ route('admin.leads.index') }}" class="btn btn-md bg-info">Listar Registros</a>
+        <h4>Meu Franqueado Conveniado</h4>
+        <a href="{{ route('admin.franchisees.index') }}" class="btn btn-md bg-info">Listar Registros</a>
     </div>
 @stop
 
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div class="alert alert-success mb-2" role="alert" style="max-width: 800px; margin: auto;">
             {{ session('success') }}
         </div>
-    @elseif (session('error'))
-        <div class="alert alert-danger mb-2" role="alert" style="max-width: 700px; margin: auto;">
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger mb-2" role="alert" style="max-width: 800px; margin: auto;">
             {{ session('error') }}
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.leads.store') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.franchisees.store') }}">
         @csrf
         <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
-                <h3 class="card-title">Formulário cadastro de lead:</h3>
+                <h3 class="card-title">Formulário cadastro de franqueado conveniado:</h3>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Nome completo: *</small>
+                            <small>Nome completo:</small>
                             <input type="text" name="name" value="{{ old('name') }}"
-                                class="form-control @error('name') is-invalid @enderror" maxlength="100" />
+                                class="form-control @error('name') is-invalid @enderror" maxlength="100" autofocus />
                             @error('name')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Telefones: *</small>
+                            <small>Telefone:</small>
                             <input type="text" name="phone" value="{{ old('phone') }}"
-                                class="form-control @error('phone') is-invalid @enderror" maxlength="50"
-                                placeholder="Ex: 82 99925-8977, 98854-7889 ..." />
+                                class="form-control @error('phone') is-invalid @enderror" placeholder="Ex: 82 90000-0000"
+                                maxlength="14" onkeypress="mascara(this, '## #####-####')" />
                             @error('phone')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group m-0">
-                            <small>E-mail:</small>
-                            <input type="email" name="email" value="{{ old('email') }}" class="form-control"
-                                maxlength="100" />
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group m-0">
-                            <small>Etiqueta:</small>
-                            <select name="tag" class="form-control">
-                                <option value="1">Novo</option>
-                                <option value="2">Aguardando</option>
-                                <option value="3">Convertido</option>
-                                <option value="4">Não Convertido</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Franqueado:</small>
-                            <select name="advisor_id" class="form-control">
-                                <option value="">Selecione um franqueado</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <small>Comentários:</small>
-                            <textarea name="comments" class="form-control">{{ old('comments') }}</textarea>
-                        </div>
-                    </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Cep:</small>
-                            <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code') }}" class="form-control"
-                                maxlength="9" onkeypress="mascara(this, '#####-###')" onblur="pesquisacep(this.value);" />
+                            <input type="text" name="zip_code" id="cep" value="{{ old('zip_code') }}"
+                                class="form-control" maxlength="9" onkeypress="mascara(this, '#####-###')"
+                                onblur="pesquisacep(this.value);" />
                         </div>
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Endreço:</small>
+                            <small>Endereço:</small>
                             <input type="text" name="address" id="address" value="{{ old('address') }}"
-                                class="form-control" maxlength="250" />
+                                class="form-control @error('address') is-invalid @enderror" maxlength="250" />
+                            @error('address')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Número:</small>
-                            <input type="text" name="number" value="{{ old('number') }}" class="form-control"
-                                placeholder="nº" maxlength="5" />
+                            <input type="text" name="number" value="{{ old('number') }}"
+                                class="form-control @error('number') is-invalid @enderror" placeholder="nº" maxlength="5" />
+                            @error('number')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Bairro:</small>
                             <input type="text" name="district" id="district" value="{{ old('district') }}"
-                                class="form-control" maxlength="50" />
+                                class="form-control @error('district') is-invalid @enderror" maxlength="50" />
+                            @error('district')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Cidade:</small>
-                            <input type="text" name="city" id="city" value="{{ old('city') }}" class="form-control"
-                                maxlength="50" />
+                            <input type="text" name="city" id="city" value="{{ old('city') }}"
+                                class="form-control @error('city') is-invalid @enderror" maxlength="50" />
+                            @error('city')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Estado:</small>
-                            <input type="text" name="state" id="state" value="{{ old('state') }}" class="form-control"
-                                maxlength="2" />
+                            <input type="text" name="state" id="state" value="{{ old('state') }}"
+                                class="form-control @error('state') is-invalid @enderror" maxlength="2" />
+                            @error('state')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
-
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <small>Complemento do endereço:</small>
+                            <input type="text" name="complement" value="{{ old('complement') }}" class="form-control"
+                                placeholder="(opcional)" maxlength="200" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group m-0">
+                            <small>E-mail:</small>
+                            <input type="email" name="email" value="{{ old('email') }}"
+                                class="form-control @error('email') is-invalid @enderror" maxlength="100" />
+                            @error('email')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <small>Senha:</small>
+                            <input type="password" name="password"
+                                class="form-control @error('password') is-invalid @enderror" placeholder="******" />
+                            @error('password')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <small>Confirme a senha:</small>
+                            <input type="password" name="password_confirmation"
+                                class="form-control @error('password_confirmation') is-invalid @enderror"
+                                placeholder="******" />
+                            @error('password_confirmation')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.clients.index') }}" type="submit" class="btn btn-default">Cancelar</a>
-                <button id="button" onClick="ocultarExibir()" type="submit" class="btn btn-md btn-info float-right">
+                <a href="{{ route('admin.franchisees.index') }}" type="submit" class="btn btn-default">Cancelar</a>
+                <button id="button" type="submit" onClick="ocultarExibir()" class="btn btn-md btn-info float-right">
                     <i class="fas fa-save mr-2"></i>
                     Salvar dados
                 </button>
@@ -145,7 +165,6 @@
         </div>
 
     </form>
-
     <br />
 
 @stop
@@ -155,7 +174,6 @@
 @stop
 
 @section('js')
-
     <script>
         document.getElementById("button").style.display = "block";
         document.getElementById("spinner").style.display = "none";
@@ -229,6 +247,6 @@
                 //cep sem valor, limpa formulário.
                 limpa_formulário_cep();
             }
-        };
+        }
     </script>
 @stop

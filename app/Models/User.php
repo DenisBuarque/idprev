@@ -25,6 +25,14 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'phone',
+        'zip_code',
+        'address',
+        'number',
+        'district',
+        'city',
+        'state',
+        'complement',
         'email',
         'password',
     ];
@@ -40,6 +48,21 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'two_factor_secret',
     ];
+
+    public function leads()
+    {
+        return $this->hasMany(Lead::class);
+    }
+
+    public function lawyers()
+    {
+        return $this->hasMany(lawyer::class);
+    }
+    
+    public function feedbackTickets()
+    {
+        return $this->hasMany(FeedbackTicket::class);
+    }
 
     /**
      * The attributes that should be cast.

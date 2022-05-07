@@ -4,9 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\AdvisorController;
-use App\Http\Controllers\ProcessController;
-use App\Http\Controllers\ContractController;
+use App\Http\Controllers\FranchiseeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\DashboardController;
@@ -14,6 +12,9 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\ModelController;
+use App\Http\Controllers\LawyerController;
+use App\Http\Controllers\WorksheetController;
+use App\Http\Controllers\TicketController;
 use GuzzleHttp\Middleware;
 
 /*
@@ -73,6 +74,8 @@ Route::get('/admin/lead/edit/{id}', [LeadController::class, 'edit'])->name('admi
 Route::put('/admin/lead/update/{id}', [LeadController::class, 'update'])->name('admin.leads.update');
 Route::delete('/admin/lead/delete/{id}', [LeadController::class, 'destroy'])->name('admin.leads.destroy');
 Route::delete('/admin/lead/document/remove', [LeadController::class, 'remove'])->name('admin.lead.document.remove');
+Route::get('/admin/lead/documents/{id}', [LeadController::class, 'documents'])->name('admin.lead.documents');
+Route::get('/admin/lead/document/download/{id}', [LeadController::class, 'download'])->name('admin.lead.document.download');
 
 Route::get('/admin/training/files', [FileController::class, 'index'])->name('admin.training.files.index');
 Route::get('/admin/training/file/create', [FileController::class, 'create'])->name('admin.training.files.create');
@@ -89,6 +92,14 @@ Route::get('/admin/document/model/edit/{id}', [ModelController::class, 'edit'])-
 Route::put('/admin/document/model/update/{id}', [ModelController::class, 'update'])->name('admin.document.models.update');
 Route::delete('/admin/document/model/delete/{id}', [ModelController::class, 'destroy'])->name('admin.document.models.destroy');
 Route::get('/admin/document/model/download/{id}', [ModelController::class, 'download'])->name('admin.document.models.download');
+
+Route::get('/admin/worksheets', [WorksheetController::class, 'index'])->name('admin.worksheets.index');
+Route::get('/admin/worksheet/create', [WorksheetController::class, 'create'])->name('admin.worksheets.create');
+Route::post('/admin/worksheet/store', [WorksheetController::class, 'store'])->name('admin.worksheets.store');
+Route::get('/admin/worksheet/edit/{id}', [WorksheetController::class, 'edit'])->name('admin.worksheets.edit');
+Route::put('/admin/worksheet/update/{id}', [WorksheetController::class, 'update'])->name('admin.worksheets.update');
+Route::delete('/admin/worksheet/delete/{id}', [WorksheetController::class, 'destroy'])->name('admin.worksheets.destroy');
+Route::get('/admin/worksheet/download/{id}', [WorksheetController::class, 'download'])->name('admin.worksheets.download');
 
 Route::get('/admin/training/events', [EventController::class, 'index'])->name('admin.training.events.index');
 Route::get('/admin/training/event/create', [EventController::class, 'create'])->name('admin.training.events.create');
@@ -111,26 +122,29 @@ Route::get('/admin/client/edit/{id}', [ClientController::class, 'edit'])->name('
 Route::put('/admin/client/update/{id}', [ClientController::class, 'update'])->name('admin.clients.update');
 Route::delete('/admin/client/delete/{id}', [ClientController::class, 'destroy'])->name('admin.clients.destroy');
 Route::delete('/admin/client/document/remove', [ClientController::class, 'remove'])->name('admin.client.document.remove');
+Route::get('/admin/client/documents/{id}', [ClientController::class, 'documents'])->name('admin.client.documents');
+Route::get('/admin/client/document/download/{id}', [ClientController::class, 'download'])->name('admin.client.document.download');
 
-Route::get('/admin/advisors', [AdvisorController::class, 'index'])->name('admin.advisors.index');
-Route::get('/admin/advisor/create', [AdvisorController::class, 'create'])->name('admin.advisors.create');
-Route::post('/admin/advisor/store', [AdvisorController::class, 'store'])->name('admin.advisors.store');
-Route::get('/admin/advisor/edit/{id}', [AdvisorController::class, 'edit'])->name('admin.advisors.edit');
-Route::put('/admin/advisor/update/{id}', [AdvisorController::class, 'update'])->name('admin.advisors.update');
-Route::delete('/admin/advisor/delete/{id}', [AdvisorController::class, 'destroy'])->name('admin.advisors.destroy');
+Route::get('/admin/franchisees', [FranchiseeController::class, 'index'])->name('admin.franchisees.index');
+Route::get('/admin/franchisee/create', [FranchiseeController::class, 'create'])->name('admin.franchisees.create');
+Route::post('/admin/franchisee/store', [FranchiseeController::class, 'store'])->name('admin.franchisees.store');
+Route::get('/admin/franchisee/edit/{id}', [FranchiseeController::class, 'edit'])->name('admin.franchisees.edit');
+Route::put('/admin/franchisee/update/{id}', [FranchiseeController::class, 'update'])->name('admin.franchisees.update');
+Route::delete('/admin/franchisee/delete/{id}', [FranchiseeController::class, 'destroy'])->name('admin.franchisees.destroy');
 
-Route::get('/admin/processes', [ProcessController::class, 'index'])->name('admin.processes.index');
-Route::get('/admin/processes/pdf/{id}', [ProcessController::class, 'pdf'])->name('admin.processes.pdf');
-Route::get('/admin/process/create', [ProcessController::class, 'create'])->name('admin.processes.create');
-Route::post('/admin/process/store', [ProcessController::class, 'store'])->name('admin.processes.store');
-Route::get('/admin/process/edit/{id}', [ProcessController::class, 'edit'])->name('admin.processes.edit');
-Route::put('/admin/process/update/{id}', [ProcessController::class, 'update'])->name('admin.processes.update');
-Route::delete('/admin/process/delete/{id}', [ProcessController::class, 'destroy'])->name('admin.processes.destroy');
+Route::get('/admin/lawyers', [LawyerController::class, 'index'])->name('admin.lawyers.index');
+Route::get('/admin/lawyer/create', [LawyerController::class, 'create'])->name('admin.lawyers.create');
+Route::post('/admin/lawyer/store', [LawyerController::class, 'store'])->name('admin.lawyers.store');
+Route::get('/admin/lawyer/edit/{id}', [LawyerController::class, 'edit'])->name('admin.lawyers.edit');
+Route::put('/admin/lawyer/update/{id}', [LawyerController::class, 'update'])->name('admin.lawyers.update');
+Route::delete('/admin/lawyer/delete/{id}', [LawyerController::class, 'destroy'])->name('admin.lawyers.destroy');
 
-Route::get('/admin/contracts', [ContractController::class, 'index'])->name('admin.contracts.index');
-Route::get('/admin/contract/pdf/{id}', [ContractController::class, 'pdf'])->name('admin.contracts.pdf');
-Route::get('/admin/contract/create', [ContractController::class, 'create'])->name('admin.contracts.create');
-Route::post('/admin/contract/store', [ContractController::class, 'store'])->name('admin.contracts.store');
-Route::get('/admin/contract/edit/{id}', [ContractController::class, 'edit'])->name('admin.contracts.edit');
-Route::put('/admin/contract/update/{id}', [ContractController::class, 'update'])->name('admin.contracts.update');
-Route::delete('/admin/contract/delete/{id}', [ContractController::class, 'destroy'])->name('admin.contracts.destroy');
+Route::get('/admin/tickets', [TicketController::class, 'index'])->name('admin.tickets.index');
+Route::get('/admin/ticket/create', [TicketController::class, 'create'])->name('admin.tickets.create');
+Route::post('/admin/ticket/store', [TicketController::class, 'store'])->name('admin.tickets.store');
+Route::get('/admin/ticket/edit/{id}', [TicketController::class, 'edit'])->name('admin.tickets.edit');
+Route::put('/admin/ticket/update/{id}', [TicketController::class, 'update'])->name('admin.tickets.update');
+Route::delete('/admin/ticket/delete/{id}', [TicketController::class, 'destroy'])->name('admin.tickets.destroy');
+Route::get('/admin/ticket/response/{id}', [TicketController::class, 'response'])->name('admin.tickets.response');
+Route::post('/admin/ticket/feedback', [TicketController::class, 'feedback'])->name('admin.tickets.feedback');
+

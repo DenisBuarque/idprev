@@ -9,11 +9,11 @@ class Lead extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','phone','email','cep','address','number','district','city','state','tag','process','situation','financial','action','court','stick','term','advisor_id'];
+    protected $fillable = ['name','phone','email','zip_code','address','number','district','city','state','tag','process','situation','financial','action','court','stick','term','user_id'];
 
-    public function advisors()
+    public function user()
     {
-        return $this->hasMany(Advisor::class);
+        return $this->belongsTo(User::class);
     }
 
     public function feedbackLeads()
@@ -27,6 +27,6 @@ class Lead extends Model
     }
 
     protected $casts = [
-    'created_at' => 'datetime'
-];
+        'created_at' => 'datetime'
+    ];
 }

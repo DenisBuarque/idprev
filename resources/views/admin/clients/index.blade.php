@@ -6,8 +6,8 @@
     <form method="GET" action="{{ route('admin.clients.index') }}">
         <div style="display: flex; justify-content: space-between;">
             <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control"
-                    placeholder="Pesquisa." required />
+                <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
+                    required />
                 <span class="input-group-append">
                     <button type="submit" class="btn btn-info btn-flat">Buscar</button>
                 </span>
@@ -42,47 +42,69 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th>Data</th>
                         <th>Nome</th>
-                        <th>Telefone</th>
-                        <th>E-mail</th>
-                        <th>Endereço</th>
-                        <th class='text-center'>Anexos</th>
+                        <th class='text-center'>Telefone</th>
+                        <th>Etiqueta</th>
+                        <th>Situação</th>
                         <th class='text-center'>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($clients as $client)
+                    @foreach ($leads as $lead)
                         <tr>
-                            <td>{{ $client->name }}</td>
-                            <td>{{ $client->phone }}</td>
-                            <td>{{ $client->email }}</td>
-                            <td>{{ $client->address.', '.$client->number.', '.$client->district.', '.$client->city.'/'.$client->state }}</td>
-                            <td class='text-center'>{{ count($client->photos) }}</td>
+                            <td>{{ $lead->created_at->format('d/m/Y') }}</td>
+                            <td>{{ $lead->name }}</td>
+                            <td class='text-center'>{{ $lead->phone }}</td>
+                            <td>
+                                @php
+                                    $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
+                                    foreach ($array_tags as $key => $value) {
+                                        if ($key == $lead->tag) {
+                                            if($key == 2){
+                                                echo '<small class="badge badge-warning">'.$value.'</small>';
+                                            } elseif($key == 3){
+                                                echo '<small class="badge badge-success">'.$value.'</small>';
+                                            } elseif($key == 4){
+                                                echo '<small class="badge badge-danger">'.$value.'</small>';
+                                            }
+                                        }
+                                    }
+                                @endphp
+                                
+                            </td>
+                            <td>
+                                @php
+                                    $array_situations = [1 => 'Andamento em ordem', 2 => 'Aguardando', 3 => 'Finalizado procedente', 4 => 'Finalizado improcedente', 5 => 'Recursos'];
+                                    foreach ($array_situations as $key => $value) {
+                                        if ($key == $lead->situation) {
+                                            echo $value;
+                                        }
+                                    }
+                                @endphp
+                            </td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
-                                
-                                    <a href="{{ route('admin.clients.edit', ['id' => $client->id]) }}"
-                                        class="btn btn-info btn-sm mr-1">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form method="POST" onsubmit="return(confirmaExcluir())"
-                                        action="{{ route('admin.clients.destroy', ['id' => $client->id]) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                
+                                <a href="{{ route('admin.clients.edit', ['id' => $lead->id]) }}"
+                                    class="btn btn-info btn-sm mr-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="POST" onsubmit="return(confirmaExcluir())"
+                                    action="{{ route('admin.clients.destroy', ['id' => $lead->id]) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
-
                 </tbody>
             </table>
 
             <div class="mt-3 mr-3 ml-3">
-                @if (!$search && $clients)
-                    {{ $clients->links() }}
+                @if (!$search && $leads)
+                    {{ $leads->links() }}
                 @endif
             </div>
 

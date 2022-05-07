@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('process_advisors', function (Blueprint $table) {
+        Schema::create('feedback_tickets', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('process_id');
-            $table->foreign('process_id')->references('id')->on('processes')->onDelete('cascade');
-            $table->unsignedBigInteger('advisor_id');
-            $table->foreign('advisor_id')->references('id')->on('advisors')->onDelete('cascade');
+            $table->text('description');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('ticket_id');
+            $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('process_advisors');
+        Schema::dropIfExists('feedback_tickets');
     }
 };

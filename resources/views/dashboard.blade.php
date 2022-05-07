@@ -13,13 +13,13 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>{{ count($advisors) }}</h3>
+                    <h3>{{ count($users) }}</h3>
                     <p>Franqueados</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-user-plus"></i>
                 </div>
-                <a href="#" class="small-box-footer">
+                <a href="{{ route('admin.franchisees.index') }}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -86,14 +86,14 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Lista de Leads</h3>
+                            <h3 class="card-title">Lista de leads de atendimento</h3>
                             <div class="card-tools">
-                                <a href="" class="btn btn-sm btn-info" data-toggle="modal"
-                                    data-target="#modal-lead">Adicionar novo lead</a>
+                                <a href="" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-lead"><i
+                                        class="fa fa-plus mr-2"></i> Adicionar novo lead</a>
                             </div>
                         </div>
 
-                        <div class="card-body table-responsive p-0" style="height: 320px;">
+                        <div class="card-body table-responsive p-0" style="height: 410px;">
                             <table class="table table-hover table-striped">
                                 <thead>
                                     <tr>
@@ -101,44 +101,35 @@
                                         <th>Nome</th>
                                         <th>Contato</th>
                                         <th>Etiqueta</th>
-                                        <th>Ação</th>
+                                        <th class="text-center">Comentários</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($leads as $lead)
                                         <tr>
-                                            <td>{{ $lead->created_at->format('d/m/Y') }}</td>
+                                            <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
                                             <td>{{ $lead->name }}</td>
                                             <td>{{ $lead->phone }}</td>
                                             <td>
                                                 @php
-                                                    $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
+                                                    $array_tags = [1 => 'Novo lead', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
                                                     foreach ($array_tags as $key => $value) {
                                                         if ($key == $lead->tag) {
-                                                            echo $value;
+                                                            if ($key == 1) {
+                                                                echo '<small class="badge badge-info">' . $value . '</small>';
+                                                            } else {
+                                                                echo '<small class="badge badge-warning">' . $value . '</small>';
+                                                            }
                                                         }
                                                     }
                                                 @endphp
                                             </td>
-                                            <td>
-
-                                                @php
-                                                    $tags_color = [1 => 'bg-default', 2 => 'bg-warning', 3 => 'bg-success', 4 => 'bg-danger'];
-                                                @endphp
-
-                                                @foreach ($tags_color as $key => $value)
-                                                    @if ($key == $lead->tag)
-                                                        <a href="#" class="btn btn-sm {{ $value }}"
-                                                            data-toggle="modal" data-target="#modal-{{ $lead->id }}">
-                                                            <i class="fa fa-search"></i>
-                                                        </a>
-                                                        <a href="{{ route('admin.leads.edit', ['id' => $lead->id]) }}"
-                                                            class="btn btn-info btn-sm mr-1">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                    @endif
-                                                @endforeach
-
+                                            <td class="text-center">
+                                                <a href="#" class="btn btn-sm border" data-toggle="modal"
+                                                    data-target="#modal-{{ $lead->id }}">
+                                                    <i class="fa fa-comments"></i>
+                                                    {{ count($lead->feedbackLeads) }}
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -153,15 +144,15 @@
 
             @foreach ($leads as $lead)
                 <div class="modal fade" id="modal-{{ $lead->id }}" style="display: none;" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <form>
+                    <div class="modal-dialog modal-xl">
+                        <form method="POST" action="">
                             <div class="modal-content">
                                 <div class="modal-header bg-info">
                                     @php
                                         $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
                                         foreach ($array_tags as $key => $value) {
                                             if ($key == $lead->tag) {
-                                                echo '<h4 class="modal-title">Lead - ' . $value . '</h4>';
+                                                echo '<h4 class="modal-title">Comentário Lead - ' . $value . '</h4>';
                                             }
                                         }
                                     @endphp
@@ -181,10 +172,11 @@
 
                                         @if ($lead->address)
                                             Endereço:
-                                            {{ $lead->address .', ' .$lead->number .', ' .$lead->cep .' ' .$lead->disitrict .', ' .$lead->city .', ' .$lead->state }}
+                                            {{ $lead->address . ', ' . $lead->number . ', ' . $lead->cep . ' ' . $lead->disitrict . ', ' . $lead->city . ', ' . $lead->state }}
                                         @endif
                                     </p>
                                     <textarea name="obs" class="form-control h-20" placeholder="Digite um comentário."></textarea>
+                                    <strong>Comentário(s):</strong>
                                     <ul class="list-group list-group-flush">
                                         @foreach ($lead->feedbackLeads as $comment)
                                             <li class="list-group-item">{{ $comment->comments }}</li>
@@ -194,8 +186,15 @@
                                 </div>
                                 <div class="modal-footer justify-content-between">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                                    <button type="button" class="btn btn-info">
-                                        <i class="fa fa-save"></i> Salvar</button>
+                                    <button id="button" onClick="ocultarExibir()" type="submit" class="btn btn-info">
+                                        <i class="fa fa-save mr-2"></i> Salvar Comentário
+                                    </button>
+                                    <a id="spinner" class="btn btn-md btn-info float-right text-center">
+                                        <div id="spinner" class="spinner-border" role="status"
+                                            style="width: 20px; height: 20px;">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                         </form>
@@ -204,30 +203,19 @@
             @endforeach
 
             <div class="modal fade" id="modal-lead" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog">
-                    <form method="POST" action="{{route('dashboard.store')}}">
+                <div class="modal-dialog modal-xl">
+                    <form method="POST" action="{{ route('dashboard.store') }}">
                         @csrf
                         <div class="modal-content">
                             <div class="modal-header bg-info">
-                                <h4 class="modal-title">Lead</h4>
+                                <h4 class="modal-title">Novo Lead</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">x</span>
                                 </button>
                             </div>
                             <div class="modal-body">
                                 <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group m-0">
-                                            <small>Franqueado:</small>
-                                            <select name="advisor_id" class="form-control">
-                                                <option value="">Selecione um franqueado</option>
-                                                @foreach ($advisors as $advisor)
-                                                    <option value="{{ $advisor->id }}">{{ $advisor->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-6">
                                         <div class="form-group m-0">
                                             <small>Nome completo: *</small>
                                             <input type="text" name="name" value="{{ old('name') }}"
@@ -237,7 +225,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <div class="form-group m-0">
                                             <small>Telefones: *</small>
                                             <input type="text" name="phone" value="{{ old('phone') }}"
@@ -246,6 +234,17 @@
                                             @error('phone')
                                                 <div class="text-red">{{ $message }}</div>
                                             @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group m-0">
+                                            <small>Franqueado:</small>
+                                            <select name="user_id" class="form-control">
+                                                <option value="">Selecione um franqueado</option>
+                                                @foreach ($users as $user)
+                                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -295,7 +294,7 @@
                             <div class="modal-footer justify-content-between">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                                 <button type="submit" class="btn btn-info">
-                                    <i class="fa fa-save"></i> Salvar</button>
+                                    <i class="fa fa-save mr-2"></i> Salvar Lead</button>
                             </div>
                         </div>
                     </form>
@@ -305,6 +304,14 @@
         </div>
 
         <div class="col-lg-3 col-6">
+
+            <div class="info-box bg-warning">
+                <span class="info-box-icon"><i class="fas fa-tag"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Tickets</span>
+                    <span class="info-box-number">0</span>
+                </div>
+            </div>
 
             <div class="info-box">
                 <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
@@ -362,6 +369,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+        document.getElementById("button").style.display = "block";
+        document.getElementById("spinner").style.display = "none";
+
+        function ocultarExibir() {
+            document.getElementById("button").style.display = "none";
+            document.getElementById("spinner").style.display = "block";
+        }
+
         // ChartJs Line - Gráfio em linhas
         const context = document.getElementById('myChartLine');
         const myChartLine = new Chart(context, {

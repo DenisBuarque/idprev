@@ -3,19 +3,16 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <form method="GET" action="{{ route('admin.leads.index') }}">
+    <form method="GET" action="{{ route('admin.worksheets.index') }}">
         <div style="display: flex; justify-content: space-between;">
             <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
-                    required />
+                <input type="search" name="search" value="{{ $search }}" class="form-control"
+                    placeholder="Título da planilha" required />
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">
-                        <i class="fa fa-search mr-"></i>
-                        Buscar
-                    </button>
+                    <button type="submit" class="btn btn-info btn-flat">Buscar</button>
                 </span>
             </div>
-            <a href="{{ route('admin.leads.create') }}" class="btn bg-info">Adicionar Registro</a>
+            <a href="{{ route('admin.worksheets.create') }}" class="btn bg-info">Adicionar Registro</a>
         </div>
     </form>
 @stop
@@ -38,60 +35,49 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Lista de Leads</h3>
+            <h3 class="card-title">Lista de Planilhas</h3>
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Data</th>
-                        <th>Nome</th>
-                        <th class='text-center'>Telefone</th>
-                        <th>Etiqueta</th>
-                        <th class="text-center">Comentários</th>
-                        <th class='text-center'>Ações</th>
+                        <th>Título</th>
+                        <th class='text-center' style="width: 100px;" >Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($leads as $lead)
+                    @foreach ($worksheets as $worksheet)
                         <tr>
-                            <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
-                            <td>{{ $lead->name }}</td>
-                            <td class='text-center'>{{ $lead->phone }}</td>
-                            <td>
-                                @php
-                                    $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
-                                    foreach ($array_tags as $key => $value) {
-                                        if ($key == $lead->tag) {
-                                            echo $value;
-                                        }
-                                    }
-                                @endphp
-                            </td>
-                            <td class="text-center"><i class="fa fa-comments"></i> {{ count($lead->feedbackLeads) }}</td>
+                            <td>{{ $worksheet->title }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
-                                <a href="{{ route('admin.leads.edit', ['id' => $lead->id]) }}"
+                                <a href="{{ route('admin.worksheets.download', ['id' => $worksheet->id]) }}"
+                                    class="btn btn-default btn-sm mr-1">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                                <a href="{{ route('admin.worksheets.edit', ['id' => $worksheet->id]) }}"
                                     class="btn btn-info btn-sm mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form method="POST" onsubmit="return(confirmaExcluir())"
-                                    action="{{ route('admin.leads.destroy', ['id' => $lead->id]) }}">
+                                    action="{{ route('admin.worksheets.destroy', ['id' => $worksheet->id]) }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
+                                
                             </td>
                         </tr>
                     @endforeach
+
                 </tbody>
             </table>
 
             <div class="mt-3 mr-3 ml-3">
-                @if (!$search && $leads)
-                    {{ $leads->links() }}
+                @if (!$search && $worksheets)
+                    {{ $worksheets->links() }}
                 @endif
             </div>
 

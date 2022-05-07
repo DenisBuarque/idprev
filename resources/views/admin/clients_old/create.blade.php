@@ -4,8 +4,8 @@
 
 @section('content_header')
     <div style="display: flex; justify-content: space-between">
-        <h4>Meu Franqueado</h4>
-        <a href="{{ route('admin.advisors.index') }}" class="btn btn-md bg-info">Listar Registros</a>
+        <h4>Meu Cliente</h4>
+        <a href="{{ route('admin.clients.index') }}" class="btn btn-md bg-info">Listar Registros</a>
     </div>
 @stop
 
@@ -15,33 +15,42 @@
         <div class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
             {{ session('success') }}
         </div>
-    @endif
-
-    @if (session('error'))
+    @elseif (session('error'))
         <div class="alert alert-danger mb-2" role="alert" style="max-width: 700px; margin: auto;">
             {{ session('error') }}
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.advisors.store') }}">
+    <form method="POST" action="{{ route('admin.clients.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="card card-info" style="max-width: 700px; margin: auto">
             <div class="card-header">
-                <h3 class="card-title">Formulário cadastro de franqueado:</h3>
+                <h3 class="card-title">Formulário cadastro de cliente:</h3>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-sm-9">
+                    <div class="col-sm-8">
                         <div class="form-group m-0">
                             <small>Nome completo:</small>
                             <input type="text" name="name" value="{{ old('name') }}"
-                                class="form-control @error('name') is-invalid @enderror" maxlength="100" autofocus />
+                                class="form-control @error('name') is-invalid @enderror" maxlength="100" />
                             @error('name')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
+                        <div class="form-group m-0">
+                            <small>CPF:</small>
+                            <input type="text" name="cpf" value="{{ old('cpf') }}"
+                                class="form-control @error('cpf') is-invalid @enderror" placeholder="nº" maxlength="14"
+                                onkeypress="mascara(this, '###.###.###-##')" />
+                            @error('cpf')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
                         <div class="form-group m-0">
                             <small>Telefone:</small>
                             <input type="text" name="phone" value="{{ old('phone') }}"
@@ -52,17 +61,32 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-sm-8">
+                        <div class="form-group m-0">
+                            <small>E-mail:</small>
+                            <input type="email" name="email" value="{{ old('email') }}"
+                                class="form-control @error('email') is-invalid @enderror" maxlength="100" />
+                            @error('email')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Cep:</small>
-                            <input type="text" name="zip_code" id="cep" value="{{ old('zip_code') }}"
-                                class="form-control" maxlength="9"
-                                onkeypress="mascara(this, '#####-###')" onblur="pesquisacep(this.value);" />
+                            <input type="text" 
+                                   name="zip_code" 
+                                   id="cep" 
+                                   value="{{ old('zip_code') }}" 
+                                   class="form-control" 
+                                   maxlength="9" 
+                                   onkeypress="mascara(this, '#####-###')" 
+                                   onblur="pesquisacep(this.value);"  />
                         </div>
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Endereço:</small>
+                            <small>Endreço:</small>
                             <input type="text" name="address" id="address" value="{{ old('address') }}"
                                 class="form-control @error('address') is-invalid @enderror" maxlength="250" />
                             @error('address')
@@ -117,50 +141,18 @@
                                 placeholder="(opcional)" maxlength="200" />
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <div class="form-group m-0">
-                            <small>E-mail:</small>
-                            <input type="email" name="email" value="{{ old('email') }}"
-                                class="form-control @error('email') is-invalid @enderror" maxlength="100" />
-                            @error('email')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
+                    <div class="col-md-12">
                         <div class="form-group">
-                            <small>Senha:</small>
-                            <input type="password" name="password"
-                                class="form-control @error('password') is-invalid @enderror" placeholder="******" />
-                            @error('password')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
+                            <small>Anexo de documentos do cliente:</small>
+                            <br/>
+                            <input type="file" name="photos[]" multiple/>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <small>Confirme a senha:</small>
-                            <input type="password" name="password_confirmation"
-                                class="form-control @error('password_confirmation') is-invalid @enderror"
-                                placeholder="******" />
-                            @error('password_confirmation')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    
-                    <div class="col-sm-12">
-                        <div class="form-group m-0">
-                            <p>Selecione um ou mais clientes para esse franqueado:</p>
-                            @foreach ($clients as $client)
-                                <input type="checkbox" name="client_id[]" value="{{$client->id}}"/> {{$client->name}}<br/>
-                            @endforeach
-                        </div>
-                    </div>
+
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.advisors.index') }}" type="submit" class="btn btn-default">Cancelar</a>
+                <a href="{{ route('admin.clients.index') }}" type="submit" class="btn btn-default">Cancelar</a>
                 <button type="submit" class="btn btn-md btn-info float-right">
                     <i class="fas fa-save"></i>
                     Salvar dados
@@ -169,7 +161,6 @@
         </div>
 
     </form>
-    <br/><br/>
 
 @stop
 
@@ -212,7 +203,8 @@
             }
         }
 
-        function pesquisacep(valor) {
+        function pesquisacep(valor) 
+        {
             //Nova variável "cep" somente com dígitos.
             var cep = valor.replace(/\D/g, '');
             //Verifica se campo cep possui valor informado.
@@ -243,6 +235,6 @@
                 //cep sem valor, limpa formulário.
                 limpa_formulário_cep();
             }
-        }
+        };
     </script>
 @stop

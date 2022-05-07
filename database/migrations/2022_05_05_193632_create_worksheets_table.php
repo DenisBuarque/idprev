@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('advisor_contract', function (Blueprint $table) {
+        Schema::create('worksheets', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('contract_id');
-            $table->foreign('contract_id')->references('id')->on('contracts')->onDelete('cascade');
-            $table->unsignedBigInteger('advisor_id');
-            $table->foreign('advisor_id')->references('id')->on('advisors')->onDelete('cascade');
+            $table->string('title',100);
+            $table->string('slug',120);
+            $table->string('arquivo');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('advisor_contract');
+        Schema::dropIfExists('worksheets');
     }
 };

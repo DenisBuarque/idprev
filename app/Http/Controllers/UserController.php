@@ -23,14 +23,23 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $search = "";
-        if(isset($request->search))
-        {
+        if (isset($request->search)) {
             $search = $request->search;
-            $users = $this->user->where('name','LIKE','%'.$search.'%')->get();
+
+            $query = $this->user;
+            
+            $columns = ['name','phone','email','address','district','city','state'];
+            foreach($columns as $key => $value):
+                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
+            endforeach;
+
+            $users = $query->orderBy('id','DESC')->get();
+
         } else {
-            $users = $this->user->orderBy('id','DESC')->get();
+            $users = $this->user->orderBy('id', 'DESC')->paginate(10);
         }
-        return view('admin.users.index',['users' => $users, 'search' => $search]);
+
+        return view('admin.franchisees.index', ['users' => $users, 'search' => $search]);
     }
 
     /**

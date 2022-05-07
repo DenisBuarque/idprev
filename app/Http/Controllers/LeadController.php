@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\ClientPhotos;
-use App\Models\Advisor;
+use App\Models\User;
 use App\Models\Action;
+use App\models\ModelDoc;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
@@ -14,14 +15,15 @@ use Illuminate\Support\Facades\Storage;
 class LeadController extends Controller
 {
     private $lead;
-    private $advisor;
+    private $user;
     private $action;
 
-    public function __construct(Lead $lead, Advisor $advisor, Action $action)
+    public function __construct(User $user, Lead $lead, Action $action, ModelDoc $modeldoc)
     {   
+        $this->user = $user;
         $this->lead = $lead;
-        $this->advisor = $advisor;
         $this->action = $action;
+        $this->modeldoc = $modeldoc;
     }
 
     /**
@@ -45,11 +47,29 @@ class LeadController extends Controller
             $leads = $query->orderBy('id','DESC')->get();
 
         } else {
-            $leads = $this->lead->orderBy('id','DESC')->paginate(5);
+            $leads = $this->lead->orderBy('id','DESC')->paginate(10);
         }
         
         return view('admin.leads.index',['leads' => $leads, 'search' => $search]);
     }
+
+    public function documents($id)
+    {
+        $documents = $this->modeldoc->where('action_id',$id)->get();
+        return view('admin.leads.documents',['documents' => $documents]);
+    }
+
+     public function download($id)
+    {
+        $record = $this->modeldoc->find($id);
+
+        if(Storage::exists($record['document'])){
+            return Storage::download($record['document']);
+        } 
+
+        return redirect('admin/lead/create')->with('alert', 'Desculpe! Não encontramos o documento!');
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -59,8 +79,8 @@ class LeadController extends Controller
     public function create()
     {
         $actions = $this->action->all();
-        $advisors = $this->advisor->all();
-        return view('admin.leads.create',['advisors' => $advisors, 'actions' => $actions]);
+        $users = $this->user->all();
+        return view('admin.leads.create',['users' => $users, 'actions' => $actions]);
     }
 
     /**
@@ -85,9 +105,11 @@ class LeadController extends Controller
             $data['financial'] = 0;
         endif;
 
-        if(empty($data['advisor_id'])){
-            $data['advisor_id'] = null;
+        if(empty($data['user_id'])){
+            $data['user_id'] = null;
         }
+
+        $data['situation'] = 1;
 
         $lead = $this->lead->create($data);
         if($lead)
@@ -129,12 +151,12 @@ class LeadController extends Controller
     public function edit($id)
     {
         $actions = $this->action->all();
-        $advisors = $this->advisor->all();
+        $users = $this->user->all();
         $lead = $this->lead->find($id);
         if($lead){
             return view('admin.leads.edit',[
                 'lead' => $lead, 
-                'advisors' => $advisors, 
+                'users' => $users, 
                 'actions' => $actions]
             );
         } else {
@@ -165,8 +187,8 @@ class LeadController extends Controller
             $data['financial'] = 0;
         endif;
 
-        if(empty($data['advisor_id'])){
-            $data['advisor_id'] = null;
+        if(empty($data['user_id'])){
+            $data['user_id'] = null;
         }
 
         if($record->update($data)):

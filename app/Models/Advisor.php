@@ -25,7 +25,16 @@ class Advisor extends Authenticatable
 
     public function leads()
     {
-        return $this->belongsToMany(Lead::class);
+        return $this->hasMany(Lead::class);
+    }
+
+    public function lawyers()
+    {
+        return $this->hasMany(lawyer::class);
+    }
+
+    public function tickets(){
+        return $this->hasMany(Ticket::class);
     }
 
     /**
