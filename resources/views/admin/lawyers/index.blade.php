@@ -9,7 +9,10 @@
                 <input type="search" name="search" value="{{ $search }}" class="form-control"
                     placeholder="Nome advogado ou OAB" required />
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">Buscar</button>
+                    <button type="submit" class="btn btn-info btn-flat">
+                        <i class="fa fa-search mr-1"></i>
+                        Buscar
+                    </button>
                 </span>
             </div>
             <a href="{{ route('admin.lawyers.create') }}" class="btn bg-info">Adicionar Registro</a>
@@ -42,18 +45,20 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th>Data</th>
                         <th>Nome do Advogado</th>
                         <th class="text-center">OAB</th>
-                        <th class="text-center">Franqueado</th>
+                        <th>Franqueado</th>
                         <th class='text-center' style="width: 100px;" >Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($lawyers as $lawyer)
                         <tr>
+                            <td>{{ $lawyer->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $lawyer->name }}</td>
                             <td class="text-center">{{ $lawyer->oab }}</td>
-                            <td class="text-center">{{ $lawyer->advisor->name }}</td>
+                            <td>{{ $lawyer->user->name }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
                                 <a href="{{ route('admin.lawyers.edit', ['id' => $lawyer->id]) }}"
                                     class="btn btn-info btn-sm mr-1">

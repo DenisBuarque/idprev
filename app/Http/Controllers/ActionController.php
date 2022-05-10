@@ -38,7 +38,7 @@ class ActionController extends Controller
             $actions = $query->orderBy('id','DESC')->get();
 
         } else {
-            $actions = $this->action->orderBy('id','DESC')->paginate(5);
+            $actions = $this->action->orderBy('id','DESC')->paginate(10);
         }
         
         return view('admin.document.actions.index',['actions' => $actions, 'search' => $search]);
@@ -70,7 +70,7 @@ class ActionController extends Controller
 
         $action = $this->action->create($data);
         if($action) {
-            return redirect('admin/document/actions')->with('success', 'Registro inserido com sucesso!');
+            return redirect('admin/document/action/create')->with('success', 'Registro inserido com sucesso!');
         } else {
             return redirect('admin/document/action/create')->with('error', 'Erro ao inserir o registro!');
         }

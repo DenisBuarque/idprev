@@ -7,9 +7,11 @@
         <div style="display: flex; justify-content: space-between;">
             <div class="input-group" style="width: 30%">
                 <input type="search" name="search" value="{{ $search }}" class="form-control"
-                    placeholder="Título do documento." required />
+                    placeholder="Título" required />
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">Buscar</button>
+                    <button type="submit" class="btn btn-info btn-flat">
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
                 </span>
             </div>
             <a href="{{ route('admin.document.models.create') }}" class="btn bg-info">Adicionar Registro</a>
@@ -35,13 +37,14 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Lista de Modelo de Documento</h3>
+            <h3 class="card-title">Lista de modelo de documento</h3>
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-striped">
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>Data</th>
                         <th>Título</th>
                         <th>Tipo de Ação</th>
                         <th class='text-center' style="width: 100px;" >Ações</th>
@@ -50,6 +53,7 @@
                 <tbody>
                     @foreach ($models as $model)
                         <tr>
+                            <td>{{ $model->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $model->title }}</td>
                             <td>{{ $model->action->name }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>

@@ -244,7 +244,7 @@ return [
         [
             'text'        => 'Dashboard',
             'url'         => 'dashboard',
-            'icon'        => 'far fa-fw fa-user',
+            'icon'        => 'fa fa-cog',
         ],
         [
             'text'        => 'Usuários',
@@ -254,11 +254,11 @@ return [
         [
             'text'        => 'Leads',
             'url'         => 'admin/leads',
-            'icon'        => 'far fa-fw fa-user',
+            'icon'        => 'fa fa-check',
         ],
         [
             'text'    => 'Treinamento',
-            'icon'    => 'fas fa-fw fa-share',
+            'icon'    => 'fa fa-trophy',
             'submenu' => [
                 [
                     'text' => 'Arquivos',
@@ -272,25 +272,25 @@ return [
         ],
         [
             'text'    => 'Documentos',
-            'icon'    => 'fas fa-fw fa-share',
+            'icon'    => 'fa fa-file-pdf',
             'submenu' => [
                 [
-                    'text' => 'Ação Doc.',
+                    'text' => 'Tipos de Ação',
                     'url'  => 'admin/document/actions',
                 ],
                 [
-                    'text' => 'Modelos Doc.',
+                    'text' => 'Modelos Documentos',
                     'url'  => 'admin/document/models',
                 ],
                 [
-                    'text' => 'Planilha de Calc.',
+                    'text' => 'Planilhas de Cálculo',
                     'url'  => 'admin/worksheets',
                 ],
             ],
         ],
         [
             'text'    => 'Franqueados',
-            'icon'    => 'fas fa-fw fa-share',
+            'icon'    => 'fa fa-id-card',
             'submenu' => [
                 [
                     'text' => 'Conveniados',
@@ -310,21 +310,21 @@ return [
         [
             'text'        => 'Tickets',
             'url'         => 'admin/tickets',
-            'icon'        => 'fas fa-fw fa-tag',
+            'icon'        => 'fa fa-tag',
+        ],
+        [
+            'text'        => 'Leads Convertidos',
+            'url'         => 'admin/clients/converted',
+            'icon'        => 'fa fa-thumbs-up ',
+        ],
+        [
+            'text'        => 'Prazos',
+            'url'         => 'admin/clients/term',
+            'icon'        => 'fa fa-hourglass-end',
         ],
         [
             'text'        => 'Financeiro',
             'url'         => 'admin/financial',
-            'icon'        => 'fas fa-fw fa-pen-nib',
-        ],
-        [
-            'text'        => 'Arq. Convertidos',
-            'url'         => 'admin/converted',
-            'icon'        => 'fas fa-fw fa-pen-nib',
-        ],
-        [
-            'text'        => 'Prazos',
-            'url'         => 'admin/term',
             'icon'        => 'fas fa-fw fa-pen-nib',
         ],
         [

@@ -43,12 +43,12 @@
                     <div class="col-sm-12">
                         <div class="form-group m-0">
                             <small>Franqueado:</small>
-                            <select name="advisor_id" class="form-control @error('advisor_id') is-invalid @enderror">
-                                @foreach ($advisors as $advisor)
-                                    @if ($lawyer->advisor_id == $advisor->id)
-                                        <option value="{{ $advisor->id }}" selected>{{ $advisor->name }}</option>
+                            <select name="user_id" class="form-control @error('user_id') is-invalid @enderror">
+                                @foreach ($users as $user)
+                                    @if ($lawyer->user_id == $user->id)
+                                        <option value="{{ $user->id }}" selected>{{ $user->name }}</option>
                                     @else
-                                        <option value="{{ $advisor->id }}">{{ $advisor->name }}</option>
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -61,10 +61,15 @@
             </div>
             <div class="card-footer">
                 <a href="{{ route('admin.lawyers.index') }}" type="submit" class="btn btn-default">Cancelar</a>
-                <button type="submit" class="btn btn-md btn-info float-right">
+                <button id="button" type="submit" onClick="ocultarExibir()" class="btn btn-md btn-info float-right">
                     <i class="fas fa-save mr-2"></i>
                     Salvar dados
                 </button>
+                <a id="spinner" class="btn btn-md btn-info float-right text-center">
+                    <div id="spinner" class="spinner-border" role="status" style="width: 20px; height: 20px;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
             </div>
         </div>
     </form>
@@ -76,6 +81,12 @@
 
 @section('js')
     <script>
-        
+        document.getElementById("button").style.display = "block"; 
+        document.getElementById("spinner").style.display = "none"; 
+
+    function ocultarExibir() {
+        document.getElementById("button").style.display = "none"; 
+        document.getElementById("spinner").style.display = "block"; 
+    }
     </script>
 @stop

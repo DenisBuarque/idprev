@@ -13,10 +13,10 @@
                     <option value="3" @if ($search == 3) selected @endif>Pendente</option>
                 </select>
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">Buscar</button>
+                    <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search mr-2"></i> Buscar</button>
                 </span>
             </div>
-            <a href="{{ route('admin.tickets.create') }}" class="btn bg-info">Criar Ticket de Atendimento</a>
+            <a href="{{ route('admin.tickets.create') }}" class="btn bg-info"><i class="fa fa-tag"></i> Abrir Ticket de Atendimento</a>
         </div>
     </form>
 @stop
@@ -37,7 +37,7 @@
             <div class="col-sm-3 col-6">
 
                 <div class="description-block border-right">
-                    <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> {{ count($open) }}0%</span>
+                    <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> {{ count($open) != 0 ?? '' }}0%</span>
                     <h5 class="description-header">{{ count($open) }}</h5>
                     <span class="description-text">TICKETS ABERTOS</span>
                 </div>
@@ -46,7 +46,7 @@
 
             <div class="col-sm-3 col-6">
                 <div class="description-block border-right">
-                    <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> {{ count($resolved) }}0%</span>
+                    <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> {{ count($resolved) != 0 ?? '' }}0%</span>
                     <h5 class="description-header">{{ count($resolved) }}</h5>
                     <span class="description-text">TICKETS RESOLVIDOS</span>
                 </div>
@@ -54,7 +54,7 @@
             </div>
             <div class="col-sm-3 col-6">
                 <div class="description-block">
-                    <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> {{ count($pending) }}0%</span>
+                    <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> {{ count($pending) != 0 ?? '' }}0%</span>
                     <h5 class="description-header">{{ count($pending) }}</h5>
                     <span class="description-text">TICKETS PENDETES</span>
                 </div>
@@ -91,7 +91,7 @@
                             <table class="table table-hover table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Data</th>
+                                        <th>Aberto</th>
                                         <th>Código</th>
                                         <th>Franqueado</th>
                                         <th>Status</th>
@@ -104,7 +104,7 @@
                                         <tr>
                                             <td>{{ $ticket->created_at->format('d/m/Y H:m:s') }}</td>
                                             <td>{{ $ticket->code }}</td>
-                                            <td>{{ $ticket->advisor->name }}</td>
+                                            <td>{{ $ticket->user->name }}</td>
                                             <td>
                                                 @foreach ($array as $key => $value)
                                                     @if ($key == $ticket->status)

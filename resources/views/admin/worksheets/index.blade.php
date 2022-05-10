@@ -9,7 +9,9 @@
                 <input type="search" name="search" value="{{ $search }}" class="form-control"
                     placeholder="Título da planilha" required />
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">Buscar</button>
+                    <button type="submit" class="btn btn-info btn-flat"> 
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
                 </span>
             </div>
             <a href="{{ route('admin.worksheets.create') }}" class="btn bg-info">Adicionar Registro</a>
@@ -39,7 +41,7 @@
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-striped">
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th>Título</th>

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\ClientPhotos;
-use App\Models\Advisor;
+use App\Models\User;
 use App\Models\Action;
 use App\models\ModelDoc;
 use Illuminate\Support\Facades\Validator;
@@ -15,13 +15,13 @@ use Illuminate\Support\Facades\Storage;
 class ClientController extends Controller
 {
     private $lead;
-    private $advisor;
+    private $user;
     private $action;
 
-    public function __construct(Lead $lead, Advisor $advisor, Action $action, ModelDoc $modeldoc)
+    public function __construct(Lead $lead, User $user, Action $action, ModelDoc $modeldoc)
     {   
         $this->lead = $lead;
-        $this->advisor = $advisor;
+        $this->user = $user;
         $this->action = $action;
         $this->modeldoc = $modeldoc;
     }
@@ -44,13 +44,79 @@ class ClientController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $leads = $query->whereIn('tag',[2,3,4])->orderBy('id','DESC')->get();
+            $leads = $query->whereIn('tag',[3])->orderBy('id','DESC')->get();
 
         } else {
-            $leads = $this->lead->whereIn('tag',[2,3,4])->orderBy('id','DESC')->paginate(10);
+            $leads = $this->lead->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
         }
         
         return view('admin.clients.index',['leads' => $leads, 'search' => $search]);
+    }
+
+    public function converted(Request $request)
+    {
+        $search = "";
+        if(isset($request->search))
+        {
+            $search = $request->search;
+            $query = $this->lead;
+
+            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
+            foreach($columns as $key => $value):
+                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
+            endforeach;
+
+            $leads = $query->whereIn('tag',[3])->orderBy('id','DESC')->get();
+
+        } else {
+            $leads = $this->lead->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
+        }
+        
+        return view('admin.clients.converted',['leads' => $leads, 'search' => $search]);
+    }
+
+    public function unconverted(Request $request)
+    {
+        $search = "";
+        if(isset($request->search))
+        {
+            $search = $request->search;
+            $query = $this->lead;
+
+            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
+            foreach($columns as $key => $value):
+                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
+            endforeach;
+
+            $leads = $query->whereIn('tag',[4])->orderBy('id','DESC')->get();
+
+        } else {
+            $leads = $this->lead->whereIn('tag',[4])->orderBy('id','DESC')->paginate(10);
+        }
+        
+        return view('admin.clients.converted',['leads' => $leads, 'search' => $search]);
+    }
+
+    public function term(Request $request)
+    {
+        $search = "";
+        if(isset($request->search))
+        {
+            $search = $request->search;
+            $query = $this->lead;
+
+            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
+            foreach($columns as $key => $value):
+                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
+            endforeach;
+
+            $leads = $query->where('term','!=',null)->whereIn('tag',[2,3,4])->orderBy('id','DESC')->get();
+
+        } else {
+            $leads = $this->lead->where('term','!=',null)->whereIn('tag',[2,3,4])->orderBy('id','DESC')->paginate(10);
+        }
+        
+        return view('admin.clients.term',['leads' => $leads, 'search' => $search]);
     }
 
     public function documents($id)
@@ -79,8 +145,8 @@ class ClientController extends Controller
     public function create()
     {
         $actions = $this->action->all();
-        $advisors = $this->advisor->all();
-        return view('admin.clients.create',['advisors' => $advisors, 'actions' => $actions]);
+        $users = $this->user->all();
+        return view('admin.clients.create',['users' => $users, 'actions' => $actions]);
     }
 
     /**
@@ -105,8 +171,8 @@ class ClientController extends Controller
             $data['financial'] = 0;
         endif;
 
-        if(empty($data['advisor_id'])){
-            $data['advisor_id'] = null;
+        if(empty($data['user_id'])){
+            $data['user_id'] = null;
         }
 
         $lead = $this->lead->create($data);
@@ -149,12 +215,12 @@ class ClientController extends Controller
     public function edit($id)
     {
         $actions = $this->action->all();
-        $advisors = $this->advisor->all();
+        $users = $this->user->all();
         $lead = $this->lead->find($id);
         if($lead){
             return view('admin.clients.edit',[
                 'lead' => $lead, 
-                'advisors' => $advisors, 
+                'users' => $users, 
                 'actions' => $actions]
             );
         } else {
@@ -185,8 +251,8 @@ class ClientController extends Controller
             $data['financial'] = 0;
         endif;
 
-        if(empty($data['advisor_id'])){
-            $data['advisor_id'] = null;
+        if(empty($data['user_id'])){
+            $data['user_id'] = null;
         }
 
         if($record->update($data)):

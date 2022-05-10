@@ -10,10 +10,10 @@ class Ticket extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['code','status','advisor_id'];
+    protected $fillable = ['code','status','user_id'];
 
-    public function advisor(){
-        return $this->belongsTo(Advisor::class);
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 
     public function feedbackTickets(){

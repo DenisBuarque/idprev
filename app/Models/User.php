@@ -64,6 +64,10 @@ class User extends Authenticatable
         return $this->hasMany(FeedbackTicket::class);
     }
 
+    public function tickets(){
+        return $this->hasMany(Ticket::class);
+    }
+
     /**
      * The attributes that should be cast.
      *

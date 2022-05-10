@@ -23,7 +23,7 @@
 
     <form method="POST" action="{{ route('admin.clients.store') }}" enctype="multipart/form-data">
         @csrf
-        <div class="card card-info">
+        <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
                 <h3 class="card-title">Formulário cadastro de cliente:</h3>
             </div>
@@ -108,10 +108,10 @@
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Franqueado:</small>
-                            <select name="advisor_id" class="form-control">
+                            <select name="user_id" class="form-control">
                                 <option value="">Selecione um franqueado</option>
-                                @foreach ($advisors as $advisor)
-                                    <option value="{{ $advisor->id }}">{{ $advisor->name }}</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -202,10 +202,15 @@
             </div>
             <div class="card-footer">
                 <a href="{{ route('admin.clients.index') }}" type="submit" class="btn btn-default">Cancelar</a>
-                <button type="submit" class="btn btn-md btn-info float-right">
+                <button id="button" type="submit" onClick="ocultarExibir()" class="btn btn-md btn-info float-right">
                     <i class="fas fa-save mr-2"></i>
                     Salvar dados
                 </button>
+                <a id="spinner" class="btn btn-md btn-info float-right text-center">
+                    <div id="spinner" class="spinner-border" role="status" style="width: 20px; height: 20px;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
             </div>
         </div>
 
@@ -223,6 +228,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 
     <script>
+        document.getElementById("button").style.display = "block";
+        document.getElementById("spinner").style.display = "none";
+
+        function ocultarExibir() {
+            document.getElementById("button").style.display = "none";
+            document.getElementById("spinner").style.display = "block";
+        }
+
         function showDocuments(id) {
             if (id == "") {
                 document.getElementById("todo-list").innerHTML = "";
@@ -239,7 +252,7 @@
                     document.getElementById("todo-list").innerHTML = xmlhttp.responseText;
                 }
             }
-            xmlhttp.open("GET", "/admin/lead/documents/"+id, true);
+            xmlhttp.open("GET", "/admin/lead/documents/" + id, true);
             xmlhttp.send();
         }
 

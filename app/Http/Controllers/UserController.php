@@ -39,7 +39,7 @@ class UserController extends Controller
             $users = $this->user->orderBy('id', 'DESC')->paginate(10);
         }
 
-        return view('admin.franchisees.index', ['users' => $users, 'search' => $search]);
+        return view('admin.users.index', ['users' => $users, 'search' => $search]);
     }
 
     /**

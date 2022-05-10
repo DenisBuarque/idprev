@@ -45,6 +45,7 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>Data</th>
                         <th>Nome</th>
                         <th>Telefone</th>
                         <th>E-mail</th>
@@ -55,6 +56,7 @@
                 <tbody>
                     @foreach ($users as $user)
                         <tr>
+                            <td>{{ $user->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->phone }}</td>
                             <td>{{ $user->email }}</td>

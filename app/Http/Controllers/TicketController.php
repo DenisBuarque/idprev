@@ -80,7 +80,7 @@ class TicketController extends Controller
             'description' => 'required|string|min:10',
         ])->validate();
 
-        $data['advisor_id'] = auth()->user()->id;
+        $data['user_id'] = auth()->user()->id;
         $data['code'] = Carbon::now()->timestamp; //timestamp em números
         $data['status'] = 1; // aberto
 
@@ -135,8 +135,8 @@ class TicketController extends Controller
             $status['status'] = 3;
             $pendente->update($status);
 
-            return redirect('admin/ticket/response/'.$data['ticket_id'])->with('success', 'Seu ticket foi enviado, aguardo sua resposta!');;
-
+            //return redirect('admin/ticket/response/'.$data['ticket_id'])->with('success', 'Seu ticket foi enviado, aguardo sua resposta!');;
+            return redirect('admin/tickets')->with('success', 'Seu ticket foi enviado, aguardo sua resposta!');
         } else {
             return redirect('admin/tickets')->with('error', 'Erro ao inserido o ticket!');
         }

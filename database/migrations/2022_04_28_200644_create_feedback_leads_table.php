@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('feedback_leads', function (Blueprint $table) {
             $table->id();
             $table->text('comments');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('lead_id');
             $table->foreign('lead_id')->references('id')->on('leads')->onDelete('cascade');
             $table->timestamps();

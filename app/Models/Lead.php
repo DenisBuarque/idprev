@@ -27,6 +27,7 @@ class Lead extends Model
     }
 
     protected $casts = [
-        'created_at' => 'datetime'
+        'created_at' => 'datetime',
+        'term' => 'datetime'
     ];
 }

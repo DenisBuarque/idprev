@@ -80,9 +80,9 @@ class ModelController extends Controller
         $document = $this->model->create($data);
         if($document)
         {
-            return redirect('admin/document/models')->with('success', 'Registro inserido com sucesso!');
+            return redirect('admin/document/model/create')->with('success', 'Registro inserido com sucesso!');
         } else {
-            return redirect('admin/document/models/create')->with('error', 'Erro ao inserir o registro!');
+            return redirect('admin/document/model/create')->with('error', 'Erro ao inserir o registro!');
         }
     }
 

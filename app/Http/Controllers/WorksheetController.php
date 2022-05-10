@@ -38,7 +38,7 @@ class WorksheetController extends Controller
             $worksheets = $query->orderBy('id','DESC')->get();
 
         } else {
-            $worksheets = $this->worksheet->orderBy('id','DESC')->paginate(5);
+            $worksheets = $this->worksheet->orderBy('id','DESC')->paginate(10);
         }
         
         return view('admin.worksheets.index',['worksheets' => $worksheets, 'search' => $search]);

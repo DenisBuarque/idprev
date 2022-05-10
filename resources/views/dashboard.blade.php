@@ -34,7 +34,7 @@
                 <div class="icon">
                     <i class="fas fa-chart-pie"></i>
                 </div>
-                <a href="#" class="small-box-footer">
+                <a href="{{route('admin.clients.converted')}}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -49,7 +49,7 @@
                 <div class="icon">
                     <i class="fas fa-chart-pie"></i>
                 </div>
-                <a href="#" class="small-box-footer">
+                <a href="{{route('admin.clients.index')}}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -64,7 +64,7 @@
                 <div class="icon">
                     <i class="fas fa-chart-pie"></i>
                 </div>
-                <a href="#" class="small-box-footer">
+                <a href="{{route('admin.clients.unconverted')}}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>

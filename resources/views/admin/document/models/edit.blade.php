@@ -38,7 +38,7 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        <div class="form-group m-0">
+                        <div class="form-group">
                             <small>Título:</small>
                             <input type="text" name="title" value="{{ $model->title ?? old('title') }}" placeholder="Digite o título do documento"
                                 class="form-control @error('title') is-invalid @enderror" maxlength="100" />
@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <small>Anexo modelo de documento:</small>
+                            <small>Anexo modelo de documento: .pdf, .doc, .docx</small>
                             <br/>
                             <input type="file" name="document" class="@error('document') is-invalid @enderror"/>
                         </div>
@@ -59,10 +59,15 @@
             </div>
             <div class="card-footer">
                 <a href="{{ route('admin.document.models.index') }}" type="submit" class="btn btn-default">Cancelar</a>
-                <button type="submit" class="btn btn-md btn-info float-right">
-                    <i class="fas fa-save"></i>
+                <button id="button" type="submit" onClick="ocultarExibir()" class="btn btn-md btn-info float-right">
+                    <i class="fas fa-save mr-2"></i>
                     Salvar dados
                 </button>
+                <a id="spinner" class="btn btn-md btn-info float-right text-center">
+                    <div id="spinner" class="spinner-border" role="status" style="width: 20px; height: 20px;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
             </div>
         </div>
     </form>
@@ -74,6 +79,12 @@
 
 @section('js')
     <script>
-        
+        document.getElementById("button").style.display = "block"; 
+        document.getElementById("spinner").style.display = "none"; 
+
+        function ocultarExibir() {
+            document.getElementById("button").style.display = "none"; 
+            document.getElementById("spinner").style.display = "block"; 
+        }
     </script>
 @stop

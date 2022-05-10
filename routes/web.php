@@ -75,6 +75,8 @@ Route::put('/admin/lead/update/{id}', [LeadController::class, 'update'])->name('
 Route::delete('/admin/lead/delete/{id}', [LeadController::class, 'destroy'])->name('admin.leads.destroy');
 Route::delete('/admin/lead/document/remove', [LeadController::class, 'remove'])->name('admin.lead.document.remove');
 Route::get('/admin/lead/documents/{id}', [LeadController::class, 'documents'])->name('admin.lead.documents');
+Route::get('/admin/lead/comments/{id}', [LeadController::class, 'comments'])->name('admin.lead.comments');
+Route::post('/admin/lead/feedback', [LeadController::class, 'feedback'])->name('admin.lead.feedback');
 Route::get('/admin/lead/document/download/{id}', [LeadController::class, 'download'])->name('admin.lead.document.download');
 
 Route::get('/admin/training/files', [FileController::class, 'index'])->name('admin.training.files.index');
@@ -116,6 +118,9 @@ Route::put('/admin/document/action/update/{id}', [ActionController::class, 'upda
 Route::delete('/admin/document/action/delete/{id}', [ActionController::class, 'destroy'])->name('admin.document.actions.destroy');
 
 Route::get('/admin/clients', [ClientController::class, 'index'])->name('admin.clients.index');
+Route::get('/admin/clients/converted', [ClientController::class, 'converted'])->name('admin.clients.converted');
+Route::get('/admin/clients/unconverted', [ClientController::class, 'unconverted'])->name('admin.clients.unconverted');
+Route::get('/admin/clients/term', [ClientController::class, 'term'])->name('admin.clients.term');
 Route::get('/admin/client/create', [ClientController::class, 'create'])->name('admin.clients.create');
 Route::post('/admin/client/store', [ClientController::class, 'store'])->name('admin.clients.store');
 Route::get('/admin/client/edit/{id}', [ClientController::class, 'edit'])->name('admin.clients.edit');

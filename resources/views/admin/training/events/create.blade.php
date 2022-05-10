@@ -12,18 +12,18 @@
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div class="alert alert-success mb-2" role="alert" style="max-width: 800px; margin: auto;">
             {{ session('success') }}
         </div>
     @elseif (session('error'))
-        <div class="alert alert-danger mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div class="alert alert-danger mb-2" role="alert" style="max-width: 800px; margin: auto;">
             {{ session('error') }}
         </div>
     @endif
 
     <form method="POST" action="{{ route('admin.training.events.store') }}">
         @csrf
-        <div class="card card-info" style="max-width: 700px; margin: auto">
+        <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
                 <h3 class="card-title">Formulário cadastro de evento:</h3>
             </div>
@@ -62,10 +62,15 @@
             </div>
             <div class="card-footer">
                 <a href="{{ route('admin.training.events.index') }}" type="submit" class="btn btn-default">Cancelar</a>
-                <button type="submit" class="btn btn-md btn-info float-right">
-                    <i class="fas fa-save"></i>
+                <button id="button" type="submit" onClick="ocultarExibir()" class="btn btn-md btn-info float-right">
+                    <i class="fas fa-save mr-2"></i>
                     Salvar dados
                 </button>
+                <a id="spinner" class="btn btn-md btn-info float-right text-center">
+                    <div id="spinner" class="spinner-border" role="status" style="width: 20px; height: 20px;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
             </div>
         </div>
 
@@ -78,7 +83,24 @@
 @stop
 
 @section('js')
+
+    <script src="https://cdn.tiny.cloud/1/cr3szni52gwqfslu3w63jcsfxdpbitqgg2x8tnnzdgktmhzq/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+
     <script>
-        
+
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'advlist autolink lists link image charmap preview anchor pagebreak',
+            toolbar_mode: 'floating',
+        });
+
+        document.getElementById("button").style.display = "block"; 
+        document.getElementById("spinner").style.display = "none"; 
+
+        function ocultarExibir() {
+            document.getElementById("button").style.display = "none"; 
+            document.getElementById("spinner").style.display = "block"; 
+        }
     </script>
 @stop

@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Lawyer;
-use App\Models\Advisor;
+use App\Models\User;
 
 class LawyerController extends Controller
 {
     private $lawyer;
-    private $advisor;
+    private $user;
 
-    public function __construct(Lawyer $lawyer, Advisor $advisor)
+    public function __construct(Lawyer $lawyer, User $user)
     {
         $this->lawyer = $lawyer;
-        $this->advisor = $advisor;
+        $this->user = $user;
     }
 
     /**
@@ -39,7 +39,7 @@ class LawyerController extends Controller
             $lawyers = $query->orderBy('id','DESC')->get();
 
         } else {
-            $lawyers = $this->lawyer->orderBy('id','DESC')->paginate(5);
+            $lawyers = $this->lawyer->orderBy('id','DESC')->paginate(10);
         }
         
         return view('admin.lawyers.index',['lawyers' => $lawyers, 'search' => $search]);
@@ -52,8 +52,8 @@ class LawyerController extends Controller
      */
     public function create()
     {
-        $advisors = $this->advisor->all();
-        return view('admin.lawyers.create',['advisors' => $advisors]);
+        $users = $this->user->all();
+        return view('admin.lawyers.create',['users' => $users]);
     }
 
     /**
@@ -74,7 +74,7 @@ class LawyerController extends Controller
         $lawyer = $this->lawyer->create($data);
         if($lawyer)
         {
-            return redirect('admin/lawyers')->with('success', 'Registro inserido com sucesso!');
+            return redirect('admin/lawyer/create')->with('success', 'Registro inserido com sucesso!');
         } else {
             return redirect('admin/lawyer/create')->with('error', 'Erro ao inserir o registro!');
         }
@@ -99,10 +99,10 @@ class LawyerController extends Controller
      */
     public function edit($id)
     {
-        $advisors = $this->advisor->all();
+        $users = $this->user->all();
         $lawyer = $this->lawyer->find($id);
         if($lawyer){
-            return view('admin.lawyers.edit',['lawyer' => $lawyer, 'advisors' => $advisors]);
+            return view('admin.lawyers.edit',['lawyer' => $lawyer, 'users' => $users]);
         } else {
             return redirect('admin/lawyers')->with('alert', 'Desculpe! Não encontramos o registro!');
         }

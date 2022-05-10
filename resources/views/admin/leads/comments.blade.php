@@ -4,8 +4,8 @@
 
 @section('content_header')
     <div style="display: flex; justify-content: space-between">
-        <h4>Meu Ticket Resposta</h4>
-        <a href="{{ route('admin.tickets.index') }}" class="btn btn-md bg-info">Listar Tickets</a>
+        <h4>Meu Lead Comentários</h4>
+        <a href="{{ route('admin.leads.index') }}" class="btn btn-md bg-info">Listar Tickets</a>
     </div>
 @stop
 
@@ -21,21 +21,20 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.tickets.feedback') }}">
-        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}" />
+    <form method="POST" action="{{route('admin.lead.feedback')}}">
+        <input type="hidden" name="lead_id" value="{{ $lead->id }}" />
         @csrf
         <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
-                <h3 class="card-title">Formulário resposta de ticket:</h3>
+                <h3 class="card-title">Formulário comentário de lead:</h3>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
 
-                        <p>Estamos a sua disposição para melhor lhe atender, descreva sua dúvida, elogio ou reclamação que
-                            em breve responderemos seu ticket de contato.</p>
+                        <p>Estamos a sua disposição para melhor lhe atender, descreva sua dúvidas.</p>
                         <div class="direct-chat-messages">
-                            @foreach ($feedbacks as $feed)
+                            @foreach ($feedbackLeads as $feed)
                                 @if ($feed->user_id == auth()->user()->id)
                                     <div class="direct-chat-msg">
                                         <div class="direct-chat-infos clearfix mb-1">
@@ -44,7 +43,7 @@
                                                 class="direct-chat-timestamp ml-2">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
                                         </div>
                                         <div>
-                                            <span class="bg-info rounded p-2 float-left">{!! $feed->description !!}</span>
+                                            <span class="bg-info rounded p-2 float-left">{!! $feed->comments !!}</span>
                                         </div>
                                     </div>
                                 @else
@@ -59,18 +58,18 @@
                                             @endforeach
                                         </div>
                                         <div>
-                                            <span class="bg-success rounded p-2 float-right">{!! $feed->description !!}</span>
+                                            <span class="bg-success rounded p-2 float-right">{!! $feed->comments !!}</span>
                                         </div>
                                     </div>
                                 @endif
                             @endforeach
                         </div>
 
-                        @if ($ticket->status != 2)
+                        @if ($lead->status != 2)
                             <div class="form-group m-0 mt-3">
-                                <textarea name="description" placeholder="Digite seu comentário aqui."
-                                    class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
-                                @error('description')
+                                <textarea name="comments" placeholder="Digite seu comentário aqui."
+                                    class="form-control @error('comments') is-invalid @enderror">{{ old('description') }}</textarea>
+                                @error('comments')
                                     <div class="text-red">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -80,12 +79,12 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.tickets.index') }}" type="submit" class="btn btn-default">Cancelar</a>
-                @if ($ticket->status != 2)
+                <a href="{{ route('admin.leads.index') }}" type="submit" class="btn btn-default">Cancelar</a>
+                @if ($lead->status != 2)
                     <button id="button" type="submit" onClick="ocultarExibir()" class="btn btn-md btn-info float-right">
                         <div id="text">
                             <i class="fas fa-save mr-2"></i>
-                            Responder Ticket
+                            Salvar Comentário
                         </div>
                     </button>
                     <a id="spinner" class="btn btn-md btn-info float-right text-center">

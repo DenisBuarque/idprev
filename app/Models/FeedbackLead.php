@@ -9,7 +9,7 @@ class FeedbackLead extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['comments','lead_id'];
+    protected $fillable = ['comments','lead_id','user_id'];
 
     public function lead()
     {

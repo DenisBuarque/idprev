@@ -23,7 +23,7 @@
 
     <form method="POST" action="{{ route('admin.tickets.store') }}">
         @csrf
-        <div class="card card-info" style="max-width: 700px; margin: auto">
+        <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
                 <h3 class="card-title">Formulário ticke de atendimento:</h3>
             </div>
@@ -31,10 +31,12 @@
                 <div class="row">
                     <div class="col-md-12">
 
-                        <p>Estamos a sua disposição para melhor lhe atender, descreva sua dúvida, elogio ou reclamação que em breve responderemos seu ticket de contato.</p>
+                        <p>Estamos a sua disposição para melhor lhe atender, descreva sua dúvida, elogio ou reclamação que
+                            em breve responderemos seu ticket de contato.</p>
 
                         <div class="form-group m-0">
-                            <textarea name="description" placeholder="Digite aqui a descrição do seu comentário." class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                            <textarea name="description" placeholder="Digite aqui a descrição do seu comentário."
+                                class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
                             @error('description')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
@@ -65,13 +67,23 @@
 @stop
 
 @section('js')
-<script>
-    document.getElementById("button").style.display = "block"; 
-    document.getElementById("spinner").style.display = "none"; 
 
-    function ocultarExibir() {
-        document.getElementById("button").style.display = "none"; 
-        document.getElementById("spinner").style.display = "block"; 
-    }
-</script>
+    <script src="https://cdn.tiny.cloud/1/cr3szni52gwqfslu3w63jcsfxdpbitqgg2x8tnnzdgktmhzq/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'advlist autolink lists link image charmap preview anchor pagebreak',
+            toolbar_mode: 'floating',
+        });
+
+        document.getElementById("button").style.display = "block";
+        document.getElementById("spinner").style.display = "none";
+
+        function ocultarExibir() {
+            document.getElementById("button").style.display = "none";
+            document.getElementById("spinner").style.display = "block";
+        }
+    </script>
 @stop

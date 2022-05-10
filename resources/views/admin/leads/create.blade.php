@@ -12,11 +12,11 @@
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div class="alert alert-success mb-2" role="alert" style="max-width: 800px; margin: auto;">
             {{ session('success') }}
         </div>
     @elseif (session('error'))
-        <div class="alert alert-danger mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div class="alert alert-danger mb-2" role="alert" style="max-width: 800px; margin: auto;">
             {{ session('error') }}
         </div>
     @endif
@@ -79,12 +79,6 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <small>Comentários:</small>
-                            <textarea name="comments" class="form-control">{{ old('comments') }}</textarea>
-                        </div>
-                    </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Cep:</small>
@@ -128,6 +122,13 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <small>Comentários:</small>
+                            <textarea name="comments" class="form-control" placeholder="Digite aqui o seu comentário.">{{ old('comments') }}</textarea>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="card-footer">
@@ -156,7 +157,17 @@
 
 @section('js')
 
+    <script src="https://cdn.tiny.cloud/1/cr3szni52gwqfslu3w63jcsfxdpbitqgg2x8tnnzdgktmhzq/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+
     <script>
+
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'advlist autolink lists link image charmap preview anchor pagebreak',
+            toolbar_mode: 'floating',
+        });
+
         document.getElementById("button").style.display = "block";
         document.getElementById("spinner").style.display = "none";
 

@@ -6,10 +6,11 @@
     <form method="GET" action="{{ route('admin.training.files.index') }}">
         <div style="display: flex; justify-content: space-between;">
             <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control"
-                    placeholder="Título do arquivo." required />
+                <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Título"
+                    required />
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">Buscar</button>
+                    <button type="submit" class="btn btn-info btn-flat">
+                        <i class="fa fa-search mr-1"></i> Buscar</button>
                 </span>
             </div>
             <a href="{{ route('admin.training.files.create') }}" class="btn bg-info">Adicionar Registro</a>
@@ -39,16 +40,18 @@
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-striped">
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>Criado</th>
                         <th>Título</th>
-                        <th class='text-center' style="width: 100px;" >Ações</th>
+                        <th class='text-center' style="width: 100px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($files as $file)
                         <tr>
+                            <td>{{ $file->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $file->title }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
                                 <a href="{{ route('admin.training.files.download', ['id' => $file->id]) }}"
@@ -67,7 +70,7 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
-                                
+
                             </td>
                         </tr>
                     @endforeach

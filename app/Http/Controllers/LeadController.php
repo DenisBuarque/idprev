@@ -8,6 +8,7 @@ use App\Models\ClientPhotos;
 use App\Models\User;
 use App\Models\Action;
 use App\models\ModelDoc;
+use App\Models\FeedbackLead;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
@@ -17,13 +18,15 @@ class LeadController extends Controller
     private $lead;
     private $user;
     private $action;
+    private $feedback;
 
-    public function __construct(User $user, Lead $lead, Action $action, ModelDoc $modeldoc)
+    public function __construct(User $user, Lead $lead, Action $action, ModelDoc $modeldoc, FeedbackLead $feedback)
     {   
         $this->user = $user;
         $this->lead = $lead;
         $this->action = $action;
         $this->modeldoc = $modeldoc;
+        $this->feedback = $feedback;
     }
 
     /**
@@ -33,6 +36,15 @@ class LeadController extends Controller
      */
     public function index(Request $request)
     {
+        $waiting = $this->lead->where('tag','2')->get();
+        $converted_lead = $this->lead->where('tag','3')->get();
+        $unconverted_lead = $this->lead->where('tag','4')->get();
+        $originating_customers = $this->lead->where('situation','3')->get();
+        $unfounded_customers = $this->lead->where('situation','4')->get();
+        $resources = $this->lead->where('situation','5')->get();
+
+        $users = $this->user->all();
+
         $search = "";
         if(isset($request->search))
         {
@@ -44,13 +56,23 @@ class LeadController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $leads = $query->orderBy('id','DESC')->get();
+            $leads = $query->whereIn('tag',[1,2])->orderBy('id','DESC')->get();
 
         } else {
-            $leads = $this->lead->orderBy('id','DESC')->paginate(10);
+            $leads = $this->lead->whereIn('tag',[1,2])->orderBy('id','DESC')->paginate(10);
         }
         
-        return view('admin.leads.index',['leads' => $leads, 'search' => $search]);
+        return view('admin.leads.index',[
+            'leads' => $leads, 
+            'search' => $search,
+            'waiting' => $waiting,
+            'converted_lead' => $converted_lead, 
+            'unconverted_lead' => $unconverted_lead, 
+            'originating_customers' => $originating_customers,
+            'unfounded_customers' => $unfounded_customers,
+            'resources' => $resources,
+            'users' => $users
+        ]);
     }
 
     public function documents($id)
@@ -70,6 +92,31 @@ class LeadController extends Controller
         return redirect('admin/lead/create')->with('alert', 'Desculpe! Não encontramos o documento!');
     }
 
+    public function comments($id)
+    {
+        $users = \App\Models\User::all();
+        $lead = $this->lead->find($id);
+        $feedbackLeads = $this->feedback->orderBy('id','DESC')->where('lead_id','=',$id)->get();
+        return view('admin.leads.comments', ['lead' => $lead, 'users' => $users, 'feedbackLeads' => $feedbackLeads]);
+    }
+
+    public function feedback(Request $request)
+    {
+        $data = $request->all();
+        Validator::make($data, [
+            'comments' => 'required|string|min:10',
+        ])->validate();
+
+        $data['user_id'] = auth()->user()->id;
+
+        $create = $this->feedback->create($data);
+        if ($create) {
+            return redirect('admin/lead/comments/'.$data['lead_id'])->with('success', 'Comentário adicionado com sucesso!');;
+            //return redirect('admin/leads')->with('success', 'Seu ticket foi enviado, aguardo sua resposta!');
+        } else {
+            return redirect('admin/leads')->with('error', 'Erro ao inserido o ticket!');
+        }
+    }
 
     /**
      * Show the form for creating a new resource.

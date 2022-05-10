@@ -9,7 +9,8 @@
                 <input type="search" name="search" value="{{ $search }}" class="form-control"
                     placeholder="Título do evento" required />
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">Buscar</button>
+                    <button type="submit" class="btn btn-info btn-flat">
+                        <i class="fa fa-search mr-1"></i> Buscar</button>
                 </span>
             </div>
             <a href="{{ route('admin.training.events.create') }}" class="btn bg-info">Adicionar Registro</a>
@@ -39,9 +40,10 @@
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-striped">
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>Criado</th>
                         <th>Título</th>
                         <th class="text-center">Data do Evento</th>
                         <th class='text-center' style="width: 100px;" >Ações</th>
@@ -50,6 +52,7 @@
                 <tbody>
                     @foreach ($events as $event)
                         <tr>
+                            <td>{{ $event->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $event->title }}</td>
                             <td class="text-center">
                                 @php

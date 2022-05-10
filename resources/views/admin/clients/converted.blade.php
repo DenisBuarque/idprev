@@ -3,8 +3,8 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <form method="GET" action="{{ route('admin.clients.index') }}">
-        <div style="display: flex; justify-content: space-between;">
+    <form method="GET" action="{{ route('admin.clients.converted') }}">
+        <div style="display: flex; justify-content: start;">
             <div class="input-group" style="width: 30%">
                 <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
                     required />
@@ -15,30 +15,15 @@
                     </button>
                 </span>
             </div>
-            <a href="{{ route('admin.clients.create') }}" class="btn bg-info">Adicionar Registro</a>
         </div>
     </form>
 @stop
 
 @section('content')
 
-    @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert">
-            {{ session('success') }}
-        </div>
-    @elseif (session('alert'))
-        <div class="alert alert-warning mb-2" role="alert">
-            {{ session('alert') }}
-        </div>
-    @elseif (session('error'))
-        <div class="alert alert-danger mb-2" role="alert">
-            {{ session('error') }}
-        </div>
-    @endif
-
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Lista de Clientes</h3>
+            <h3 class="card-title">Lista de Clientes convertidos</h3>
         </div>
 
         <div class="card-body p-0">
@@ -47,11 +32,10 @@
                     <tr>
                         <th>Data</th>
                         <th>Nome</th>
-                        <th>Telefone</th>
-                        <th>Localização</th>
+                        <th>Franqueado</th>
+                        <th>Local</th>
                         <th>Etiqueta</th>
                         <th>Situação</th>
-                        <th class="text-center">Comentários</th>
                         <th class='text-center'>Ações</th>
                     </tr>
                 </thead>
@@ -60,7 +44,7 @@
                         <tr>
                             <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $lead->name }}</td>
-                            <td>{{ $lead->phone }}</td>
+                            <td>{{ $lead->user->name }}</td>
                             <td>{{ $lead->city.'/'.$lead->state }}</td>
                             <td>
                                 @php
@@ -89,20 +73,11 @@
                                     }
                                 @endphp
                             </td>
-                            <td class="text-center"><i class="fa fa-comments"></i> {{ count($lead->feedbackLeads) }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
                                 <a href="{{ route('admin.clients.edit', ['id' => $lead->id]) }}"
                                     class="btn btn-info btn-sm mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form method="POST" onsubmit="return(confirmaExcluir())"
-                                    action="{{ route('admin.clients.destroy', ['id' => $lead->id]) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -125,13 +100,6 @@
 
 @section('js')
     <script>
-        function confirmaExcluir() {
-            var conf = confirm("Deseja mesmo excluir? Os dados serão perdidos e não poderam ser recuperados.");
-            if (conf) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+
     </script>
 @stop
