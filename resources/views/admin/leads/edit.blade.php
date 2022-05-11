@@ -62,7 +62,7 @@
                     <div class="col-sm-4">
                         <div class="form-group m-0">
                             <small>Franqueado:</small>
-                            <select name="advisor_id" class="form-control">
+                            <select name="user_id" class="form-control">
                                 <option value="">Selecione um franqueado</option>
                                 @foreach ($users as $user)
                                     @if ($user->id == $lead->user_id)
@@ -72,21 +72,10 @@
                                     @endif
                                 @endforeach
                             </select>
+                            @error('user_id')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
-                    </div>
-                    <div class="col-sm-12">
-
-                        <div class="form-group m-0">
-                            <small>Comentários:</small>
-                            <textarea name="comments" class="form-control">{{ $lead->comments ?? old('comments') }}</textarea>
-                        </div>
-
-                        <ul class="list-group list-group-flush">
-                            @foreach ($lead->feedbackLeads as $comment)
-                                <li class="list-group-item">{{ $comment->comments }}</li>
-                            @endforeach
-                        </ul>
-
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">

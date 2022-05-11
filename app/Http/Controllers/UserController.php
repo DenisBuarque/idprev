@@ -33,10 +33,10 @@ class UserController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $users = $query->orderBy('id','DESC')->get();
+            $users = $query->where('type','A')->orderBy('id','DESC')->get();
 
         } else {
-            $users = $this->user->orderBy('id', 'DESC')->paginate(10);
+            $users = $this->user->where('type','A')->orderBy('id', 'DESC')->paginate(10);
         }
 
         return view('admin.users.index', ['users' => $users, 'search' => $search]);
@@ -67,7 +67,8 @@ class UserController extends Controller
             'email' => 'required|string|email|unique:users|max:50',
             'password' => 'required|string|min:6|confirmed',
         ])->validate();
-
+        
+        $data['type'] = 'A';
         $data['password'] =  bcrypt($request->password);
 
         if($this->user->create($data)){

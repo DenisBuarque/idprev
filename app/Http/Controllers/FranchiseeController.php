@@ -41,10 +41,10 @@ class FranchiseeController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $users = $query->orderBy('id','DESC')->get();
+            $users = $query->where('type','F')->orderBy('id','DESC')->get();
 
         } else {
-            $users = $this->user->orderBy('id', 'DESC')->paginate(10);
+            $users = $this->user->where('type','F')->orderBy('id', 'DESC')->paginate(10);
         }
 
         return view('admin.franchisees.index', ['users' => $users, 'search' => $search]);
@@ -86,9 +86,10 @@ class FranchiseeController extends Controller
             'state' => 'required|string'
         ])->validate();
 
+        $data['type'] = 'F';
         $data['password'] =  bcrypt($request->password);
 
-        if ($create = $this->user->create($data)) 
+        if ($create = $this->user->create($data))
         {
             //$create->notify(new userNotification);
             /*if(!empty($data['client_id'])){

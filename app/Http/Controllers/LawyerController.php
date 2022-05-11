@@ -52,7 +52,7 @@ class LawyerController extends Controller
      */
     public function create()
     {
-        $users = $this->user->all();
+        $users = $this->user->where('type','F')->get();
         return view('admin.lawyers.create',['users' => $users]);
     }
 
@@ -99,7 +99,7 @@ class LawyerController extends Controller
      */
     public function edit($id)
     {
-        $users = $this->user->all();
+        $users = $this->user->where('type','F')->get();
         $lawyer = $this->lawyer->find($id);
         if($lawyer){
             return view('admin.lawyers.edit',['lawyer' => $lawyer, 'users' => $users]);

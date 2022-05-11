@@ -15,7 +15,9 @@
                     </button>
                 </span>
             </div>
-            <a href="{{ route('admin.franchisees.create') }}" class="btn bg-info">Adicionar Registro</a>
+            <a href="{{ route('admin.franchisees.create') }}" class="btn bg-info">
+                <i class="fa fa-plus mr-1"></i> Adicionar Registro
+            </a>
         </div>
     </form>
 @stop
@@ -45,31 +47,33 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Data</th>
                         <th>Nome</th>
                         <th>Telefone</th>
                         <th>E-mail</th>
                         <th class='text-center'>Lead(s)</th>
+                        <th style="width: 160px;">Criado</th>
+                        <th style="width: 160px;">Atualizado</th>
                         <th style="width: 100px; text-align: center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($users as $user)
                         <tr>
-                            <td>{{ $user->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->phone }}</td>
                             <td>{{ $user->email }}</td>
                             <td class='text-center'>{{ count($user->leads) }}</td>
+                            <td>{{ $user->created_at->format('d/m/Y H:m:s') }}</td>
+                            <td>{{ $user->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
                                 <a href="{{route('admin.franchisees.edit',['id' => $user->id])}}"
-                                    class="btn btn-info btn-sm mr-1">
+                                    class="btn btn-info btn-xs px-2 mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form method="POST" action="{{route('admin.franchisees.destroy',['id' => $user->id])}}" onsubmit="return(confirmaExcluir())">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <button type="submit" class="btn btn-danger btn-xs px-2">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>

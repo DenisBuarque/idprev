@@ -33,7 +33,7 @@ class DashboardController extends Controller
         $unfounded_customers = $this->lead->where('situation','4')->get();
         $resources = $this->lead->where('situation','5')->get();
 
-        $users = $this->user->all();
+        $users = $this->user->where('type','F')->get();
 
         $leads = $this->lead->whereIn('tag', [1,2])->orderBy('id','DESC')->get();
         
@@ -88,7 +88,8 @@ class DashboardController extends Controller
         {
             if(isset($data['comments'])){
                 $lead->feedbackLeads()->create([
-                    'comments' => $data['comments']
+                    'comments' => $data['comments'],
+                    'user_id' =>  auth()->user()->id
                 ]);
             }
             

@@ -126,7 +126,7 @@ class LeadController extends Controller
     public function create()
     {
         $actions = $this->action->all();
-        $users = $this->user->all();
+        $users = $this->user->where('type','F')->get();
         return view('admin.leads.create',['users' => $users, 'actions' => $actions]);
     }
 
@@ -163,7 +163,8 @@ class LeadController extends Controller
         {
             if(isset($data['comments'])){
                 $lead->feedbackLeads()->create([
-                    'comments' => $data['comments']
+                    'comments' => $data['comments'],
+                    'user_id' => auth()->user()->id,
                 ]);
             }
             
@@ -198,7 +199,7 @@ class LeadController extends Controller
     public function edit($id)
     {
         $actions = $this->action->all();
-        $users = $this->user->all();
+        $users = $this->user->where('type','F')->get();
         $lead = $this->lead->find($id);
         if($lead){
             return view('admin.leads.edit',[
@@ -223,6 +224,14 @@ class LeadController extends Controller
         $data = $request->all();
         $record = $this->lead->find($id);
 
+        if($data['tag'] == 3){
+
+            Validator::make($data, [
+                'user_id' => 'required|string',
+            ])->validate();
+
+        }
+
         Validator::make($data, [
             'name' => 'required|string|min:3',
             'phone' => 'required|string',
@@ -240,11 +249,12 @@ class LeadController extends Controller
 
         if($record->update($data)):
 
-            if(isset($data['comments'])){
+            /*if(isset($data['comments'])){
                 $record->feedbackLeads()->create([
-                    'comments' => $data['comments']
+                    'comments' => $data['comments'],
+                    'user_id' => auth()->user()->id,
                 ]);
-            }
+            }*/
 
             if($request->hasFile('photos'))
             {

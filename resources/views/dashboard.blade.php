@@ -101,7 +101,7 @@
                                         <th>Nome</th>
                                         <th>Contato</th>
                                         <th>Etiqueta</th>
-                                        <th class="text-center">Comentários</th>
+                                        <th class="text-center">Coments</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -125,7 +125,7 @@
                                                 @endphp
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-sm border" data-toggle="modal"
+                                                <a href="#" class="btn btn-xs border" data-toggle="modal"
                                                     data-target="#modal-{{ $lead->id }}">
                                                     <i class="fa fa-comments"></i>
                                                     {{ count($lead->feedbackLeads) }}
@@ -293,8 +293,11 @@
                             </div>
                             <div class="modal-footer justify-content-between">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                                <button type="submit" class="btn btn-info">
-                                    <i class="fa fa-save mr-2"></i> Salvar Lead</button>
+                                <button type="submit" class="btn btn-md btn-info">
+                                    <i class="fas fa-save mr-2"></i>
+                                    Salvar dados
+                                </button>
+
                             </div>
                         </div>
                     </form>
@@ -369,13 +372,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        document.getElementById("button").style.display = "block";
-        document.getElementById("spinner").style.display = "none";
-
-        function ocultarExibir() {
-            document.getElementById("button").style.display = "none";
-            document.getElementById("spinner").style.display = "block";
-        }
 
         // ChartJs Line - Gráfio em linhas
         const context = document.getElementById('myChartLine');

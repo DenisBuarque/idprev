@@ -121,10 +121,12 @@ Route::get('/admin/clients', [ClientController::class, 'index'])->name('admin.cl
 Route::get('/admin/clients/converted', [ClientController::class, 'converted'])->name('admin.clients.converted');
 Route::get('/admin/clients/unconverted', [ClientController::class, 'unconverted'])->name('admin.clients.unconverted');
 Route::get('/admin/clients/term', [ClientController::class, 'term'])->name('admin.clients.term');
+Route::get('/admin/client/term/edit/{id}', [ClientController::class, 'edit_term'])->name('admin.clients.edit_term');
 Route::get('/admin/client/create', [ClientController::class, 'create'])->name('admin.clients.create');
 Route::post('/admin/client/store', [ClientController::class, 'store'])->name('admin.clients.store');
 Route::get('/admin/client/edit/{id}', [ClientController::class, 'edit'])->name('admin.clients.edit');
 Route::put('/admin/client/update/{id}', [ClientController::class, 'update'])->name('admin.clients.update');
+Route::put('/admin/client/update/term', [ClientController::class, 'update_term'])->name('admin.clients.update_term');
 Route::delete('/admin/client/delete/{id}', [ClientController::class, 'destroy'])->name('admin.clients.destroy');
 Route::delete('/admin/client/document/remove', [ClientController::class, 'remove'])->name('admin.client.document.remove');
 Route::get('/admin/client/documents/{id}', [ClientController::class, 'documents'])->name('admin.client.documents');

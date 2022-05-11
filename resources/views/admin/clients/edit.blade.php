@@ -16,7 +16,7 @@
         @method('PUT')
         <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
-                <h3 class="card-title">Formulário cadastro de cliente:</h3>
+                <h3 class="card-title">Formulário edição de cliente:</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -48,20 +48,6 @@
                                 class="form-control" maxlength="100" />
                         </div>
                     </div>
-                    <div class="col-sm-12">
-
-                        <div class="form-group m-0">
-                            <small>Comentários:</small>
-                            <textarea name="comments" class="form-control">{{ $lead->comments ?? old('comments') }}</textarea>
-                        </div>
-
-                        <ul class="list-group list-group-flush">
-                            @foreach ($lead->feedbackLeads as $comment)
-                                <li class="list-group-item">{{ $comment->comments }}</li>
-                            @endforeach
-                        </ul>
-
-                    </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Cep:</small>
@@ -72,7 +58,7 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Endreço:</small>
+                            <small>Endereço:</small>
                             <input type="text" name="address" id="address" value="{{ $lead->address ?? old('address') }}"
                                 class="form-control" maxlength="250" />
                         </div>
@@ -135,11 +121,11 @@
                         <div class="form-group m-0">
                             <small>Situação:</small>
                             <select name="situation" class="form-control">
-                                <option value="1">Andamento em ordem</option>
-                                <option value="2">Aguardando</option>
-                                <option value="3">Finalizado Procedente</option>
-                                <option value="4">Finalizado Improcedente</option>
-                                <option value="5">Recursos</option>
+                                <option value="1" @if ($lead->situation == 1) selected @endif>Andamento em ordem</option>
+                                <option value="2" @if ($lead->situation == 2) selected @endif>Aguardando cumprimento</option>
+                                <option value="3" @if ($lead->situation == 3) selected @endif>Finalizado Procedente</option>
+                                <option value="4" @if ($lead->situation == 4) selected @endif>Finalizado Improcedente</option>
+                                <option value="5" @if ($lead->situation == 5) selected @endif>Recursos</option>
                             </select>
                         </div>
                     </div>

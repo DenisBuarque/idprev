@@ -4,7 +4,7 @@
 
 @section('content_header')
     <div style="display: flex; justify-content: space-between">
-        <h4>Usuário do Sistema</h4>
+        <h4>Administrador do Sistema</h4>
         <a href="{{ route('admin.users.index') }}" class="btn btn-md bg-info">Listar Registros</a>
     </div>
 @stop
@@ -21,7 +21,7 @@
         @csrf
         <div class="card card-info" style="max-width: 700px; margin: auto">
             <div class="card-header">
-                <h3 class="card-title">Formulário cadastro de usuário:</h3>
+                <h3 class="card-title">Formulário cadastro de administrador:</h3>
             </div>
             <div class="card-body">
                 <div class="row">

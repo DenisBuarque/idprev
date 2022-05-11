@@ -4,7 +4,7 @@
 
 @section('content_header')
     <form method="GET" action="{{ route('admin.clients.term') }}">
-        <div style="display: flex; justify-content: space-between;">
+        <div style="display: flex; justify-content: start;">
             <div class="input-group" style="width: 30%">
                 <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
                     required />
@@ -15,7 +15,6 @@
                     </button>
                 </span>
             </div>
-            <a href="{{ route('admin.clients.create') }}" class="btn bg-info">Adicionar Registro</a>
         </div>
     </form>
 @stop
@@ -24,14 +23,14 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Lista de Clientes convertidos</h3>
+            <h3 class="card-title">Lista de Clientes convertidos em prazo:</h3>
         </div>
 
         <div class="card-body p-0">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Data</th>
+                        <th>Criado</th>
                         <th>Prazo</th>
                         <th>Nome</th>
                         <th>Franqueado</th>
@@ -47,7 +46,7 @@
                             <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $lead->term->format('d/m/Y') }}</td>
                             <td>{{ $lead->name }}</td>
-                            <td></td>
+                            <td>{{ $lead->user->name }}</td>
                             <td>{{ $lead->city.'/'.$lead->state }}</td>
                             <td>
                                 @php
@@ -68,7 +67,7 @@
                             </td>
                             <td>
                                 @php
-                                    $array_situations = [1 => 'Andamento em ordem', 2 => 'Aguardando', 3 => 'Finalizado procedente', 4 => 'Finalizado improcedente', 5 => 'Recursos'];
+                                    $array_situations = [1 => 'Andamento em ordem', 2 => 'Aguardando cumprimento', 3 => 'Finalizado procedente', 4 => 'Finalizado improcedente', 5 => 'Recursos'];
                                     foreach ($array_situations as $key => $value) {
                                         if ($key == $lead->situation) {
                                             echo $value;
@@ -77,7 +76,7 @@
                                 @endphp
                             </td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
-                                <a href="{{ route('admin.clients.edit', ['id' => $lead->id]) }}"
+                                <a href="{{ route('admin.clients.edit_term', ['id' => $lead->id]) }}"
                                     class="btn btn-info btn-sm mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>

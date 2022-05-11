@@ -5,7 +5,7 @@
 @section('content_header')
     <div style="display: flex; justify-content: space-between">
         <h4>Meu Lead Comentários</h4>
-        <a href="{{ route('admin.leads.index') }}" class="btn btn-md bg-info">Listar Tickets</a>
+        <a href="{{ route('admin.leads.index') }}" class="btn btn-md bg-info">Listar Leads</a>
     </div>
 @stop
 
@@ -26,13 +26,11 @@
         @csrf
         <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
-                <h3 class="card-title">Formulário comentário de lead:</h3>
+                <h3 class="card-title">Comentários de lead, estamos a sua disposição:</h3>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-
-                        <p>Estamos a sua disposição para melhor lhe atender, descreva sua dúvidas.</p>
                         <div class="direct-chat-messages">
                             @foreach ($feedbackLeads as $feed)
                                 @if ($feed->user_id == auth()->user()->id)
@@ -97,6 +95,7 @@
         </div>
 
     </form>
+    <br/>
 
 @stop
 

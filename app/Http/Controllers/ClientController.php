@@ -110,13 +110,23 @@ class ClientController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $leads = $query->where('term','!=',null)->whereIn('tag',[2,3,4])->orderBy('id','DESC')->get();
+            $leads = $query->whereIn('situation',[2])->orderBy('id','DESC')->get();
 
         } else {
-            $leads = $this->lead->where('term','!=',null)->whereIn('tag',[2,3,4])->orderBy('id','DESC')->paginate(10);
+            $leads = $this->lead->whereIn('situation',[2])->orderBy('id','DESC')->paginate(10);
         }
         
         return view('admin.clients.term',['leads' => $leads, 'search' => $search]);
+    }
+
+    public function edit_term($id)
+    {
+        $lead = $this->lead->find($id);
+        if($lead){
+            return view('admin.clients.edit_term',['lead' => $lead]);
+        } else {
+            return redirect('admin/client/term/edit')->with('alert', 'Desculpe! Não encontramos o registro!');
+        }
     }
 
     public function documents($id)
@@ -272,6 +282,24 @@ class ClientController extends Controller
             return redirect('admin/clients')->with('success', 'Registro alterado com sucesso!');
         else:
             return redirect('admin/clients')->with('error', 'Erro ao alterar o registro!');
+        endif;
+    }
+
+    public function update_term(Request $request, $id)
+    {
+        $data = $request->all();
+        $record = $this->lead->find($id);
+
+        Validator::make($data, [
+            'responsible' => 'required|string|min:3|max:100',
+            'date_fulfilled' => 'required|string',
+            'greeting' => 'required|string|min:10',
+        ])->validate();
+
+        if($record->update($data)):
+            return redirect('admin/clients/term')->with('success', 'Registro alterado com sucesso!');
+        else:
+            return redirect('admin/clients/term')->with('error', 'Erro ao alterar o registro!');
         endif;
     }
 

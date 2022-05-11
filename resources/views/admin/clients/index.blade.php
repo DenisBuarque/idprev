@@ -15,7 +15,9 @@
                     </button>
                 </span>
             </div>
-            <a href="{{ route('admin.clients.create') }}" class="btn bg-info">Adicionar Registro</a>
+            <a href="{{ route('admin.clients.create') }}" class="btn bg-info">
+                <i class="fa fa-plus mr-1"></i> Adicionar Registro
+            </a>
         </div>
     </form>
 @stop
@@ -45,23 +47,22 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Data</th>
                         <th>Nome</th>
-                        <th>Telefone</th>
                         <th>Localização</th>
+                        <th>Franqueado</th>
                         <th>Etiqueta</th>
                         <th>Situação</th>
-                        <th class="text-center">Comentários</th>
-                        <th class='text-center'>Ações</th>
+                        <th style="width: 160px;">Criado</th>
+                        <th style="width: 160px;">Atualizado</th>
+                        <th class='text-center' style="width: 140px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($leads as $lead)
                         <tr>
-                            <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $lead->name }}</td>
-                            <td>{{ $lead->phone }}</td>
                             <td>{{ $lead->city.'/'.$lead->state }}</td>
+                            <td>{{ $lead->user->name }}</td>
                             <td>
                                 @php
                                     $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
@@ -76,7 +77,7 @@
                                             }
                                         }
                                     }
-                                @endphp
+                                    @endphp
                                 
                             </td>
                             <td>
@@ -87,19 +88,21 @@
                                             echo $value;
                                         }
                                     }
-                                @endphp
+                                    @endphp
                             </td>
-                            <td class="text-center"><i class="fa fa-comments"></i> {{ count($lead->feedbackLeads) }}</td>
+                            <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
+                            <td>{{ $lead->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
+                                <a href="" class="btn btn-xs border mr-1"><i class="fa fa-comments"></i> {{ count($lead->feedbackLeads) }}</a>
                                 <a href="{{ route('admin.clients.edit', ['id' => $lead->id]) }}"
-                                    class="btn btn-info btn-sm mr-1">
+                                    class="btn btn-info btn-xs px-2 mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form method="POST" onsubmit="return(confirmaExcluir())"
                                     action="{{ route('admin.clients.destroy', ['id' => $lead->id]) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <button type="submit" class="btn btn-danger btn-xs px-2">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>

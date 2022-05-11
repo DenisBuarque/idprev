@@ -12,11 +12,11 @@
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div class="alert alert-success mb-2" role="alert" style="max-width: 800px; margin: auto;">
             {{ session('success') }}
         </div>
     @elseif (session('error'))
-        <div class="alert alert-danger mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div class="alert alert-danger mb-2" role="alert" style="max-width: 800px; margin: auto;">
             {{ session('error') }}
         </div>
     @endif
@@ -57,22 +57,16 @@
                                 maxlength="100" />
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <small>Comentários:</small>
-                            <textarea name="comments" class="form-control">{{ old('comments') }}</textarea>
-                        </div>
-                    </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Cep:</small>
-                            <input type="text" name="cep" id="cep" value="{{ old('cep') }}" class="form-control"
+                            <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code') }}" class="form-control"
                                 maxlength="9" onkeypress="mascara(this, '#####-###')" onblur="pesquisacep(this.value);" />
                         </div>
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Endreço:</small>
+                            <small>Endereço:</small>
                             <input type="text" name="address" id="address" value="{{ old('address') }}"
                                 class="form-control" maxlength="250" />
                         </div>
@@ -132,7 +126,7 @@
                             <small>Situação:</small>
                             <select name="situation" class="form-control">
                                 <option value="1">Andamento em ordem</option>
-                                <option value="2">Aguardando</option>
+                                <option value="2">Aguardando cumprimento</option>
                                 <option value="3">Finalizado Procedente</option>
                                 <option value="4">Finalizado Improcedente</option>
                                 <option value="5">Recursos</option>
@@ -194,8 +188,16 @@
                             <input type="file" name="photos[]" multiple />
                         </div>
                     </div>
+
                     <div class="col-md-12">
                         <div id="todo-list"></div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <small>Comentários:</small>
+                            <textarea name="comments" class="form-control">{{ old('comments') }}</textarea>
+                        </div>
                     </div>
 
                 </div>
@@ -227,7 +229,17 @@
 @section('js')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 
+    <script src="https://cdn.tiny.cloud/1/cr3szni52gwqfslu3w63jcsfxdpbitqgg2x8tnnzdgktmhzq/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+
     <script>
+
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'advlist autolink lists link image charmap preview anchor pagebreak',
+            toolbar_mode: 'floating',
+        });
+
         document.getElementById("button").style.display = "block";
         document.getElementById("spinner").style.display = "none";
 

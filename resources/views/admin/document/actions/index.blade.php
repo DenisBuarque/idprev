@@ -14,7 +14,9 @@
                     </button>
                 </span>
             </div>
-            <a href="{{ route('admin.document.actions.create') }}" class="btn bg-info">Adicionar Registro</a>
+            <a href="{{ route('admin.document.actions.create') }}" class="btn bg-info">
+                <i class="fa fa-plus"></i> Adicionar Registro
+            </a>
         </div>
     </form>
 @stop
@@ -44,16 +46,18 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Data</th>
                         <th>Tipo de ação</th>
+                        <th style="width: 160px">Criado</th>
+                        <th style="width: 160px">Atualizado</th>
                         <th class='text-center' style="width: 100px;" >Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($actions as $action)
                         <tr>
-                            <td>{{ $action->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $action->name }}</td>
+                            <td>{{ $action->created_at->format('d/m/Y H:m:s') }}</td>
+                            <td>{{ $action->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
                                 <a href="{{ route('admin.document.actions.edit', ['id' => $action->id]) }}"
                                     class="btn btn-info btn-sm mr-1">

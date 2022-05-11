@@ -9,10 +9,14 @@
                 <input type="search" name="search" value="{{ $search }}" class="form-control"
                     placeholder="Nome do usuário" required />
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">Buscar</button>
+                    <button type="submit" class="btn btn-info btn-flat">
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
                 </span>
             </div>
-            <a href="{{ route('admin.users.create') }}" class="btn bg-info">Adicionar Registro</a>
+            <a href="{{ route('admin.users.create') }}" class="btn bg-info">
+                <i class="fa fa-plus"></i> Adicionar Registro
+            </a>
         </div>
     </form>
 @stop
@@ -35,15 +39,17 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Lista de Usuários</h3>
+            <h3 class="card-title">Lista de administradores do sistema</h3>
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-striped">
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th>Nome</th>
                         <th>E-mail</th>
+                        <th style='width: 160px'>Criado</th>
+                        <th style='width: 160px'>Atualizado</th>
                         <th style="width: 100px; text-align: center">Ações</th>
                     </tr>
                 </thead>
@@ -52,17 +58,19 @@
                         <tr>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
+                            <td>{{ $user->created_at->format('d/m/Y H:m:s') }}</td>
+                            <td>{{ $user->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
 
                                     <a href="{{ route('admin.users.edit', ['id' => $user->id]) }}"
-                                        class="btn btn-info btn-sm mr-1">
+                                        class="btn btn-info btn-xs px-2 mr-1">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <form method="POST" onsubmit="return(confirmaExcluir())"
                                         action="{{ route('admin.users.destroy', ['id' => $user->id]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
+                                        <button type="submit" class="btn btn-danger px-2 btn-xs">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
