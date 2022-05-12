@@ -48,7 +48,6 @@
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Localização</th>
                         <th>Franqueado</th>
                         <th>Etiqueta</th>
                         <th>Situação</th>
@@ -61,7 +60,6 @@
                     @foreach ($leads as $lead)
                         <tr>
                             <td>{{ $lead->name }}</td>
-                            <td>{{ $lead->city.'/'.$lead->state }}</td>
                             <td>{{ $lead->user->name }}</td>
                             <td>
                                 @php
@@ -82,7 +80,7 @@
                             </td>
                             <td>
                                 @php
-                                    $array_situations = [1 => 'Andamento em ordem', 2 => 'Aguardando', 3 => 'Finalizado procedente', 4 => 'Finalizado improcedente', 5 => 'Recursos'];
+                                    $array_situations = [1 => 'Andamento em ordem', 2 => 'Aguardando cumprimento', 3 => 'Finalizado procedente', 4 => 'Finalizado improcedente', 5 => 'Recursos'];
                                     foreach ($array_situations as $key => $value) {
                                         if ($key == $lead->situation) {
                                             echo $value;

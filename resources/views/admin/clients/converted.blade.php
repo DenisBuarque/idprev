@@ -30,22 +30,20 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Data</th>
                         <th>Nome</th>
                         <th>Franqueado</th>
-                        <th>Local</th>
                         <th>Etiqueta</th>
                         <th>Situação</th>
+                        <th>Criado</th>
+                        <th>Atualizado</th>
                         <th class='text-center'>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($leads as $lead)
                         <tr>
-                            <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $lead->name }}</td>
                             <td>{{ $lead->user->name }}</td>
-                            <td>{{ $lead->city.'/'.$lead->state }}</td>
                             <td>
                                 @php
                                     $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
@@ -65,7 +63,7 @@
                             </td>
                             <td>
                                 @php
-                                    $array_situations = [1 => 'Andamento em ordem', 2 => 'Aguardando', 3 => 'Finalizado procedente', 4 => 'Finalizado improcedente', 5 => 'Recursos'];
+                                    $array_situations = [1 => 'Andamento em ordem', 2 => 'Aguardando cumprimento', 3 => 'Finalizado procedente', 4 => 'Finalizado improcedente', 5 => 'Recursos'];
                                     foreach ($array_situations as $key => $value) {
                                         if ($key == $lead->situation) {
                                             echo $value;
@@ -73,9 +71,11 @@
                                     }
                                 @endphp
                             </td>
+                            <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
+                            <td>{{ $lead->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
                                 <a href="{{ route('admin.clients.edit', ['id' => $lead->id]) }}"
-                                    class="btn btn-info btn-sm mr-1">
+                                    class="btn btn-info btn-xs px-2 mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             </td>

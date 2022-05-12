@@ -23,6 +23,11 @@ class Client extends Model
         'state'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function processes()
     {
         return $this->hasMany(Process::class);

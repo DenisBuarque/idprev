@@ -6,16 +6,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Lead;
 use App\Models\User;
+use App\Models\Ticket;
+use App\Models\FeedbackLead;
+use App\Models\Event;
 
 class DashboardController extends Controller
 {
     private $user;
     private $lead;
+    private $ticket;
+    private $event;
 
-    public function __construct(User $user, Lead $lead)
+    public function __construct(User $user, Lead $lead, Ticket $ticket, FeedbackLead $feedback, Event $event)
     {
         $this->user = $user;
         $this->lead = $lead;
+        $this->ticket = $ticket;
+        $this->feedback = $feedback;
+        $this->event = $event;
     }
 
     /**
@@ -25,28 +33,52 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $waiting = $this->lead->where('tag','2')->get();
-        $converted_lead = $this->lead->where('tag','3')->get();
-        $unconverted_lead = $this->lead->where('tag','4')->get();
-        $progress_in_order = $this->lead->where('situation','2')->get();
-        $originating_customers = $this->lead->where('situation','3')->get();
-        $unfounded_customers = $this->lead->where('situation','4')->get();
-        $resources = $this->lead->where('situation','5')->get();
+        
+        $waiting = $this->lead->where('tag','2')->get()->count(); // esperando
+        $converted_lead = $this->lead->where('tag','3')->get()->count();
+        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+        //$progress_in_order = $this->lead->where('situation','2')->get();
+        $tickets = $this->ticket->where('status','1')->get()->count();
+        $originating_customers = $this->lead->where('situation','3')->get()->count(); // clientes precedentes
+        $unfounded_customers = $this->lead->where('situation','4')->get()->count(); // clientes improcedentes
+        $resources = $this->lead->where('situation','5')->get()->count(); //recursos
 
         $users = $this->user->where('type','F')->get();
+        $events = $this->event->all();
 
-        $leads = $this->lead->whereIn('tag', [1,2])->orderBy('id','DESC')->get();
-        
+        $leads = $this->lead->whereIn('tag', [1])->orderBy('id','DESC')->get();
+
         return view('dashboard',[
-            'leads' => $leads, 
-            'waiting' => $waiting, 
-            'converted_lead' => $converted_lead, 
-            'unconverted_lead' => $unconverted_lead, 
+            'leads'                 => $leads, 
+            'waiting'               => $waiting, 
+            'converted_lead'        => $converted_lead, 
+            'unconverted_lead'      => $unconverted_lead, 
+            'tickets'               => $tickets,
             'originating_customers' => $originating_customers,
-            'unfounded_customers' => $unfounded_customers,
-            'resources' => $resources,
-            'users' => $users
+            'unfounded_customers'   => $unfounded_customers,
+            'resources'             => $resources,
+            'users'                 => $users,
+            'events'                => $events,
         ]);
+    }
+
+    public function feedback(Request $request)
+    {
+        $data = $request->all();
+        
+        Validator::make($data, [
+            'comments' => 'required|string|min:10',
+        ])->validate();
+
+        $data['user_id'] = auth()->user()->id;
+
+        $create = $this->feedback->create($data);
+        if ($create) {
+            return redirect('dashboard')->with('success', 'Comentário adicionado com sucesso!');;
+            //return redirect('admin/leads')->with('success', 'Seu ticket foi enviado, aguardo sua resposta!');
+        } else {
+            return redirect('dashboard')->with('error', 'Erro ao inserido o ticket!');
+        }
     }
 
     /**
@@ -72,6 +104,7 @@ class DashboardController extends Controller
         Validator::make($data, [
             'name' => 'required|string|min:3',
             'phone' => 'required|string',
+            'user_id' => 'required'
         ])->validate();
 
         if(isset($data['financial'])):

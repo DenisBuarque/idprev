@@ -73,7 +73,7 @@ class FileController extends Controller
 
         if($request->hasFile('arquivo') && $request->file('arquivo')->isValid())
         {
-            $file = $request->arquivo->store('files');
+            $file = $request->arquivo->store('public/files');
             $data['arquivo'] = $file;
         }
 
@@ -150,7 +150,7 @@ class FileController extends Controller
                 //Storage::download('tutorial.pdf');
             } 
 
-            $new_file = $request->arquivo->store('files');
+            $new_file = $request->arquivo->store('public/files');
             $data['arquivo'] = $new_file;
         }
 

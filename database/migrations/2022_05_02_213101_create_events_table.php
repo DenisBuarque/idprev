@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('date_event');
             $table->text('description');
             $table->string('slug');
+            $table->string('image');
             $table->timestamps();
         });
     }

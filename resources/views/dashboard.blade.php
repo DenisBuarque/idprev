@@ -28,7 +28,7 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>{{ count($converted_lead) }}</h3>
+                    <h3>{{ $converted_lead }}</h3>
                     <p>Leads Convertidos</p>
                 </div>
                 <div class="icon">
@@ -43,7 +43,7 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>{{ count($waiting) }}</h3>
+                    <h3>{{ $waiting }}</h3>
                     <p>Leads Aguardando</p>
                 </div>
                 <div class="icon">
@@ -58,7 +58,7 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-danger">
                 <div class="inner">
-                    <h3>{{ count($unconverted_lead) }}</h3>
+                    <h3>{{ $unconverted_lead }}</h3>
                     <p>Leads não convertidos</p>
                 </div>
                 <div class="icon">
@@ -144,57 +144,61 @@
 
             @foreach ($leads as $lead)
                 <div class="modal fade" id="modal-{{ $lead->id }}" style="display: none;" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                        <form method="POST" action="">
+                    <div class="modal-dialog modal-lg">
+                        <form method="POST" action="{{ route('dashboard.feedback')}}">
+                            @csrf
+                            <input type="hidden" name="lead_id" value="{{$lead->id}}" />
                             <div class="modal-content">
                                 <div class="modal-header bg-info">
-                                    @php
-                                        $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
-                                        foreach ($array_tags as $key => $value) {
-                                            if ($key == $lead->tag) {
-                                                echo '<h4 class="modal-title">Comentário Lead - ' . $value . '</h4>';
-                                            }
-                                        }
-                                    @endphp
+                                    <h4 class="modal-title">Comentário Lead: {{ $lead->name }}</h4>
 
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">x</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>
-                                        Nome: {{ $lead->name }}<br />
-                                        Contato(s): {{ $lead->phone }}<br />
-
-                                        @if ($lead->email)
-                                            Email: {{ $lead->email }}<br />
-                                        @endif
-
-                                        @if ($lead->address)
-                                            Endereço:
-                                            {{ $lead->address . ', ' . $lead->number . ', ' . $lead->cep . ' ' . $lead->disitrict . ', ' . $lead->city . ', ' . $lead->state }}
-                                        @endif
-                                    </p>
-                                    <textarea name="obs" class="form-control h-20" placeholder="Digite um comentário."></textarea>
-                                    <strong>Comentário(s):</strong>
-                                    <ul class="list-group list-group-flush">
-                                        @foreach ($lead->feedbackLeads as $comment)
-                                            <li class="list-group-item">{{ $comment->comments }}</li>
+                                    <div class="direct-chat-messages">
+                                        @foreach ($lead->feedbackLeads as $feed)
+                                            @if ($feed->user_id == auth()->user()->id)
+                                                <div class="direct-chat-msg">
+                                                    <div class="direct-chat-infos clearfix mb-1">
+                                                        <span class="direct-chat-name float-left">{{ auth()->user()->name }}</span>
+                                                        <span
+                                                            class="direct-chat-timestamp ml-2">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="bg-info rounded p-2 float-left">{!! $feed->comments !!}</span>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class="direct-chat-msg">
+                                                    <div class="direct-chat-infos clearfix mb-1">
+                                                        @foreach ($users as $user)
+                                                            @if ($feed->user_id == $user->id)
+                                                                <span
+                                                                    class="direct-chat-timestamp ml-2 float-right">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
+                                                                <span class="direct-chat-name float-right">{{ $user->name }}</span>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                    <div>
+                                                        <span class="bg-success rounded p-2 float-right">{!! $feed->comments !!}</span>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         @endforeach
-                                    </ul>
-
+                                    </div>
+                                    
+                                    <textarea name="comments" class="form-control h-20 @error('comments') is-invalid @enderror" placeholder="Digite um comentário aqui."></textarea>
+                                    @error('comments')
+                                        <div class="text-red">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="modal-footer justify-content-between">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                                    <button id="button" onClick="ocultarExibir()" type="submit" class="btn btn-info">
-                                        <i class="fa fa-save mr-2"></i> Salvar Comentário
+                                    <button type="submit" class="btn btn-info">
+                                        <i class="fa fa-save mr-2"></i> Enviar Comentário
                                     </button>
-                                    <a id="spinner" class="btn btn-md btn-info float-right text-center">
-                                        <div id="spinner" class="spinner-border" role="status"
-                                            style="width: 20px; height: 20px;">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                    </a>
                                 </div>
                             </div>
                         </form>
@@ -203,7 +207,7 @@
             @endforeach
 
             <div class="modal fade" id="modal-lead" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
+                <div class="modal-dialog modal-lg">
                     <form method="POST" action="{{ route('dashboard.store') }}">
                         @csrf
                         <div class="modal-content">
@@ -217,7 +221,7 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group m-0">
-                                            <small>Nome completo: *</small>
+                                            <small>Nome: (obrigatório)</small>
                                             <input type="text" name="name" value="{{ old('name') }}"
                                                 class="form-control @error('name') is-invalid @enderror" maxlength="100" />
                                             @error('name')
@@ -227,7 +231,7 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="form-group m-0">
-                                            <small>Telefones: *</small>
+                                            <small>Telefones: (obrigatório)</small>
                                             <input type="text" name="phone" value="{{ old('phone') }}"
                                                 class="form-control @error('phone') is-invalid @enderror" maxlength="50"
                                                 placeholder="Ex: 82 99925-8977, 98854-7889 ..." />
@@ -238,13 +242,16 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="form-group m-0">
-                                            <small>Franqueado:</small>
-                                            <select name="user_id" class="form-control">
+                                            <small>Franqueado: (obrigatório)</small>
+                                            <select name="user_id" class="form-control @error('user_id') is-invalid @enderror">
                                                 <option value="">Selecione um franqueado</option>
                                                 @foreach ($users as $user)
                                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                                 @endforeach
                                             </select>
+                                            @error('user_id')
+                                                <div class="text-red">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -311,8 +318,8 @@
             <div class="info-box bg-warning">
                 <span class="info-box-icon"><i class="fas fa-tag"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Tickets</span>
-                    <span class="info-box-number">0</span>
+                    <span class="info-box-text">Tickets Abertos</span>
+                    <span class="info-box-number">{{ $tickets }}</span>
                 </div>
             </div>
 
@@ -320,7 +327,7 @@
                 <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">Clientes Procedentes</span>
-                    <span class="info-box-number">{{ count($originating_customers) }}</span>
+                    <span class="info-box-number">{{ $originating_customers }}</span>
                 </div>
             </div>
 
@@ -328,7 +335,7 @@
                 <span class="info-box-icon bg-danger"><i class="far fa-flag"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">Clientes Improcedentes</span>
-                    <span class="info-box-number">{{ count($unfounded_customers) }}</span>
+                    <span class="info-box-number">{{ $unfounded_customers }}</span>
                 </div>
             </div>
 
@@ -336,7 +343,7 @@
                 <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">Coube Recursos</span>
-                    <span class="info-box-number">{{ count($resources) }}</span>
+                    <span class="info-box-number">{{ $resources }}</span>
                 </div>
             </div>
 
@@ -352,7 +359,7 @@
 
     </div>
 
-    <div class="row row-cols-2 mb-5">
+    <div class="row row-cols-2 my-5">
         <div class="col">
             <canvas id="myChartLine"></canvas>
         </div>
@@ -361,6 +368,28 @@
         </div>
     </div>
 
+    <div class="card card-success">
+        <div class="card-body">
+            
+            <div class="row">
+
+                @foreach ($events as $event)    
+                    <div class="col-md-12 col-lg-6 col-xl-4">
+                        <div class="card mb-2 bg-gradient-dark">
+                            <img class="card-img-top" src="{{ asset('storage/'.$event->image) }}" alt="{{ $event->title }}">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end">
+                                <h3 class="card-title text-primary text-white mb-3">{{ $event->title }}</h3>
+                                <a href="#" class="text-white">{{ $event->date_event->format('d/m/Y') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    
+    
+    
 @stop
 
 @section('css')

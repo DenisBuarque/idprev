@@ -144,6 +144,7 @@ class LeadController extends Controller
         Validator::make($data, [
             'name' => 'required|string|min:3',
             'phone' => 'required|string',
+            'user_id' => 'required',
         ])->validate();
 
         if(isset($data['financial'])):
@@ -173,7 +174,11 @@ class LeadController extends Controller
                 $lead->photos()->createMany($images);
             }
 
-            return redirect('admin/leads')->with('success', 'Registro inserido com sucesso!');
+            if($data['tag'] == 3){
+                return redirect('admin/clients/converted')->with('success', 'Registro inserido com sucesso!');
+            } else {
+                return redirect('admin/leads')->with('success', 'Registro inserido com sucesso!');
+            }
         } else {
             return redirect('admin/lead/create')->with('error', 'Erro ao inserir o registro!');
         }
@@ -261,8 +266,12 @@ class LeadController extends Controller
                 $images = $this->imageUpload($request,'image');
                 $record->photos()->createMany($images);
             }
-            
-            return redirect('admin/leads')->with('success', 'Registro alterado com sucesso!');
+
+            if($data['tag'] == 3){
+                return redirect('admin/clients/converted')->with('success', 'Registro inserido com sucesso!');
+            } else {
+                return redirect('admin/leads')->with('success', 'Registro inserido com sucesso!');
+            }
         else:
             return redirect('admin/leads')->with('error', 'Erro ao alterar o registro!');
         endif;

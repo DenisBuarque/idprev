@@ -46,6 +46,7 @@ Route::post('/franqueado/login',[HomeController::class, 'login'])->name('login.f
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth:sanctum', 'verified'])->name('dashboard');
 Route::post('/dashboard/create', [DashboardController::class, 'store'])->middleware(['auth:sanctum', 'verified'])->name('dashboard.store');
+Route::post('/dashboard/feedback', [DashboardController::class, 'feedback'])->middleware(['auth:sanctum', 'verified'])->name('dashboard.feedback');
 
 Route::group(['middleware' => 'advisor'], function () {
     Route::get('/franqueado/logout',[HomeController::class, 'logout'])->name('logout.franchisee');

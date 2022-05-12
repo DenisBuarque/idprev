@@ -10,10 +10,13 @@
                     placeholder="Título do evento" required />
                 <span class="input-group-append">
                     <button type="submit" class="btn btn-info btn-flat">
-                        <i class="fa fa-search mr-1"></i> Buscar</button>
+                        <i class="fa fa-search mr-1"></i> Buscar
+                    </button>
                 </span>
             </div>
-            <a href="{{ route('admin.training.events.create') }}" class="btn bg-info">Adicionar Registro</a>
+            <a href="{{ route('admin.training.events.create') }}" class="btn bg-info">
+                <i class="fa fa-plus mr-1"></i> Adicionar Registro
+            </a>
         </div>
     </form>
 @stop
@@ -43,32 +46,30 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Criado</th>
                         <th>Título</th>
-                        <th class="text-center">Data do Evento</th>
-                        <th class='text-center' style="width: 100px;" >Ações</th>
+                        <th>Data do Evento</th>
+                        <th style="width: 160px;">Criado</th>
+                        <th style="width: 160px;">Atualizado</th>
+                        <th class='text-center' style="width: 100px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($events as $event)
                         <tr>
-                            <td>{{ $event->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $event->title }}</td>
-                            <td class="text-center">
-                                @php
-                                    echo implode('/', array_reverse(explode('-', $event->date_event)))
-                                @endphp
-                                </td>
+                            <td>{{ $event->date_event->format('d/m/Y') }}</td>
+                            <td>{{ $event->created_at->format('d/m/Y H:m:s') }}</td>
+                            <td>{{ $event->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
                                 <a href="{{ route('admin.training.events.edit', ['id' => $event->id]) }}"
-                                    class="btn btn-info btn-sm mr-1">
+                                    class="btn btn-info btn-xs px-2 mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form method="POST" onsubmit="return(confirmaExcluir())"
                                     action="{{ route('admin.training.events.destroy', ['id' => $event->id]) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <button type="submit" class="btn btn-danger btn-xs px-2">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>

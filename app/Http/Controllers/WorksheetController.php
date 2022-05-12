@@ -84,7 +84,7 @@ class WorksheetController extends Controller
 
         if($request->hasFile('arquivo') && $request->file('arquivo')->isValid())
         {
-            $worksheet = $request->arquivo->store('worksheets');
+            $worksheet = $request->arquivo->store('public/worksheets');
             $data['arquivo'] = $worksheet;
         }
 
@@ -149,7 +149,7 @@ class WorksheetController extends Controller
                 Storage::delete($record['arquivo']);
             } 
 
-            $new_worksheet = $request->arquivo->store('worksheets');
+            $new_worksheet = $request->arquivo->store('public/worksheets');
             $data['arquivo'] = $new_worksheet;
         }
 

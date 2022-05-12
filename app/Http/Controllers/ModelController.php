@@ -73,7 +73,7 @@ class ModelController extends Controller
 
         if($request->hasFile('document') && $request->file('document')->isValid())
         {
-            $file = $request->document->store('model_docs');
+            $file = $request->document->store('public/model_docs');
             $data['document'] = $file;
         }
 
@@ -151,7 +151,7 @@ class ModelController extends Controller
                 Storage::delete($record['document']);
             } 
 
-            $new_file = $request->document->store('model_docs');
+            $new_file = $request->document->store('public/model_docs');
             $data['document'] = $new_file;
         }
 

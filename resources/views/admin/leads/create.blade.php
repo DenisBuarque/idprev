@@ -70,13 +70,16 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group m-0">
-                            <small>Franqueado:</small>
-                            <select name="advisor_id" class="form-control">
+                            <small>Franqueado: *</small>
+                            <select name="user_id" class="form-control @error('phone') is-invalid @enderror">
                                 <option value="">Selecione um franqueado</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                            @error('user_id')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-3">

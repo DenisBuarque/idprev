@@ -50,51 +50,69 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Cep:</small>
+                            <small>Cep: *</small>
                             <input type="text" name="zip_code" id="zip_code" value="{{ $lead->zip_code ?? old('zip_code') }}"
                                 class="form-control" maxlength="9" onkeypress="mascara(this, '#####-###')"
                                 onblur="pesquisacep(this.value);" />
+                                @error('zip_code')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Endereço:</small>
+                            <small>Endereço: *</small>
                             <input type="text" name="address" id="address" value="{{ $lead->address ?? old('address') }}"
                                 class="form-control" maxlength="250" />
+                                @error('address')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <small>Número:</small>
+                            <small>Número: *</small>
                             <input type="text" name="number" value="{{ $lead->number ?? old('number') }}"
                                 class="form-control" placeholder="nº" maxlength="5" />
+                                @error('number')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <small>Bairro:</small>
+                            <small>Bairro: *</small>
                             <input type="text" name="district" id="district"
                                 value="{{ $lead->district ?? old('district') }}" class="form-control" maxlength="50" />
+                                @error('district')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <small>Cidade:</small>
+                            <small>Cidade: *</small>
                             <input type="text" name="city" id="city" value="{{ $lead->city ?? old('city') }}"
                                 class="form-control" maxlength="50" />
+                                @error('city')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <small>Estado:</small>
+                            <small>Estado: *</small>
                             <input type="text" name="state" id="state" value="{{ $lead->state ?? old('state') }}"
                                 class="form-control" maxlength="2" />
+                                @error('state')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Franqueado:</small>
-                            <select name="advisor_id" class="form-control">
+                            <small>Franqueado: *</small>
+                            <select name="user_id" class="form-control @error('phone') is-invalid @enderror">
                                 <option value="">Selecione um franqueado</option>
                                 @foreach ($users as $user)
                                     @if ($user->id == $lead->user_id)
@@ -104,28 +122,30 @@
                                     @endif
                                 @endforeach
                             </select>
+                            @error('user_id')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group m-0">
-                            <small>Etiqueta:</small>
+                            <small>Etiqueta: *</small>
                             <select name="tag" class="form-control">
-                                <option value="1" @if ($lead->tag == 1) selected @endif>Novo</option>
-                                <option value="2" @if ($lead->tag == 2) selected @endif>Aguardando</option>
-                                <option value="3" @if ($lead->tag == 3) selected @endif>Convertido</option>
-                                <option value="4" @if ($lead->tag == 4) selected @endif>Não Convertido</option>
+                                <option value="2" @if ($lead->tag == 2 || old('tag') == 2) selected @endif>Aguardando</option>
+                                <option value="3" @if ($lead->tag == 3 || old('tag') == 3) selected @endif>Convertido</option>
+                                <option value="4" @if ($lead->tag == 4 || old('tag') == 4) selected @endif>Não Convertido</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Situação:</small>
+                            <small>Situação: *</small>
                             <select name="situation" class="form-control">
-                                <option value="1" @if ($lead->situation == 1) selected @endif>Andamento em ordem</option>
-                                <option value="2" @if ($lead->situation == 2) selected @endif>Aguardando cumprimento</option>
-                                <option value="3" @if ($lead->situation == 3) selected @endif>Finalizado Procedente</option>
-                                <option value="4" @if ($lead->situation == 4) selected @endif>Finalizado Improcedente</option>
-                                <option value="5" @if ($lead->situation == 5) selected @endif>Recursos</option>
+                                <option value="1" @if ($lead->situation == 1 || old('situation') == 1) selected @endif>Andamento em ordem</option>
+                                <option value="2" @if ($lead->situation == 2 || old('situation') == 2) selected @endif>Aguardando cumprimento</option>
+                                <option value="3" @if ($lead->situation == 3 || old('situation') == 3) selected @endif>Finalizado Procedente</option>
+                                <option value="4" @if ($lead->situation == 4 || old('situation') == 4) selected @endif>Finalizado Improcedente</option>
+                                <option value="5" @if ($lead->situation == 5 || old('situation') == 5) selected @endif>Recursos</option>
                             </select>
                         </div>
                     </div>
@@ -141,16 +161,16 @@
                         <div class="form-group m-0">
                             <small>Financeiro:</small>
                             <input type="text" name="financial" id="financial" onkeyup="moeda(this);"
-                                value="{{ $lead->finencial ?? old('financial') }}" class="form-control" maxlength="13"
+                                value="{{ $lead->financial ? number_format($lead->financial,2,',','.') : old('financial') }}" class="form-control" maxlength="13"
                                 placeholder="0,00" />
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Tipo de Ação:</small>
+                            <small>Tipo de Ação: *</small>
                             <select name="action" class="form-control" onchange="showDocuments(this.value)">
                                 @foreach ($actions as $action)
-                                    @if ($action->id == $lead->action)
+                                    @if ($action->id == $lead->action && old('action') == $action->id)
                                         <option value="{{ $action->id }}" selected>{{ $action->name }}</option>
                                     @else
                                         <option value="{{ $action->id }}">{{ $action->name }}</option>
@@ -177,7 +197,10 @@
                         <div class="form-group">
                             <small>Prazo:</small>
                             <input type="date" name="term" id="term" value="{{ $lead->term ?? old('term') }}"
-                                class="form-control" />
+                                class="form-control @error('term') is-invalid @enderror" />
+                            @error('term')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 

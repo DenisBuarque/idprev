@@ -43,30 +43,32 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Criado</th>
                         <th>Título</th>
-                        <th class='text-center' style="width: 100px;">Ações</th>
+                        <th style="width: 160px;">Criado</th>
+                        <th style="width: 160px;">Atualizado</th>
+                        <th class='text-center' style="width: 140px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($files as $file)
                         <tr>
-                            <td>{{ $file->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $file->title }}</td>
+                            <td>{{ $file->created_at->format('d/m/Y H:m:s') }}</td>
+                            <td>{{ $file->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
                                 <a href="{{ route('admin.training.files.download', ['id' => $file->id]) }}"
-                                    class="btn btn-default btn-sm mr-1">
+                                    class="btn btn-default btn-xs px-2 mr-1">
                                     <i class="fas fa-download"></i>
                                 </a>
                                 <a href="{{ route('admin.training.files.edit', ['id' => $file->id]) }}"
-                                    class="btn btn-info btn-sm mr-1">
+                                    class="btn btn-info btn-xs px-2 mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form method="POST" onsubmit="return(confirmaExcluir())"
                                     action="{{ route('admin.training.files.destroy', ['id' => $file->id]) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <button type="submit" class="btn btn-danger btn-xs px-2">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>

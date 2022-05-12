@@ -59,78 +59,104 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Cep:</small>
-                            <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code') }}" class="form-control"
+                            <small>Cep: *</small>
+                            <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code') }}" class="form-control @error('zip_code') is-invalid @enderror"
                                 maxlength="9" onkeypress="mascara(this, '#####-###')" onblur="pesquisacep(this.value);" />
-                        </div>
+                                @error('zip_code')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
+                            </div>
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Endereço:</small>
+                            <small>Endereço: *</small>
                             <input type="text" name="address" id="address" value="{{ old('address') }}"
-                                class="form-control" maxlength="250" />
+                                class="form-control @error('address') is-invalid @enderror" maxlength="250" />
+                                @error('address')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <small>Número:</small>
-                            <input type="text" name="number" value="{{ old('number') }}" class="form-control"
+                            <small>Número: *</small>
+                            <input type="text" name="number" value="{{ old('number') }}" class="form-control @error('number') is-invalid @enderror"
                                 placeholder="nº" maxlength="5" />
+                                @error('number')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <small>Bairro:</small>
+                            <small>Bairro: *</small>
                             <input type="text" name="district" id="district" value="{{ old('district') }}"
-                                class="form-control" maxlength="50" />
+                                class="form-control @error('district') is-invalid @enderror" maxlength="50" />
+                                @error('district')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <small>Cidade:</small>
-                            <input type="text" name="city" id="city" value="{{ old('city') }}" class="form-control"
+                            <small>Cidade: *</small>
+                            <input type="text" name="city" id="city" value="{{ old('city') }}" class="form-control @error('city') is-invalid @enderror"
                                 maxlength="50" />
+                                @error('city')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <small>Estado:</small>
-                            <input type="text" name="state" id="state" value="{{ old('state') }}" class="form-control"
+                            <small>Estado: *</small>
+                            <input type="text" name="state" id="state" value="{{ old('state') }}" class="form-control @error('state') is-invalid @enderror"
                                 maxlength="2" />
+                                @error('state')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Franqueado:</small>
-                            <select name="user_id" class="form-control">
+                            <small>Franqueado: *</small>
+                            <select name="user_id" class="form-control @error('user_id') is-invalid @enderror">
                                 <option value="">Selecione um franqueado</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                            @error('user_id')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group m-0">
-                            <small>Etiqueta:</small>
-                            <select name="tag" class="form-control">
-                                <option value="1">Novo</option>
-                                <option value="2">Aguardando</option>
-                                <option value="3">Convertido</option>
-                                <option value="4">Não Convertido</option>
+                            <small>Etiqueta: *</small>
+                            <select name="tag" class="form-control @error('tag') is-invalid @enderror">
+                                <option value="2" @if (old('tag') == 2) selected @endif>Aguardando</option>
+                                <option value="3" @if (old('tag') == 3) selected @endif>Convertido</option>
+                                <option value="4" @if (old('tag') == 4) selected @endif>Não Convertido</option>
                             </select>
+                            @error('tag')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Situação:</small>
-                            <select name="situation" class="form-control">
-                                <option value="1">Andamento em ordem</option>
-                                <option value="2">Aguardando cumprimento</option>
-                                <option value="3">Finalizado Procedente</option>
-                                <option value="4">Finalizado Improcedente</option>
-                                <option value="5">Recursos</option>
+                            <small>Situação: *</small>
+                            <select name="situation" class="form-control @error('situation') is-invalid @enderror">
+                                <option value="1" @if (old('situation') == 1) selected @endif>Andamento em ordem</option>
+                                <option value="2" @if (old('situation') == 2) selected @endif>Aguardando cumprimento</option>
+                                <option value="3" @if (old('situation') == 3) selected @endif>Finalizado Procedente</option>
+                                <option value="4" @if (old('situation') == 4) selected @endif>Finalizado Improcedente</option>
+                                <option value="5" @if (old('situation') == 5) selected @endif>Recursos</option>
                             </select>
+                            @error('situation')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -155,7 +181,7 @@
                             <select name="action" class="form-control" onchange="showDocuments(this.value)">
                                 <option value="">Selecione um tipo</option>
                                 @foreach ($actions as $action)
-                                    <option value="{{ $action->id }}">{{ $action->name }}</option>
+                                    <option value="{{ $action->id }}" @if (old('action') == $action->is) selected @endif>{{ $action->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -177,8 +203,11 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <small>Prazo:</small>
-                            <input type="date" name="term" id="term" value="{{ old('term') }}" class="form-control" />
+                            <input type="date" name="term" id="term" value="{{ old('term') }}" class="form-control @error('phone') is-invalid @enderror" />
                         </div>
+                        @error('term')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                     </div>
 
                     <div class="col-md-12">

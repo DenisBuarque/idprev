@@ -55,6 +55,10 @@ class User extends Authenticatable
         return $this->hasMany(Lead::class);
     }
 
+    public function clients(){
+        return $this->hasMany(Lead::class);
+    }
+
     public function lawyers()
     {
         return $this->hasMany(lawyer::class);

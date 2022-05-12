@@ -9,7 +9,9 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title','date_event','description','slug'];
+    protected $fillable = ['title','date_event','description','slug','image'];
 
-    
+    protected $casts = [
+        'date_event' => 'datetime',
+    ];
 }

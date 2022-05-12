@@ -155,7 +155,7 @@ class ClientController extends Controller
     public function create()
     {
         $actions = $this->action->all();
-        $users = $this->user->all();
+        $users = $this->user->where('type','F')->get();
         return view('admin.clients.create',['users' => $users, 'actions' => $actions]);
     }
 
@@ -173,7 +173,21 @@ class ClientController extends Controller
         Validator::make($data, [
             'name' => 'required|string|min:3',
             'phone' => 'required|string',
+            'user_id' => 'required',
+            'zip_code' => 'required|string|max:9',
+            'address' => 'required|string|max:255',
+            'number' => 'required|string|max:5',
+            'district' => 'required|string|max:50',
+            'city' => 'required|string|max:50',
+            'state' => 'required|string|max:2',
+            'action' => 'required',
         ])->validate();
+
+        if($data['situation'] == 2){
+            Validator::make($data, [
+                'term' => 'required',
+            ])->validate();
+        }
 
         if(isset($data['financial'])):
             $data['financial'] = str_replace(['.', ','], ['', '.'], $data['financial']);
@@ -225,7 +239,7 @@ class ClientController extends Controller
     public function edit($id)
     {
         $actions = $this->action->all();
-        $users = $this->user->all();
+        $users = $this->user->where('type','F')->get();
         $lead = $this->lead->find($id);
         if($lead){
             return view('admin.clients.edit',[
@@ -253,7 +267,21 @@ class ClientController extends Controller
         Validator::make($data, [
             'name' => 'required|string|min:3',
             'phone' => 'required|string',
+            'user_id' => 'required',
+            'zip_code' => 'required|string|max:9',
+            'address' => 'required|string|max:255',
+            'number' => 'required|string|max:5',
+            'district' => 'required|string|max:50',
+            'city' => 'required|string|max:50',
+            'state' => 'required|string|max:2',
+            'action' => 'required',
         ])->validate();
+
+        if($data['situation'] == 2){
+            Validator::make($data, [
+                'term' => 'required',
+            ])->validate();
+        }
 
         if(isset($data['financial'])):
             $data['financial'] = str_replace(['.', ','], ['', '.'], $data['financial']);

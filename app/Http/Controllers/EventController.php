@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -67,9 +68,16 @@ class EventController extends Controller
             'title' => 'required|string|min:3|max:100',
             'date_event' => 'date_format:"Y-m-d"|required',
             'description' => 'required',
+            'image' => 'sometimes|required|max:50000|mimes:jpg,jpeg,gif,png',
         ])->validate();
 
         $data['slug'] = Str::slug($data['title'], '-');
+
+        if($request->hasFile('image') && $request->file('image')->isValid())
+        {
+            $file = $request->image->store('events','public');
+            $data['image'] = $file;
+        }
 
         $event = $this->event->create($data);
         if($event)
@@ -127,6 +135,16 @@ class EventController extends Controller
 
         $data['slug'] = Str::slug($data['title'], '-');
 
+        if($request->hasFile('image') && $request->file('image')->isValid())
+        {
+            if(Storage::exists($record['image'])){
+                Storage::delete($record['image']);
+            } 
+
+            $new_file = $request->image->store('public/events');
+            $data['image'] = $new_file;
+        }
+
         if($record->update($data))
         {
             return redirect('admin/training/events')->with('success', 'Registro alterado com sucesso!');
@@ -146,6 +164,10 @@ class EventController extends Controller
         $data = $this->event->find($id);
         if($data->delete())
         {
+            if(Storage::exists($data['image'])){
+                Storage::delete($data['image']);
+            } 
+
             return redirect('admin/training/events')->with('success', 'Registro excluído com sucesso!');
         } else {
             return redirect('admin/training/events')->with('alert', 'Erro ao excluir o registro!');
