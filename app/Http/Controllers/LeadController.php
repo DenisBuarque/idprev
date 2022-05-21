@@ -286,24 +286,13 @@ class LeadController extends Controller
 
         if($record->update($data)):
 
-            /*if(isset($data['comments'])){
-                $record->feedbackLeads()->create([
-                    'comments' => $data['comments'],
-                    'user_id' => auth()->user()->id,
-                ]);
-            }*/
-
             if($request->hasFile('photos'))
             {
                 $images = $this->imageUpload($request,'image');
                 $record->photos()->createMany($images);
             }
 
-            if($data['tag'] == 3){
-                return redirect('admin/clients/converted')->with('success', 'Registro inserido com sucesso!');
-            } else {
-                return redirect('admin/leads')->with('success', 'Registro inserido com sucesso!');
-            }
+            return redirect('admin/leads')->with('success', 'Registro inserido com sucesso!');
         else:
             return redirect('admin/leads')->with('error', 'Erro ao alterar o registro!');
         endif;

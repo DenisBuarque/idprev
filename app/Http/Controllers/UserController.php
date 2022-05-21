@@ -80,12 +80,7 @@ class UserController extends Controller
             if(isset($data['permission']) && count($data['permission']))
             {
                 foreach($data['permission'] as $key => $value):
-                    //$record->permissionUsers()->attach($value);
-                    $record->permissionUsers()->create([
-                        'user_id' => auth()->user()->id,
-                        'permission' => $value,
-                    ]);
-                        
+                    $record->permissions()->attach($value);
                 endforeach;
             }
 
@@ -114,9 +109,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        $permissions = $this->permission->all();
         $user = $this->user->find($id);
         if($user){
-            return view('admin.users.edit',['user' => $user]);
+            return view('admin.users.edit',['user' => $user, 'permissions' => $permissions]);
         } else {
             return redirect('admin/users')->with('alert', 'Desculpe! Não foi encontrado o registro que procura!');
         }
@@ -149,6 +145,21 @@ class UserController extends Controller
         }
 
         if($record->update($data)):
+
+            $permissions = $record->permissions;
+            if(count($permissions)){
+                foreach($permissions as $key => $value):
+                    $record->permissions()->detach($value->id);
+                endforeach;
+            }
+
+            if(isset($data['permission']) && count($data['permission']))
+            {
+                foreach($data['permission'] as $key => $value):
+                    $record->permissions()->attach($value);
+                endforeach;
+            }
+
             return redirect('admin/users')->with('success', 'Registro alterado com sucesso!');
         else:
             return redirect('admin/users')->with('alert', 'Erro ao alterar o registro!');

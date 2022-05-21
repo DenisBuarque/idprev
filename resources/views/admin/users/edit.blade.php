@@ -57,6 +57,34 @@
                                 placeholder="Confirmar senha" />
                         </div>
                     </div>
+                    <div class="col-md-12 my-3">
+                        <div class="form-group m-0">
+                            <small>Permissões de acessi ao sistema:</small>
+                            <select name="permission[]" class="form-control" multiple style="height: 300px;">
+                                @foreach($permissions as $key => $value)
+                                    @php
+                                        $selected = '';
+                                        if(old('permission')):
+                                            foreach (old('permission') as $key => $value2):
+                                                if($value->id == $value2->id ):
+                                                    $selected = 'selected';
+                                                endif;
+                                            endforeach;
+                                        else:
+                                            if($user){
+                                                foreach( $user->permissions as $key => $permission):
+                                                    if($permission->id == $value->id):
+                                                        $selected = "selected";
+                                                    endif;
+                                                endforeach;
+                                            }
+                                        endif;
+                                    @endphp
+                                    <option {{ $selected }} value="{{ $value->id }}">{{ $value->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -75,6 +103,7 @@
         </div>
 
     </form>
+    <br/>
 
 @stop
 

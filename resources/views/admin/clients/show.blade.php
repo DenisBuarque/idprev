@@ -205,27 +205,31 @@
                                                 @endforeach
                                             </div>
 
-                                            @if ($lead->status != 2)
-                                                <div class="form-group m-0 mt-3">
-                                                    <textarea name="comments" placeholder="Digite seu comentário aqui."
-                                                        class="form-control @error('comments') is-invalid @enderror">{{ old('description') }}</textarea>
-                                                    @error('comments')
-                                                        <div class="text-red">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            @endif
+                                            
+                                                @if ($lead->status != 2)
+                                                    <div class="form-group m-0 mt-3">
+                                                        <textarea name="comments" placeholder="Digite seu comentário aqui."
+                                                            class="form-control @error('comments') is-invalid @enderror">{{ old('description') }}</textarea>
+                                                        @error('comments')
+                                                            <div class="text-red">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                @endif
+                                           
                                         </div>
                                         <div class="card-footer">
                                             <a href="{{ route('admin.leads.index') }}" type="submit"
                                                 class="btn btn-default">Cancelar</a>
-                                            @if ($lead->status != 2)
-                                                <button id="button" type="submit" onClick="ocultarExibir()"
-                                                    class="btn btn-md btn-info float-right">
-                                                    <div id="text">
-                                                        <i class="fas fa-save mr-2"></i>
-                                                        Salvar Comentário
-                                                    </div>
-                                                </button>
+                                            
+                                                @if ($lead->status != 2)
+                                                    <button id="button" type="submit" onClick="ocultarExibir()"
+                                                        class="btn btn-md btn-info float-right">
+                                                        <div id="text">
+                                                            <i class="fas fa-save mr-2"></i>
+                                                            Salvar Comentário
+                                                        </div>
+                                                    </button>
+                                                
                                                 <a id="spinner" class="btn btn-md btn-info float-right text-center">
                                                     <div id="spinner" class="spinner-border" role="status"
                                                         style="width: 20px; height: 20px;">
@@ -236,16 +240,12 @@
                                         </div>
                                     </div>
                                 </form>
-
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </div>
-
     </section>
 
 @stop
@@ -269,6 +269,5 @@
             console.log('fecha message...');
             document.getElementById('message').style.display = 'none';
         }, 5000);
-        
     </script>
 @stop

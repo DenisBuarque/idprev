@@ -55,19 +55,12 @@ Route::group(['middleware' => 'advisor'], function () {
     Route::get('/cliente/{id}', [HomeController::class, 'detail'])->name('franchisee.client');
 });
 
-Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
-Route::get('/admin/user/create', [UserController::class, 'create'])->name('admin.users.create');
-Route::post('/admin/user/store', [UserController::class, 'store'])->name('admin.users.store');
-Route::get('/admin/user/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
-Route::put('/admin/user/update/{id}', [UserController::class, 'update'])->name('admin.users.update');
-Route::delete('/admin/user/delete/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
-
-Route::get('/admin/services', [ServiceController::class, 'index'])->name('admin.services.index');
-Route::get('/admin/service/create', [ServiceController::class, 'create'])->name('admin.services.create');
-Route::post('/admin/service/store', [ServiceController::class, 'store'])->name('admin.services.store');
-Route::get('/admin/service/edit/{id}', [ServiceController::class, 'edit'])->name('admin.services.edit');
-Route::put('/admin/service/update/{id}', [ServiceController::class, 'update'])->name('admin.services.update');
-Route::delete('/admin/service/delete/{id}', [ServiceController::class, 'destroy'])->name('admin.services.destroy');
+Route::get('/admin/users', [UserController::class, 'index'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.index');
+Route::get('/admin/user/create', [UserController::class, 'create'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.create');
+Route::post('/admin/user/store', [UserController::class, 'store'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.store');
+Route::get('/admin/user/edit/{id}', [UserController::class, 'edit'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.edit');
+Route::put('/admin/user/update/{id}', [UserController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.update');
+Route::delete('/admin/user/delete/{id}', [UserController::class, 'destroy'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.destroy');
 
 Route::get('/admin/leads', [LeadController::class, 'index'])->name('admin.leads.index');
 Route::get('/admin/lead/create', [LeadController::class, 'create'])->name('admin.leads.create');
@@ -81,6 +74,33 @@ Route::delete('/admin/lead/document/remove', [LeadController::class, 'remove'])-
 Route::get('/admin/lead/documents/{id}', [LeadController::class, 'documents'])->name('admin.lead.documents');
 Route::post('/admin/lead/feedback', [LeadController::class, 'feedback'])->name('admin.lead.feedback');
 Route::get('/admin/lead/document/download/{id}', [LeadController::class, 'download'])->name('admin.lead.document.download');
+
+Route::get('/admin/clients', [ClientController::class, 'index'])->name('admin.clients.index');
+Route::get('/admin/clients/term', [ClientController::class, 'term'])->name('admin.clients.term');
+Route::get('/admin/client/term/edit/{id}', [ClientController::class, 'edit_term'])->name('admin.clients.edit_term');
+Route::get('/admin/client/create', [ClientController::class, 'create'])->name('admin.clients.create');
+Route::post('/admin/client/store', [ClientController::class, 'store'])->name('admin.clients.store');
+Route::get('/admin/client/edit/{id}', [ClientController::class, 'edit'])->name('admin.clients.edit');
+Route::get('/admin/client/tag/{tag}', [ClientController::class, 'tag'])->name('admin.clients.tag');
+Route::get('/admin/client/situation/{situation}', [ClientController::class, 'situation'])->name('admin.clients.situation');
+Route::get('/admin/client/show/{id}', [ClientController::class, 'show'])->name('admin.clients.show');
+Route::put('/admin/client/update/{id}', [ClientController::class, 'update'])->name('admin.clients.update');
+Route::put('/admin/client/update/term/{id}', [ClientController::class, 'update_term'])->name('admin.clients.update_term');
+
+
+
+
+
+
+
+Route::get('/admin/services', [ServiceController::class, 'index'])->name('admin.services.index');
+Route::get('/admin/service/create', [ServiceController::class, 'create'])->name('admin.services.create');
+Route::post('/admin/service/store', [ServiceController::class, 'store'])->name('admin.services.store');
+Route::get('/admin/service/edit/{id}', [ServiceController::class, 'edit'])->name('admin.services.edit');
+Route::put('/admin/service/update/{id}', [ServiceController::class, 'update'])->name('admin.services.update');
+Route::delete('/admin/service/delete/{id}', [ServiceController::class, 'destroy'])->name('admin.services.destroy');
+
+
 
 Route::get('/admin/training/files', [FileController::class, 'index'])->name('admin.training.files.index');
 Route::get('/admin/training/file/create', [FileController::class, 'create'])->name('admin.training.files.create');
@@ -120,18 +140,7 @@ Route::get('/admin/document/action/edit/{id}', [ActionController::class, 'edit']
 Route::put('/admin/document/action/update/{id}', [ActionController::class, 'update'])->name('admin.document.actions.update');
 Route::delete('/admin/document/action/delete/{id}', [ActionController::class, 'destroy'])->name('admin.document.actions.destroy');
 
-Route::get('/admin/clients', [ClientController::class, 'index'])->name('admin.clients.index');
-Route::get('/admin/clients/term', [ClientController::class, 'term'])->name('admin.clients.term');
-Route::get('/admin/client/term/edit/{id}', [ClientController::class, 'edit_term'])->name('admin.clients.edit_term');
-Route::get('/admin/client/create', [ClientController::class, 'create'])->name('admin.clients.create');
-Route::post('/admin/client/store', [ClientController::class, 'store'])->name('admin.clients.store');
-Route::get('/admin/client/edit/{id}', [ClientController::class, 'edit'])->name('admin.clients.edit');
-Route::get('/admin/client/tag/{tag}', [ClientController::class, 'tag'])->name('admin.clients.tag');
-Route::get('/admin/client/situation/{situation}', [ClientController::class, 'situation'])->name('admin.clients.situation');
-Route::get('/admin/client/show/{id}', [ClientController::class, 'show'])->name('admin.clients.show');
-Route::put('/admin/client/update/{id}', [ClientController::class, 'update'])->name('admin.clients.update');
 
-Route::put('/admin/client/update/term/{id}', [ClientController::class, 'update_term'])->name('admin.clients.update_term');
 
 Route::delete('/admin/client/delete/{id}', [ClientController::class, 'destroy'])->name('admin.clients.destroy');
 Route::delete('/admin/client/document/remove', [ClientController::class, 'remove'])->name('admin.client.document.remove');

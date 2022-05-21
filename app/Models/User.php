@@ -78,6 +78,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Permission::class);
     }
 
+    public function hasPermissions($value)
+    {
+        $p = $this->permissions;
+        return $value->intersect($p)->count();
+    }
+
     /**
      * The attributes that should be cast.
      *

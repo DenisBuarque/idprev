@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
-use App\Models\User;
-use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,10 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //$this->registerPolicies();
-        Gate::define('create-data', function (User $user) {
-            return true;
-        });
+        //
     }
 
     /**

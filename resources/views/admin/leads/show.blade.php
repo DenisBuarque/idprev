@@ -10,9 +10,7 @@
 @stop
 
 @section('content')
-
     <section class="content">
-
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Acompanhe os detalhes do seu lead:</h3>
@@ -42,12 +40,10 @@
                                     <b class="d-block">{{ $lead->zip_code }}</b>
                                 </p>
                             @endif
-                            
                         </p>
                         <p class="text-sm">Franqueado:
                             <b class="d-block">{{ $lead->user->name }}</b>
                         </p>
-                        
                     </div>
                     <div class="col-12 col-md-12 col-lg-8">
                         <div class="row">
@@ -104,7 +100,6 @@
                                         {{ session('error') }}
                                     </div>
                                 @endif
-
                                 <form method="POST" action="{{ route('admin.lead.feedback') }}">
                                     <input type="hidden" name="lead_id" value="{{ $lead->id }}" />
                                     @csrf
@@ -148,50 +143,48 @@
                                                     @endif
                                                 @endforeach
                                             </div>
-        
-                                            @if ($lead->tag != 4)
-                                                <div class="form-group m-0 mt-3">
-                                                    <textarea name="comments" placeholder="Digite seu comentário aqui."
-                                                        class="form-control @error('comments') is-invalid @enderror">{{ old('description') }}</textarea>
-                                                    @error('comments')
-                                                        <div class="text-red">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            @endif
+                                            
+                                                @if ($lead->tag != 4)
+                                                    <div class="form-group m-0 mt-3">
+                                                        <textarea name="comments" placeholder="Digite seu comentário aqui."
+                                                            class="form-control @error('comments') is-invalid @enderror">{{ old('description') }}</textarea>
+                                                        @error('comments')
+                                                            <div class="text-red">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                @endif
+                                            
                                         </div>
                                         <div class="card-footer">
                                             <a href="{{ route('admin.leads.index') }}" type="submit"
                                             class="btn btn-default">Cancelar</a>
-                                        @if ($lead->tag != 4)
-                                            <button id="button" type="submit" onClick="ocultarExibir()"
-                                                class="btn btn-md btn-info float-right">
-                                                <div id="text">
-                                                    <i class="fas fa-save mr-2"></i>
-                                                    Salvar Comentário
-                                                </div>
-                                            </button>
-                                            <a id="spinner" class="btn btn-md btn-info float-right text-center">
-                                                <div id="spinner" class="spinner-border" role="status"
-                                                    style="width: 20px; height: 20px;">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </a>
-                                        @endif
+                                            
+                                                @if ($lead->tag != 4)
+                                                    <button id="button" type="submit" onClick="ocultarExibir()"
+                                                        class="btn btn-md btn-info float-right">
+                                                        <div id="text">
+                                                            <i class="fas fa-save mr-2"></i>
+                                                            Salvar Comentário
+                                                        </div>
+                                                    </button>
+                                                    <a id="spinner" class="btn btn-md btn-info float-right text-center">
+                                                        <div id="spinner" class="spinner-border" role="status"
+                                                            style="width: 20px; height: 20px;">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                    </a>
+                                                @endif
+                                            
                                         </div>
                                     </div>
                                 </form>
-
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </div>
-
     </section>
-
 @stop
 
 @section('css')
@@ -201,7 +194,6 @@
 @section('js')
 
     <script>
-
         document.getElementById("button").style.display = "block";
         document.getElementById("spinner").style.display = "none";
 
@@ -213,7 +205,7 @@
 
         setTimeout(() => {
             document.getElementById('message').style.display = 'none';
-        }, 7000);
+        }, 6000);
 
     </script>
 @stop
