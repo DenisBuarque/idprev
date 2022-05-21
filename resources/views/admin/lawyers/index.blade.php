@@ -47,7 +47,7 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Nome do Advogado</th>
+                        <th>Nome</th>
                         <th class="text-center">OAB</th>
                         <th>Franqueado</th>
                         <th style="width: 160px;">Criado</th>

@@ -30,40 +30,29 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Criado</th>
                         <th>Prazo</th>
+                        <th>Situação</th>
                         <th>Nome</th>
                         <th>Franqueado</th>
-                        <th>Local</th>
                         <th>Etiqueta</th>
-                        <th>Situação</th>
-                        <th class='text-center'>Ações</th>
+                        <th>Anexos</th>
+                        <th>Criado</th>
+                        <th>Atualizado</th>
+                        <th class='text-center' style="width: 150px">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($leads as $lead)
                         <tr>
-                            <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
-                            <td>{{ $lead->term->format('d/m/Y') }}</td>
-                            <td>{{ $lead->name }}</td>
-                            <td>{{ $lead->user->name }}</td>
-                            <td>{{ $lead->city.'/'.$lead->state }}</td>
                             <td>
                                 @php
-                                    $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
-                                    foreach ($array_tags as $key => $value) {
-                                        if ($key == $lead->tag) {
-                                            if($key == 2){
-                                                echo '<small class="badge badge-warning">'.$value.'</small>';
-                                            } elseif($key == 3){
-                                                echo '<small class="badge badge-success">'.$value.'</small>';
-                                            } elseif($key == 4){
-                                                echo '<small class="badge badge-danger">'.$value.'</small>';
-                                            }
-                                        }
+                                    $now = Carbon\Carbon::now()->format('Y-m-d');
+                                    if ($lead->term < $now) {
+                                        echo '<small class="badge badge-danger">' . $lead->term->format('d/m/Y') . '</small>';
+                                    } else {
+                                        echo $lead->term->format('d/m/Y');
                                     }
                                 @endphp
-                                
                             </td>
                             <td>
                                 @php
@@ -75,16 +64,59 @@
                                     }
                                 @endphp
                             </td>
+                            <td>{{ $lead->name }}</td>
+                            <td>{{ $lead->user->name }}</td>
+                            <td>
+                                @php
+                                    $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
+                                    foreach ($array_tags as $key => $value) {
+                                        if ($key == $lead->tag) {
+                                            if ($key == 2) {
+                                                echo '<small class="badge badge-warning">' . $value . '</small>';
+                                            } elseif ($key == 3) {
+                                                echo '<small class="badge badge-success">' . $value . '</small>';
+                                            } elseif ($key == 4) {
+                                                echo '<small class="badge badge-danger">' . $value . '</small>';
+                                            }
+                                        }
+                                    }
+                                @endphp
+                            </td>
+                            <td>
+                                @php
+                                    $docs = count($lead->photos);
+                                    $anexos = 0;
+                                    foreach ($models as $model) {
+                                        if ($model->action_id == $lead->action) {
+                                            $anexos += 1;
+                                        }
+                                    }
+                                    
+                                    if ($anexos > $docs) {
+                                        $falta = $anexos - $docs;
+                                        echo $docs .' <i class="fas fa-paperclip"></i> falta ' . $falta . ' doc.';
+                                    } else {
+                                        echo '<i class="fas fa-thumbs-up"></i> ' . $docs . ' anexo(s)';
+                                    }
+                                    
+                                @endphp
+
+                            </td>
+                            <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
+                            <td>{{ $lead->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
+                                <a href="{{ route('admin.clients.show', ['id' => $lead->id]) }}"
+                                    class="btn btn-xs border mr-1"><i class="fa fa-comments"></i>
+                                    {{ count($lead->feedbackLeads) }}</a>
                                 <a href="{{ route('admin.clients.edit_term', ['id' => $lead->id]) }}"
-                                    class="btn btn-info btn-sm mr-1">
+                                    class="btn btn-info btn-xs px-2 mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form method="POST" onsubmit="return(confirmaExcluir())"
                                     action="{{ route('admin.clients.destroy', ['id' => $lead->id]) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <button type="submit" class="btn btn-danger btn-xs px-2">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>

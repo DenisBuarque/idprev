@@ -30,10 +30,10 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         
-        $ticket_total = $this->ticket->all();
-        $open = $this->ticket->where('status','1')->get();
-        $resolved = $this->ticket->where('status','2')->get();
-        $pending = $this->ticket->where('status','3')->get();
+        $ticket_total = $this->ticket->all()->count();
+        $open = $this->ticket->where('status','1')->get()->count();
+        $resolved = $this->ticket->where('status','2')->get()->count();
+        $pending = $this->ticket->where('status','3')->get()->count();
 
         //total * (valor/100);
 

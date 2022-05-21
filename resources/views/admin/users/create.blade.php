@@ -12,14 +12,14 @@
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div class="alert alert-success mb-2" role="alert" style="max-width: 800px; margin: auto;">
             {{ session('success') }}
         </div>
     @endif
 
     <form method="POST" action="{{ route('admin.users.store') }}">
         @csrf
-        <div class="card card-info" style="max-width: 700px; margin: auto">
+        <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
                 <h3 class="card-title">Formulário cadastro de administrador:</h3>
             </div>
@@ -67,6 +67,18 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-md-12 my-3">
+                        <div class="form-group m-0">
+                            <small>Confirme sua senha:</small>
+                            <select name="permissions[]" class="form-control">
+                                @foreach ($permissions as $permission)
+                                    <option value="{{$permission->slug}}">{{$permission->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                    </div>
+                    
                 </div>
             </div>
             <div class="card-footer">

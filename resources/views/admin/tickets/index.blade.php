@@ -28,40 +28,32 @@
             <div class="col-sm-3 col-6">
                 <div class="description-block border-right">
                     <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 100%</span>
-                    <h5 class="description-header">{{ count($ticket_total) }}</h5>
+                    <h5 class="description-header">{{ $ticket_total }}</h5>
                     <span class="description-text">TICKETS</span>
                 </div>
-
             </div>
-
             <div class="col-sm-3 col-6">
-
                 <div class="description-block border-right">
-                    <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> {{ count($open) != 0 ?? '' }}0%</span>
-                    <h5 class="description-header">{{ count($open) }}</h5>
+                    <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> {{ $open != 0 ?? '' }}0%</span>
+                    <h5 class="description-header">{{ $open }}</h5>
                     <span class="description-text">TICKETS ABERTOS</span>
                 </div>
-
             </div>
-
             <div class="col-sm-3 col-6">
                 <div class="description-block border-right">
-                    <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> {{ count($resolved) != 0 ?? '' }}0%</span>
-                    <h5 class="description-header">{{ count($resolved) }}</h5>
+                    <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> {{ $resolved != 0 ?? '' }}0%</span>
+                    <h5 class="description-header">{{ $resolved }}</h5>
                     <span class="description-text">TICKETS RESOLVIDOS</span>
                 </div>
-
             </div>
             <div class="col-sm-3 col-6">
                 <div class="description-block">
-                    <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> {{ count($pending) != 0 ?? '' }}0%</span>
-                    <h5 class="description-header">{{ count($pending) }}</h5>
+                    <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> {{ $pending != 0 ?? '' }}0%</span>
+                    <h5 class="description-header">{{ $pending }}</h5>
                     <span class="description-text">TICKETS PENDETES</span>
                 </div>
-
             </div>
         </div>
-
     </div>
 
     <div class="row">
@@ -95,8 +87,7 @@
                                         <th>Código</th>
                                         <th>Franqueado</th>
                                         <th>Status</th>
-                                        <th class="text-center">Comentários</th>
-                                        <th style="width: 100px;" class="text-center">Ação</th>
+                                        <th style="width: 150px;" class="text-center">Ação</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -112,32 +103,30 @@
                                                     @endif
                                                 @endforeach
                                             </td>
-                                            <td class="text-center">
+                                            <td class='d-flex flex-row align-content-center justify-content-center'>
                                                 <a href="{{ route('admin.tickets.response', ['id' => $ticket->id]) }}"
-                                                    class="btn btn-sm border">
+                                                    class="btn btn-xs px-2 border mr-1">
                                                     <i class="fa fa-comments"></i> {{ count($ticket->feedbackTickets) }}
                                                 </a>
-                                            </td>
-                                            <td class='d-flex flex-row align-content-center justify-content-center'>
 
                                                 @if ($ticket->status != 2)
                                                     <a href="{{ route('admin.tickets.edit', ['id' => $ticket->id]) }}"
-                                                        class="btn btn-info btn-sm mr-1">
+                                                        class="btn btn-info btn-xs px-2 mr-1">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     <form method="POST" onsubmit="return(confirmaExcluir())"
                                                         action="{{ route('admin.tickets.destroy', ['id' => $ticket->id]) }}">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                        <button type="submit" class="btn btn-danger btn-xs px-2">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </form>
                                                 @else
-                                                    <button type="button" class="btn btn-lingt btn-sm mr-1">
+                                                    <button type="button" class="btn btn-lingt btn-xs px-2 mr-1">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-lingt btn-sm mr-1">
+                                                    <button type="button" class="btn btn-lingt btn-xs px-2 mr-1">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 @endif

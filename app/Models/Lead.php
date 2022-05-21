@@ -26,6 +26,11 @@ class Lead extends Model
         return $this->hasMany(ClientPhotos::class);
     }
 
+    public function financy(){
+        return $this->hasOne(Financial::class);
+    }
+
+
     protected $casts = [
         'created_at' => 'datetime',
         'term' => 'datetime'

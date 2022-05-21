@@ -36,9 +36,10 @@ class LeadController extends Controller
      */
     public function index(Request $request)
     {
-        $waiting = $this->lead->where('tag','2')->get();
-        $converted_lead = $this->lead->where('tag','3')->get();
-        $unconverted_lead = $this->lead->where('tag','4')->get();
+        $leads_total = $this->lead->all()->count();
+        $waiting = $this->lead->where('tag','2')->get()->count();
+        $converted_lead = $this->lead->where('tag','3')->get()->count();
+        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
         $originating_customers = $this->lead->where('situation','3')->get();
         $unfounded_customers = $this->lead->where('situation','4')->get();
         $resources = $this->lead->where('situation','5')->get();
@@ -56,10 +57,10 @@ class LeadController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $leads = $query->whereIn('tag',[1,2])->orderBy('id','DESC')->get();
+            $leads = $query->orderBy('id','DESC')->get();
 
         } else {
-            $leads = $this->lead->whereIn('tag',[1,2])->orderBy('id','DESC')->paginate(10);
+            $leads = $this->lead->orderBy('id','DESC')->paginate(10);
         }
         
         return view('admin.leads.index',[
@@ -71,7 +72,31 @@ class LeadController extends Controller
             'originating_customers' => $originating_customers,
             'unfounded_customers' => $unfounded_customers,
             'resources' => $resources,
-            'users' => $users
+            'users' => $users,
+            'leads_total' => $leads_total
+        ]);
+    }
+
+    public function leads($tag)
+    {
+        $leads_total = $this->lead->all()->count();
+        $waiting = $this->lead->where('tag','2')->get()->count();
+        $converted_lead = $this->lead->where('tag','3')->get()->count();
+        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+        $originating_customers = $this->lead->where('situation','3')->get();
+        $unfounded_customers = $this->lead->where('situation','4')->get();
+        $search = '';
+
+        $leads = $this->lead->where('tag',$tag)->orderBy('id','DESC')->get();
+        return view('admin.leads.tag',[
+            'leads' => $leads, 
+            'search' => $search,
+            'waiting' => $waiting,
+            'converted_lead' => $converted_lead, 
+            'unconverted_lead' => $unconverted_lead, 
+            'originating_customers' => $originating_customers,
+            'unfounded_customers' => $unfounded_customers,
+            'leads_total' => $leads_total
         ]);
     }
 
@@ -111,7 +136,7 @@ class LeadController extends Controller
 
         $create = $this->feedback->create($data);
         if ($create) {
-            return redirect('admin/lead/comments/'.$data['lead_id'])->with('success', 'Comentário adicionado com sucesso!');;
+            return redirect('admin/lead/show/'.$data['lead_id'])->with('success', 'Comentário adicionado com sucesso!');;
             //return redirect('admin/leads')->with('success', 'Seu ticket foi enviado, aguardo sua resposta!');
         } else {
             return redirect('admin/leads')->with('error', 'Erro ao inserido o ticket!');
@@ -192,7 +217,14 @@ class LeadController extends Controller
      */
     public function show($id)
     {
-        //
+        $users = \App\Models\User::all();
+        $lead = $this->lead->find($id);
+        $feedbackLeads = $this->feedback->orderBy('id','DESC')->where('lead_id','=',$id)->get();
+        if($lead){
+            return view('admin.leads.show',['lead' => $lead, 'users' => $users, 'feedbackLeads' => $feedbackLeads]);
+        } else {
+            return redirect('admin/leads')->with('alert', 'Desculpe! Não encontramos o registro!');
+        }
     }
 
     /**

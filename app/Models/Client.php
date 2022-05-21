@@ -27,19 +27,13 @@ class Client extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function processes()
-    {
-        return $this->hasMany(Process::class);
-    }
-
+    
     public function photos()
     {
         return $this->hasMany(ClientPhotos::class);
     }
 
-    public function advisor()
-    {
-        return $this->hasMany(Advisor::class);
-    }
+    protected $casts = [
+        'term' => 'datetime'
+    ];
 }

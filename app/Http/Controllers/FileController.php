@@ -73,7 +73,7 @@ class FileController extends Controller
 
         if($request->hasFile('arquivo') && $request->file('arquivo')->isValid())
         {
-            $file = $request->arquivo->store('public/files');
+            $file = $request->arquivo->store('files','public');
             $data['arquivo'] = $file;
         }
 
@@ -147,10 +147,9 @@ class FileController extends Controller
         {
             if(Storage::exists($record['arquivo'])){
                 Storage::delete($record['arquivo']);
-                //Storage::download('tutorial.pdf');
             } 
 
-            $new_file = $request->arquivo->store('public/files');
+            $new_file = $request->arquivo->store('files','public');
             $data['arquivo'] = $new_file;
         }
 

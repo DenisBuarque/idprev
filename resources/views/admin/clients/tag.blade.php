@@ -116,6 +116,7 @@
                             <tr>
                                 <th>Nome</th>
                                 <th>Franqueado</th>
+                                <th>Etiqueta</th>
                                 <th>Situação</th>
                                 <th style="width: 130px;">Anexos</th>
                                 <th class='text-center' style="width: 140px;">Ações</th>
@@ -126,6 +127,24 @@
                                 <tr>
                                     <td>{{ $lead->name }}</td>
                                     <td>{{ $lead->user->name }}</td>
+                                    <td>
+                                        @php
+                                            $array_tags = [1 => 'Novo Lead', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
+                                            foreach ($array_tags as $key => $value) {
+                                                if ($key == $lead->tag) {
+                                                    if ($key == 1) {
+                                                        echo '<small class="badge badge-info">' . $value . '</small>';
+                                                    } elseif ($key == 2) {
+                                                        echo '<small class="badge badge-warning">' . $value . '</small>';
+                                                    } elseif ($key == 3) {
+                                                        echo '<small class="badge badge-success">' . $value . '</small>';
+                                                    } else {
+                                                        echo '<small class="badge badge-danger">' . $value . '</small>';
+                                                    }
+                                                }
+                                            }
+                                        @endphp
+                                    </td>
                                     <td>
                                         @php
                                             $array_situations = [1 => 'Andamento em ordem', 2 => 'Aguardando cumprimento', 3 => 'Finalizado procedente', 4 => 'Finalizado improcedente', 5 => 'Recursos'];
@@ -148,7 +167,7 @@
 
                                             if($anexos > $docs){
                                                 $falta = $anexos - $docs;
-                                                echo $docs.' <i class="fas fa-paperclip"></i> falta '.$falta.' doc.';
+                                                echo $docs .' <i class="fas fa-paperclip"></i> falta ' . $falta . ' doc.';
                                             } else {
                                                 echo '<i class="fas fa-thumbs-up"></i> '.$docs.' anexo(s)';
                                             }
@@ -177,12 +196,6 @@
                             @endforeach
                         </tbody>
                     </table>
-
-                    <div class="mt-3 mr-3 ml-3">
-                        @if (!$search && $leads)
-                            {{ $leads->links() }}
-                        @endif
-                    </div>
 
                 </div>
             </div>

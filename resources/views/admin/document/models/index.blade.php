@@ -14,7 +14,9 @@
                     </button>
                 </span>
             </div>
-            <a href="{{ route('admin.document.models.create') }}" class="btn bg-info">Adicionar Registro</a>
+            <a href="{{ route('admin.document.models.create') }}" class="btn bg-info">
+                <i class="fas fa-plus mr-2"></i> Adicionar Registro
+            </a>
         </div>
     </form>
 @stop
@@ -44,32 +46,34 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Data</th>
                         <th>Título</th>
                         <th>Tipo de Ação</th>
-                        <th class='text-center' style="width: 100px;" >Ações</th>
+                        <th style="width: 160px;">Criado</th>
+                        <th style="width: 160px;">Atualizado</th>
+                        <th class='text-center' style="width: 100px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($models as $model)
                         <tr>
-                            <td>{{ $model->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $model->title }}</td>
                             <td>{{ $model->action->name }}</td>
+                            <td>{{ $model->created_at->format('d/m/Y H:m:s') }}</td>
+                            <td>{{ $model->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
                                 <a href="{{ route('admin.document.models.download', ['id' => $model->id]) }}"
-                                    class="btn btn-default btn-sm mr-1">
+                                    class="btn btn-default btn-xs px-2 mr-1">
                                     <i class="fas fa-download"></i>
                                 </a>
                                 <a href="{{ route('admin.document.models.edit', ['id' => $model->id]) }}"
-                                    class="btn btn-info btn-sm mr-1">
+                                    class="btn btn-info btn-xs px-2 mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form method="POST" onsubmit="return(confirmaExcluir())"
                                     action="{{ route('admin.document.models.destroy', ['id' => $model->id]) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <button type="submit" class="btn btn-danger btn-xs px-2">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>

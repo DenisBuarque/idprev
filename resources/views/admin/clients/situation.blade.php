@@ -148,13 +148,11 @@
 
                                             if($anexos > $docs){
                                                 $falta = $anexos - $docs;
-                                                echo $docs.' <i class="fas fa-paperclip"></i> falta '.$falta.' doc.';
+                                                echo $docs .' <i class="fas fa-paperclip"></i> falta ' . $falta . ' doc.';
                                             } else {
                                                 echo '<i class="fas fa-thumbs-up"></i> '.$docs.' anexo(s)';
                                             }
-
                                         @endphp
-                                        
                                     </td>
                                     <td class='d-flex flex-row align-content-center justify-content-center'>
                                         <a href="{{ route('admin.clients.show', ['id' => $lead->id]) }}"
@@ -177,12 +175,6 @@
                             @endforeach
                         </tbody>
                     </table>
-
-                    <div class="mt-3 mr-3 ml-3">
-                        @if (!$search && $leads)
-                            {{ $leads->links() }}
-                        @endif
-                    </div>
 
                 </div>
             </div>
@@ -226,7 +218,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
 
 

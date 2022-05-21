@@ -8,22 +8,29 @@ use App\Models\ClientPhotos;
 use App\Models\User;
 use App\Models\Action;
 use App\models\ModelDoc;
+use App\Models\FeedbackLead;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ClientController extends Controller
 {
     private $lead;
     private $user;
     private $action;
+    private $feedback;
+    private $clientPhotos;
+    private $model;
 
-    public function __construct(Lead $lead, User $user, Action $action, ModelDoc $modeldoc)
+    public function __construct(Lead $lead, User $user, Action $action, ModelDoc $model, FeedbackLead $feedback, ClientPhotos $clientPhotos)
     {   
         $this->lead = $lead;
         $this->user = $user;
         $this->action = $action;
-        $this->modeldoc = $modeldoc;
+        $this->model = $model;
+        $this->feedback = $feedback;
+        $this->clientPhotos = $clientPhotos;
     }
 
     /**
@@ -33,6 +40,16 @@ class ClientController extends Controller
      */
     public function index(Request $request)
     {
+        $waiting = $this->lead->where('tag','2')->get()->count();
+        $converted_lead = $this->lead->where('tag','3')->get()->count();
+        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+        $progress = $this->lead->where('situation','1')->get()->count();
+        $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
+        $procedente = $this->lead->where('situation','3')->get()->count();
+        $improcedente = $this->lead->where('situation','4')->get()->count();
+        $resources = $this->lead->where('situation','5')->get()->count();
+        $models = $this->model->all();
+
         $search = "";
         if(isset($request->search))
         {
@@ -50,7 +67,81 @@ class ClientController extends Controller
             $leads = $this->lead->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
         }
         
-        return view('admin.clients.index',['leads' => $leads, 'search' => $search]);
+        return view('admin.clients.index',[
+            'leads' => $leads, 
+            'search' => $search,
+            'waiting' => $waiting,
+            'converted_lead' => $converted_lead, 
+            'unconverted_lead' => $unconverted_lead,
+            'progress' => $progress,
+            'awaiting_fulfillment' => $awaiting_fulfillment,
+            'procedente' => $procedente,
+            'improcedente' => $improcedente,
+            'resources' => $resources,
+            'models' => $models,
+        ]);
+    }
+
+    public function tag($tag)
+    {
+        $waiting = $this->lead->where('tag','2')->get()->count();
+        $converted_lead = $this->lead->where('tag','3')->get()->count();
+        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+        $progress = $this->lead->where('situation','1')->get()->count();
+        $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
+        $procedente = $this->lead->where('situation','3')->get()->count();
+        $improcedente = $this->lead->where('situation','4')->get()->count();
+        $resources = $this->lead->where('situation','5')->get()->count();
+        $models = $this->model->all();
+
+        $search = "";
+
+        $leads = $this->lead->where('tag',$tag)->orderBy('id','DESC')->get();
+        
+        return view('admin.clients.tag',[
+            'leads' => $leads, 
+            'search' => $search,
+            'waiting' => $waiting,
+            'converted_lead' => $converted_lead, 
+            'unconverted_lead' => $unconverted_lead,
+            'progress' => $progress,
+            'awaiting_fulfillment' => $awaiting_fulfillment,
+            'procedente' => $procedente,
+            'improcedente' => $improcedente,
+            'resources' => $resources,
+            'models' => $models,
+        ]);
+    }
+
+    public function situation($situation)
+    {
+        $waiting = $this->lead->where('tag','2')->get()->count();
+        $converted_lead = $this->lead->where('tag','3')->get()->count();
+        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+        $progress = $this->lead->where('situation','1')->get()->count();
+        $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
+        $procedente = $this->lead->where('situation','3')->get()->count();
+        $improcedente = $this->lead->where('situation','4')->get()->count();
+        $resources = $this->lead->where('situation','5')->get()->count();
+        $models = $this->model->all();
+
+        $search = "";
+
+        $leads = $this->lead->where('situation',$situation)->orderBy('id','DESC')->get();
+        
+        return view('admin.clients.situation',[
+            'leads' => $leads, 
+            'search' => $search,
+            'waiting' => $waiting,
+            'converted_lead' => $converted_lead, 
+            'unconverted_lead' => $unconverted_lead,
+            'progress' => $progress,
+            'awaiting_fulfillment' => $awaiting_fulfillment,
+            'procedente' => $procedente,
+            'improcedente' => $improcedente,
+            'resources' => $resources,
+            'models' => $models,
+        ]);
     }
 
     public function converted(Request $request)
@@ -99,6 +190,7 @@ class ClientController extends Controller
 
     public function term(Request $request)
     {
+        $models = $this->model->all();
         $search = "";
         if(isset($request->search))
         {
@@ -116,7 +208,11 @@ class ClientController extends Controller
             $leads = $this->lead->whereIn('situation',[2])->orderBy('id','DESC')->paginate(10);
         }
         
-        return view('admin.clients.term',['leads' => $leads, 'search' => $search]);
+        return view('admin.clients.term',[
+            'leads' => $leads, 
+            'search' => $search,
+            'models' => $models
+        ]);
     }
 
     public function edit_term($id)
@@ -135,17 +231,26 @@ class ClientController extends Controller
         return view('admin.clients.documents',['documents' => $documents]);
     }
 
-     public function download($id)
+    public function download($id)
     {
-        $record = $this->modeldoc->find($id);
+        $record = $this->model->find($id);
 
         if(Storage::exists($record['document'])){
             return Storage::download($record['document']);
         } 
 
-        return redirect('admin/client/create')->with('alert', 'Desculpe! Não encontramos o documento!');
+        return redirect('/admin/client/show/'.$id)->with('alert', 'Desculpe! Não encontramos o documento!');
     }
 
+    public function downloaddoc($id,$lead)
+    {
+        $record = $this->clientPhotos->find($id);
+
+        if(Storage::exists($record['image'])){
+            return Storage::download($record['image']);
+        } 
+        return redirect('/admin/client/show/'.$lead)->with('err', 'Desculpe! Erro ao baixar arquivo!');
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -227,7 +332,16 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        //
+        $users = \App\Models\User::all();
+        $actions = $this->action->all();
+        $models = $this->model->all();
+        $lead = $this->lead->find($id);
+        $feedbackLeads = $this->feedback->orderBy('id','DESC')->where('lead_id','=',$id)->get();
+        if($lead){
+            return view('admin.clients.show',['lead' => $lead, 'users' => $users, 'feedbackLeads' => $feedbackLeads, 'actions' => $actions, 'models' => $models]);
+        } else {
+            return redirect('admin/clients')->with('alert', 'Desculpe! Não encontramos o registro!');
+        }
     }
 
     /**
@@ -249,6 +363,24 @@ class ClientController extends Controller
             );
         } else {
             return redirect('admin/clients')->with('alert', 'Desculpe! Não encontramos o registro!');
+        }
+    }
+
+    public function feedback(Request $request)
+    {
+        $data = $request->all();
+        Validator::make($data, [
+            'comments' => 'required|string|min:10',
+        ])->validate();
+
+        $data['user_id'] = auth()->user()->id;
+
+        $create = $this->feedback->create($data);
+        if ($create) {
+            return redirect('admin/client/show/'.$data['lead_id'])->with('success', 'Comentário adicionado com sucesso!');;
+            //return redirect('admin/leads')->with('success', 'Seu ticket foi enviado, aguardo sua resposta!');
+        } else {
+            return redirect('admin/clients')->with('error', 'Erro ao inserido o ticket!');
         }
     }
 
@@ -319,8 +451,8 @@ class ClientController extends Controller
         $record = $this->lead->find($id);
 
         Validator::make($data, [
-            'responsible' => 'required|string|min:3|max:100',
-            'date_fulfilled' => 'required|string',
+            'responsible' => 'required|string|min:3|max:50',
+            'date_fulfilled' => 'required',
             'greeting' => 'required|string|min:10',
         ])->validate();
 

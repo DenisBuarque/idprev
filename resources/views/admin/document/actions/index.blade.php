@@ -60,14 +60,14 @@
                             <td>{{ $action->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
                                 <a href="{{ route('admin.document.actions.edit', ['id' => $action->id]) }}"
-                                    class="btn btn-info btn-sm mr-1">
+                                    class="btn btn-info btn-xs py-2 mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form method="POST" onsubmit="return(confirmaExcluir())"
                                     action="{{ route('admin.document.actions.destroy', ['id' => $action->id]) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <button type="submit" class="btn btn-danger btn-xs py-2">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>

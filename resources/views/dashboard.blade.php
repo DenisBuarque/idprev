@@ -24,22 +24,6 @@
                 </a>
             </div>
         </div>
-
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>{{ $converted_lead }}</h3>
-                    <p>Leads Convertidos</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-chart-pie"></i>
-                </div>
-                <a href="{{route('admin.clients.converted')}}" class="small-box-footer">
-                    Listar registros <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div>
-
         <div class="col-lg-3 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
@@ -47,14 +31,27 @@
                     <p>Leads Aguardando</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-chart-pie"></i>
+                    <i class="fas fa-clock"></i>
                 </div>
-                <a href="{{route('admin.clients.index')}}" class="small-box-footer">
+                <a href="{{route('admin.leads.tag',['tag' => 2])}}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div>
-
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ $converted_lead }}</h3>
+                    <p>Leads Convertidos</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-thumbs-up"></i>
+                </div>
+                <a href="{{route('admin.leads.tag',['tag' => 3])}}" class="small-box-footer">
+                    Listar registros <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
         <div class="col-lg-3 col-6">
             <div class="small-box bg-danger">
                 <div class="inner">
@@ -62,9 +59,9 @@
                     <p>Leads não convertidos</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-chart-pie"></i>
+                    <i class="fas fa-thumbs-down"></i>
                 </div>
-                <a href="{{route('admin.clients.unconverted')}}" class="small-box-footer">
+                <a href="{{route('admin.leads.tag',['tag' => 4])}}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -375,11 +372,12 @@
 
                 @foreach ($events as $event)    
                     <div class="col-md-12 col-lg-6 col-xl-4">
-                        <div class="card mb-2 bg-gradient-dark">
+                        <div class="card mb-2">
                             <img class="card-img-top" src="{{ asset('storage/'.$event->image) }}" alt="{{ $event->title }}">
-                            <div class="card-img-overlay d-flex flex-column justify-content-end">
-                                <h3 class="card-title text-primary text-white mb-3">{{ $event->title }}</h3>
-                                <a href="#" class="text-white">{{ $event->date_event->format('d/m/Y') }}</a>
+                            <div class="d-flex flex-column justify-content-end mt-2 p-3">
+                                <h4 class="text-primary mb-3">{{ $event->title }}</h4>
+                                <strong>Data: {{ $event->date_event->format('d/m/Y') }}</strong>
+                                <p>{!! $event->description !!}</p>
                             </div>
                         </div>
                     </div>

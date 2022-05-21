@@ -257,6 +257,25 @@ return [
             'icon'        => 'fa fa-check',
         ],
         [
+            'text'        => 'Clientes',
+            'url'         => 'admin/clients',
+            'icon'        => 'fas fa-fw fa-users',
+        ],
+        [
+            'text'    => 'Franqueados',
+            'icon'    => 'fa fa-id-card',
+            'submenu' => [
+                [
+                    'text' => 'Conveniados',
+                    'url'  => 'admin/franchisees',
+                ],
+                [
+                    'text' => 'Advogados',
+                    'url'  => 'admin/lawyers',
+                ],
+            ],
+        ],
+        [
             'text'    => 'Treinamento',
             'icon'    => 'fa fa-trophy',
             'submenu' => [
@@ -288,34 +307,11 @@ return [
                 ],
             ],
         ],
-        [
-            'text'    => 'Franqueados',
-            'icon'    => 'fa fa-id-card',
-            'submenu' => [
-                [
-                    'text' => 'Conveniados',
-                    'url'  => 'admin/franchisees',
-                ],
-                [
-                    'text' => 'Advogados',
-                    'url'  => 'admin/lawyers',
-                ],
-            ],
-        ],
-        [
-            'text'        => 'Clientes',
-            'url'         => 'admin/clients',
-            'icon'        => 'fas fa-fw fa-users',
-        ],
+
         [
             'text'        => 'Tickets',
             'url'         => 'admin/tickets',
             'icon'        => 'fa fa-tag',
-        ],
-        [
-            'text'        => 'Leads Convertidos',
-            'url'         => 'admin/clients/converted',
-            'icon'        => 'fa fa-thumbs-up ',
         ],
         [
             'text'        => 'Prazos',

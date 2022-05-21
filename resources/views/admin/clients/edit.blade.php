@@ -196,8 +196,11 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <small>Prazo:</small>
-                            <input type="date" name="term" id="term" value="{{ $lead->term ?? old('term') }}"
-                                class="form-control @error('term') is-invalid @enderror" />
+                            @if (!empty($lead->ter))
+                                <input type="date" name="term" id="term" value="{{$lead->term->format('Y-m-d')}}" class="form-control @error('term') is-invalid @enderror" />
+                            @else
+                                <input type="date" name="term" id="term" class="form-control @error('term') is-invalid @enderror" />
+                            @endif
                             @error('term')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
@@ -232,29 +235,6 @@
             </div>
         </div>
     </form>
-
-    <div class="card" style="max-width: 800px; margin: auto; margin-top: 10px;">
-        <div class="card-header">
-            <h3 class="card-title">Imagens de documentos</h3>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                @foreach ($lead->photos as $photo)
-                    <div class="col-md-3">
-                        <img src="{{ asset('storage/' . $photo->image) }}" alt="foto" class="img-fluid" />
-                        <form action="{{ route('admin.client.document.remove') }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <input type="hidden" name="photo" value="{{ $photo->image }}" />
-                            <button id="button" type="submit" class="btn btn-sm btn-danger float-right">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
     <br />
 
 @stop

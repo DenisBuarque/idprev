@@ -40,7 +40,6 @@
                 </a>
             </div>
         </div>
-
         <div class="col-lg-3 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
@@ -69,7 +68,6 @@
                 </a>
             </div>
         </div>
-
         <div class="col-lg-3 col-6">
             <div class="small-box bg-danger">
                 <div class="inner">
@@ -164,12 +162,6 @@
                     @endforeach
                 </tbody>
             </table>
-
-            <div class="mt-3 mr-3 ml-3">
-                @if (!$search && $leads)
-                    {{ $leads->links() }}
-                @endif
-            </div>
 
         </div>
     </div>

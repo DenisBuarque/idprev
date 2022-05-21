@@ -73,6 +73,11 @@ class User extends Authenticatable
         return $this->hasMany(Ticket::class);
     }
 
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class);
+    }
+
     /**
      * The attributes that should be cast.
      *

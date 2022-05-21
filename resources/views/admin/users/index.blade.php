@@ -14,9 +14,13 @@
                     </button>
                 </span>
             </div>
-            <a href="{{ route('admin.users.create') }}" class="btn bg-info">
-                <i class="fa fa-plus"></i> Adicionar Registro
-            </a>
+
+            @can('create-data')
+                <a href="{{ route('admin.users.create') }}" class="btn bg-info">
+                    <i class="fa fa-plus"></i> Adicionar Registro
+                </a>
+            @endcan
+
         </div>
     </form>
 @stop

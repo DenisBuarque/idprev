@@ -5,13 +5,13 @@
 @section('content_header')
     <div style="display: flex; justify-content: space-between">
         <h4>Meu Prazo de Cumprimento</h4>
-        <a href="{{ route('admin.clients.index') }}" class="btn btn-md bg-info">Listar Registros</a>
+        <a href="{{ route('admin.clients.term') }}" class="btn btn-md bg-info">Listar Registros</a>
     </div>
 @stop
 
 @section('content')
 
-    <form method="POST" action="{{ route('admin.clients.update_term', ['id' => $lead->id]) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.clients.update_term', ['id' => $lead->id]) }}">
         @csrf
         @method('PUT')
         <div class="card card-info" style="max-width: 800px; margin: auto">
@@ -22,10 +22,10 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group m-0">
-                            <small>Nome completo:</small>
-                            <input type="text" name="responsible" value="{{ $lead->name ?? old('name') }}" placeholder="Digite o nome de que cumprio"
-                                class="form-control @error('name') is-invalid @enderror" maxlength="100" />
-                            @error('name')
+                            <small>Nome:</small>
+                            <input type="text" name="responsible" value="{{ $lead->responsible ?? old('responsible') }}" placeholder="Digite o nome de que cumprio"
+                                class="form-control @error('responsible') is-invalid @enderror" maxlength="100" />
+                            @error('responsible')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
@@ -33,9 +33,9 @@
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Data cumprimento: *</small>
-                            <input type="date" name="date_fulfilled" value="{{ $lead->phone ?? old('phone') }}"
-                                class="form-control @error('phone') is-invalid @enderror" />
-                            @error('phone')
+                            <input type="date" name="date_fulfilled" value="{{ $lead->date_fulfilled ?? old('date_fulfilled') }}"
+                                class="form-control @error('date_fulfilled') is-invalid @enderror" />
+                            @error('date_fulfilled')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
@@ -56,8 +56,8 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <small>Descriva o cumprimento:</small>
-                            <textarea name="greeting" class="form-control @error('phone') is-invalid @enderror" placeholder="Descreva aqui o cumprimento da ação.">{{ old('comments') }}</textarea>
-                            @error('phone')
+                            <textarea name="greeting" class="form-control @error('greeting') is-invalid @enderror" placeholder="Descreva aqui o cumprimento da ação.">{{ $lead->greeting ?? old('greeting') }}</textarea>
+                            @error('greeting')
                                 <div class="text-red">{{ $message }}</div>
                         @enderror
                         </div>
@@ -79,6 +79,7 @@
             </div>
         </div>
     </form>
+    <br/>
 @stop
 
 @section('css')

@@ -108,7 +108,6 @@ class ModelController extends Controller
         return redirect('admin/document/models')->with('alert', 'Desculpe! Não encontramos o arquivo!');
     }
 
-
     /**
      * Show the form for editing the specified resource.
      *

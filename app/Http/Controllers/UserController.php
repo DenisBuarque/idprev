@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\models\Permission;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
    private $user;
+   private $permission;
 
-   public function __construct(User $user)
+   public function __construct(User $user, Permission $permission)
    {
        $this->user = $user;
+       $this->permission = $permission;
    }
     /**
      * Display a listing of the resource.
@@ -49,7 +52,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $permissions = $this->permission->all();
+        return view('admin.users.create',['permissions' => $permissions]);
     }
 
     /**
@@ -71,7 +75,20 @@ class UserController extends Controller
         $data['type'] = 'A';
         $data['password'] =  bcrypt($request->password);
 
-        if($this->user->create($data)){
+        $record = $this->user->create($data);
+        if($record){
+            if(isset($data['permission']) && count($data['permission']))
+            {
+                foreach($data['permission'] as $key => $value):
+                    //$record->permissionUsers()->attach($value);
+                    $record->permissionUsers()->create([
+                        'user_id' => auth()->user()->id,
+                        'permission' => $value,
+                    ]);
+                        
+                endforeach;
+            }
+
             return redirect('admin/users')->with('success', 'Registro inserido com sucesso!');
         }else{
             return redirect('admin/users')->with('error', 'Erro ao inserido o registro!');

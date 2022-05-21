@@ -141,7 +141,7 @@ class EventController extends Controller
                 Storage::delete($record['image']);
             } 
 
-            $new_file = $request->image->store('public/events');
+            $new_file = $request->image->store('events','public');
             $data['image'] = $new_file;
         }
 

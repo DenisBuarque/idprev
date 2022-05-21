@@ -15,6 +15,7 @@ use App\Http\Controllers\ModelController;
 use App\Http\Controllers\LawyerController;
 use App\Http\Controllers\WorksheetController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\FinancialController;
 use GuzzleHttp\Middleware;
 
 /*
@@ -70,13 +71,14 @@ Route::delete('/admin/service/delete/{id}', [ServiceController::class, 'destroy'
 
 Route::get('/admin/leads', [LeadController::class, 'index'])->name('admin.leads.index');
 Route::get('/admin/lead/create', [LeadController::class, 'create'])->name('admin.leads.create');
+Route::get('/admin/leads/{tag}', [LeadController::class, 'leads'])->name('admin.leads.tag');
 Route::post('/admin/lead/store', [LeadController::class, 'store'])->name('admin.leads.store');
 Route::get('/admin/lead/edit/{id}', [LeadController::class, 'edit'])->name('admin.leads.edit');
+Route::get('/admin/lead/show/{id}', [LeadController::class, 'show'])->name('admin.leads.show');
 Route::put('/admin/lead/update/{id}', [LeadController::class, 'update'])->name('admin.leads.update');
 Route::delete('/admin/lead/delete/{id}', [LeadController::class, 'destroy'])->name('admin.leads.destroy');
 Route::delete('/admin/lead/document/remove', [LeadController::class, 'remove'])->name('admin.lead.document.remove');
 Route::get('/admin/lead/documents/{id}', [LeadController::class, 'documents'])->name('admin.lead.documents');
-Route::get('/admin/lead/comments/{id}', [LeadController::class, 'comments'])->name('admin.lead.comments');
 Route::post('/admin/lead/feedback', [LeadController::class, 'feedback'])->name('admin.lead.feedback');
 Route::get('/admin/lead/document/download/{id}', [LeadController::class, 'download'])->name('admin.lead.document.download');
 
@@ -119,19 +121,24 @@ Route::put('/admin/document/action/update/{id}', [ActionController::class, 'upda
 Route::delete('/admin/document/action/delete/{id}', [ActionController::class, 'destroy'])->name('admin.document.actions.destroy');
 
 Route::get('/admin/clients', [ClientController::class, 'index'])->name('admin.clients.index');
-Route::get('/admin/clients/converted', [ClientController::class, 'converted'])->name('admin.clients.converted');
-Route::get('/admin/clients/unconverted', [ClientController::class, 'unconverted'])->name('admin.clients.unconverted');
 Route::get('/admin/clients/term', [ClientController::class, 'term'])->name('admin.clients.term');
 Route::get('/admin/client/term/edit/{id}', [ClientController::class, 'edit_term'])->name('admin.clients.edit_term');
 Route::get('/admin/client/create', [ClientController::class, 'create'])->name('admin.clients.create');
 Route::post('/admin/client/store', [ClientController::class, 'store'])->name('admin.clients.store');
 Route::get('/admin/client/edit/{id}', [ClientController::class, 'edit'])->name('admin.clients.edit');
+Route::get('/admin/client/tag/{tag}', [ClientController::class, 'tag'])->name('admin.clients.tag');
+Route::get('/admin/client/situation/{situation}', [ClientController::class, 'situation'])->name('admin.clients.situation');
+Route::get('/admin/client/show/{id}', [ClientController::class, 'show'])->name('admin.clients.show');
 Route::put('/admin/client/update/{id}', [ClientController::class, 'update'])->name('admin.clients.update');
-Route::put('/admin/client/update/term', [ClientController::class, 'update_term'])->name('admin.clients.update_term');
+
+Route::put('/admin/client/update/term/{id}', [ClientController::class, 'update_term'])->name('admin.clients.update_term');
+
 Route::delete('/admin/client/delete/{id}', [ClientController::class, 'destroy'])->name('admin.clients.destroy');
 Route::delete('/admin/client/document/remove', [ClientController::class, 'remove'])->name('admin.client.document.remove');
 Route::get('/admin/client/documents/{id}', [ClientController::class, 'documents'])->name('admin.client.documents');
-Route::get('/admin/client/document/download/{id}', [ClientController::class, 'download'])->name('admin.client.document.download');
+Route::get('/admin/client/model/download/{id}', [ClientController::class, 'download'])->name('admin.client.model.download');
+Route::get('/admin/client/document/download/{id}/{lead}', [ClientController::class, 'downloaddoc'])->name('admin.client.document.download');
+Route::post('/admin/client/feedback', [ClientController::class, 'feedback'])->name('admin.client.feedback');
 
 Route::get('/admin/franchisees', [FranchiseeController::class, 'index'])->name('admin.franchisees.index');
 Route::get('/admin/franchisee/create', [FranchiseeController::class, 'create'])->name('admin.franchisees.create');
@@ -156,3 +163,9 @@ Route::delete('/admin/ticket/delete/{id}', [TicketController::class, 'destroy'])
 Route::get('/admin/ticket/response/{id}', [TicketController::class, 'response'])->name('admin.tickets.response');
 Route::post('/admin/ticket/feedback', [TicketController::class, 'feedback'])->name('admin.tickets.feedback');
 
+Route::get('/admin/financial', [FinancialController::class, 'index'])->name('admin.financial.index');
+Route::get('/admin/financial/create', [FinancialController::class, 'create'])->name('admin.financial.create');
+Route::post('/admin/financial/store', [FinancialController::class, 'store'])->name('admin.financial.store');
+Route::get('/admin/financial/edit/{id}', [FinancialController::class, 'edit'])->name('admin.financial.edit');
+Route::put('/admin/financial/update/{id}', [FinancialController::class, 'update'])->name('admin.financial.update');
+Route::delete('/admin/financial/delete/{id}', [FinancialController::class, 'destroy'])->name('admin.financial.destroy');
