@@ -318,7 +318,7 @@
                                                         @if (isset($lead->financy->payment_amount))
                                                             <input type="text" name="payment_amount" id="payment_amount"
                                                                 onkeyup="moeda(this);"
-                                                                value="{{ $lead->financy->payment_amount ?? old('payment_amount') }}"
+                                                                value="{{ number_format($lead->financy->payment_amount,2,',','.') ?? old('payment_amount') }}"
                                                                 class="form-control @error('payment_amount') is-invalid @enderror"
                                                                 maxlength="13" placeholder="0,00" />
                                                         @else

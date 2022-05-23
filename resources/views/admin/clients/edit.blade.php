@@ -169,6 +169,7 @@
                         <div class="form-group m-0">
                             <small>Tipo de Ação: *</small>
                             <select name="action" class="form-control" onchange="showDocuments(this.value)">
+                                <option value="">Selecione a ação</option>
                                 @foreach ($actions as $action)
                                     @if ($action->id == $lead->action && old('action') == $action->id)
                                         <option value="{{ $action->id }}" selected>{{ $action->name }}</option>

@@ -12,7 +12,7 @@
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div id="message" class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
             {{ session('success') }}
         </div>
     @elseif (session('error'))
@@ -33,7 +33,7 @@
                         <div class="form-group m-0">
                             <small>Ação:</small>
                             <input type="text" name="name" value="{{ old('name') }}" placeholder="Digite o tipo da ação"
-                                class="form-control @error('name') is-invalid @enderror" maxlength="100" />
+                                class="form-control @error('name') is-invalid @enderror" maxlength="100" autofocus />
                             @error('name')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
@@ -72,5 +72,9 @@
             document.getElementById("button").style.display = "none"; 
             document.getElementById("spinner").style.display = "block"; 
         }
+
+        setTimeout(() => {
+            document.getElementById('message').style.display = 'none';
+        }, 6000);
     </script>
 @stop

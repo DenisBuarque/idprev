@@ -36,10 +36,10 @@ class UserController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $users = $query->where('type','A')->orderBy('id','DESC')->get();
+            $users = $query->orderBy('id','DESC')->get();
 
         } else {
-            $users = $this->user->where('type','A')->orderBy('id', 'DESC')->paginate(10);
+            $users = $this->user->orderBy('id', 'DESC')->paginate(10);
         }
 
         return view('admin.users.index', ['users' => $users, 'search' => $search]);

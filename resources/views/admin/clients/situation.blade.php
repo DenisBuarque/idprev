@@ -5,6 +5,7 @@
 @section('content_header')
     <form method="GET" action="{{ route('admin.clients.index') }}">
         <div style="display: flex; justify-content: space-between;">
+            @can('search-client')
             <div class="input-group" style="width: 30%">
                 <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
                     required />
@@ -15,9 +16,12 @@
                     </button>
                 </span>
             </div>
+            @endcan
+            @can('create-client')
             <a href="{{ route('admin.clients.create') }}" class="btn bg-info">
                 <i class="fa fa-plus mr-1"></i> Adicionar Registro
             </a>
+            @endcan
         </div>
     </form>
 @stop
@@ -69,7 +73,6 @@
                 </a>
             </div>
         </div>
-
         <div class="col-lg-3 col-6">
             <div class="small-box bg-danger">
                 <div class="inner">
@@ -182,39 +185,61 @@
         </div>
 
         <div class="col-lg-3 col-md-3 col-6">
-            <div class="info-box mb-3 bg-info">
-                <span class="info-box-icon"><i class="fas fa-users"></i></span>
-                <div class="info-box-content">
-                    <a href="{{route('admin.clients.situation',['situation' => 1])}}"><span class="info-box-text text-white">Andamento em Ordem</span></a>
-                    <span class="info-box-number">{{ $progress }}</span>
+            <div class="row">
+                <div class="col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-info"><i class="fa fa-users"></i></span>
+                        <div class="info-box-content">
+                            <a href="{{ route('admin.clients.situation', ['situation' => 1]) }}">
+                                <span class="info-box-text">Andamento em Ordem</span>
+                            </a>
+                            <span class="info-box-number">{{ $progress }}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="info-box mb-3 bg-warning">
-                <span class="info-box-icon"><i class="fas fa-users"></i></span>
-                <div class="info-box-content">
-                    <a href="{{route('admin.clients.situation',['situation' => 2])}}"><span class="info-box-text text-dark">Aguardando Cumprimento</span></a>
-                    <span class="info-box-number">{{ $awaiting_fulfillment }}</span>
+                <div class="col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-warning"><i class="fa fa-users"></i></span>
+                        <div class="info-box-content">
+                            <a href="{{ route('admin.clients.situation', ['situation' => 2]) }}">
+                                <span class="info-box-text">Aguardando Cumprimento</span>
+                            </a>
+                            <span class="info-box-number">{{ $awaiting_fulfillment }}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="info-box mb-3 bg-success">
-                <span class="info-box-icon"><i class="fas fa-users"></i></span>
-                <div class="info-box-content">
-                    <a href="{{route('admin.clients.situation',['situation' => 3])}}"><span class="info-box-text text-white">Finalizado Procedente</span></a>
-                    <span class="info-box-number">{{ $procedente }}</span>
+                <div class="col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-success"><i class="fa fa-users"></i></span>
+                        <div class="info-box-content">
+                            <a href="{{ route('admin.clients.situation', ['situation' => 3]) }}">
+                                <span class="info-box-text">Finalizado Procedente</span>
+                            </a>
+                            <span class="info-box-number">{{ $procedente }}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="info-box mb-3 bg-danger">
-                <span class="info-box-icon"><i class="fas fa-users"></i></span>
-                <div class="info-box-content">
-                    <a href="{{route('admin.clients.situation',['situation' => 4])}}"><span class="info-box-text text-white">Finalizado Improcedente</span></a>
-                    <span class="info-box-number">{{ $improcedente }}</span>
+                <div class="col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-danger"><i class="fa fa-users"></i></span>
+                        <div class="info-box-content">
+                            <a href="{{ route('admin.clients.situation', ['situation' => 4]) }}">
+                                <span class="info-box-text">Finalizado Improcedente</span>
+                            </a>
+                            <span class="info-box-number">{{ $improcedente }}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="info-box mb-3 bg-warning">
-                <span class="info-box-icon"><i class="fas fa-users"></i></span>
-                <div class="info-box-content">
-                    <a href="{{route('admin.clients.situation',['situation' => 5])}}"><span class="info-box-text text-dark">Recursos</span></a>
-                    <span class="info-box-number">{{ $resources }}</span>
+                <div class="col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-warning"><i class="fa fa-users"></i></span>
+                        <div class="info-box-content">
+                            <a href="{{ route('admin.clients.situation', ['situation' => 5]) }}">
+                                <span class="info-box-text">Recursos</span>
+                            </a>
+                            <span class="info-box-number">{{ $resources }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

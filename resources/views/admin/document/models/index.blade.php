@@ -5,18 +5,22 @@
 @section('content_header')
     <form method="GET" action="{{ route('admin.document.models.index') }}">
         <div style="display: flex; justify-content: space-between;">
-            <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control"
-                    placeholder="Título" required />
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">
-                        <i class="fa fa-search"></i> Buscar
-                    </button>
-                </span>
-            </div>
-            <a href="{{ route('admin.document.models.create') }}" class="btn bg-info">
-                <i class="fas fa-plus mr-2"></i> Adicionar Registro
-            </a>
+            @can('search-document')
+                <div class="input-group" style="width: 30%">
+                    <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Título"
+                        required />
+                    <span class="input-group-append">
+                        <button type="submit" class="btn btn-info btn-flat">
+                            <i class="fa fa-search"></i> Buscar
+                        </button>
+                    </span>
+                </div>
+            @endcan
+            @can('create-document')
+                <a href="{{ route('admin.document.models.create') }}" class="btn bg-info">
+                    <i class="fas fa-plus mr-2"></i> Adicionar Registro
+                </a>
+            @endcan
         </div>
     </form>
 @stop
@@ -24,11 +28,11 @@
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert">
+        <div id="message" class="alert alert-success mb-2" role="alert">
             {{ session('success') }}
         </div>
     @elseif (session('alert'))
-        <div class="alert alert-warning mb-2" role="alert">
+        <div id="message" class="alert alert-warning mb-2" role="alert">
             {{ session('alert') }}
         </div>
     @elseif (session('error'))
@@ -41,8 +45,7 @@
         <div class="card-header">
             <h3 class="card-title">Lista de modelo de documento</h3>
         </div>
-
-        <div class="card-body p-0">
+        <div class="card-body table-responsive p-0">
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -61,36 +64,36 @@
                             <td>{{ $model->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $model->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
-                                <a href="{{ route('admin.document.models.download', ['id' => $model->id]) }}"
-                                    class="btn btn-default btn-xs px-2 mr-1">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                <a href="{{ route('admin.document.models.edit', ['id' => $model->id]) }}"
-                                    class="btn btn-info btn-xs px-2 mr-1">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form method="POST" onsubmit="return(confirmaExcluir())"
-                                    action="{{ route('admin.document.models.destroy', ['id' => $model->id]) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-xs px-2">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                                
+                                @can('edit-document')
+                                    <a href="{{ route('admin.document.models.download', ['id' => $model->id]) }}"
+                                        class="btn btn-default btn-xs px-2 mr-1">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                    <a href="{{ route('admin.document.models.edit', ['id' => $model->id]) }}"
+                                        class="btn btn-info btn-xs px-2 mr-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                @endcan
+                                @can('delete-document')
+                                    <form method="POST" onsubmit="return(confirmaExcluir())"
+                                        action="{{ route('admin.document.models.destroy', ['id' => $model->id]) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-xs px-2">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach
-
                 </tbody>
             </table>
-
             <div class="mt-3 mr-3 ml-3">
                 @if (!$search && $models)
                     {{ $models->links() }}
                 @endif
             </div>
-
         </div>
     </div>
 @stop
@@ -109,5 +112,9 @@
                 return false;
             }
         }
+
+        setTimeout(() => {
+            document.getElementById('message').style.display = 'none';
+        }, 6000);
     </script>
 @stop

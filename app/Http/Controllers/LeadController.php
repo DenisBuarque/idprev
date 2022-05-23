@@ -36,7 +36,7 @@ class LeadController extends Controller
      */
     public function index(Request $request)
     {
-        $leads_total = $this->lead->all()->count();
+        $leads_total = $this->lead->whereIn('tag',[1,2])->count();
         $waiting = $this->lead->where('tag','2')->get()->count();
         $converted_lead = $this->lead->where('tag','3')->get()->count();
         $unconverted_lead = $this->lead->where('tag','4')->get()->count();
@@ -57,10 +57,10 @@ class LeadController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $leads = $query->orderBy('id','DESC')->get();
+            $leads = $query->whereIn('tag',[1,2])->orderBy('id','DESC')->get();
 
         } else {
-            $leads = $this->lead->orderBy('id','DESC')->paginate(10);
+            $leads = $this->lead->whereIn('tag',[1,2])->orderBy('id','DESC')->paginate(10);
         }
         
         return view('admin.leads.index',[
@@ -79,7 +79,7 @@ class LeadController extends Controller
 
     public function leads($tag)
     {
-        $leads_total = $this->lead->all()->count();
+        $leads_total = $this->lead->whereIn('id',[1,2])->count();
         $waiting = $this->lead->where('tag','2')->get()->count();
         $converted_lead = $this->lead->where('tag','3')->get()->count();
         $unconverted_lead = $this->lead->where('tag','4')->get()->count();
@@ -199,11 +199,7 @@ class LeadController extends Controller
                 $lead->photos()->createMany($images);
             }
 
-            if($data['tag'] == 3){
-                return redirect('admin/clients/converted')->with('success', 'Registro inserido com sucesso!');
-            } else {
-                return redirect('admin/leads')->with('success', 'Registro inserido com sucesso!');
-            }
+            return redirect('admin/leads')->with('success', 'Registro inserido com sucesso!');
         } else {
             return redirect('admin/lead/create')->with('error', 'Erro ao inserir o registro!');
         }

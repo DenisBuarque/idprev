@@ -33,7 +33,7 @@
                 <div class="row">
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Nome completo:</small>
+                            <small>Nome: *</small>
                             <input type="text" name="name" value="{{ old('name') }}"
                                 class="form-control @error('name') is-invalid @enderror" maxlength="100" autofocus />
                             @error('name')
@@ -43,7 +43,7 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Telefone:</small>
+                            <small>Telefone: *</small>
                             <input type="text" name="phone" value="{{ old('phone') }}"
                                 class="form-control @error('phone') is-invalid @enderror" placeholder="Ex: 82 90000-0000"
                                 maxlength="13" onkeypress="mascara(this, '## #####-####')" />
@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Endereço:</small>
+                            <small>Endereço: *</small>
                             <input type="text" name="address" id="address" value="{{ old('address') }}"
                                 class="form-control @error('address') is-invalid @enderror" maxlength="250" />
                             @error('address')
@@ -72,7 +72,7 @@
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group m-0">
-                            <small>Número:</small>
+                            <small>Número: *</small>
                             <input type="text" name="number" value="{{ old('number') }}"
                                 class="form-control @error('number') is-invalid @enderror" placeholder="nº" maxlength="5" />
                             @error('number')
@@ -82,7 +82,7 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group m-0">
-                            <small>Bairro:</small>
+                            <small>Bairro: *</small>
                             <input type="text" name="district" id="district" value="{{ old('district') }}"
                                 class="form-control @error('district') is-invalid @enderror" maxlength="50" />
                             @error('district')
@@ -92,7 +92,7 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group m-0">
-                            <small>Cidade:</small>
+                            <small>Cidade: *</small>
                             <input type="text" name="city" id="city" value="{{ old('city') }}"
                                 class="form-control @error('city') is-invalid @enderror" maxlength="50" />
                             @error('city')
@@ -102,7 +102,7 @@
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group m-0">
-                            <small>Estado:</small>
+                            <small>Estado: *</small>
                             <input type="text" name="state" id="state" value="{{ old('state') }}"
                                 class="form-control @error('state') is-invalid @enderror" maxlength="2" />
                             @error('state')
@@ -117,9 +117,12 @@
                                 placeholder="(opcional)" maxlength="200" />
                         </div>
                     </div>
+                    <div class="col-sm-12">
+                        <small>O preencimendo dos campos e-mail e senha garante o acesso do franqueado ao sistema:</small>
+                    </div>
                     <div class="col-sm-6">
                         <div class="form-group m-0">
-                            <small>E-mail:</small>
+                            <small>E-mail: *</small>
                             <input type="email" name="email" value="{{ old('email') }}"
                                 class="form-control @error('email') is-invalid @enderror" maxlength="100" />
                             @error('email')
@@ -129,7 +132,7 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
-                            <small>Senha:</small>
+                            <small>Senha: *</small>
                             <input type="password" name="password"
                                 class="form-control @error('password') is-invalid @enderror" placeholder="******" />
                             @error('password')
@@ -139,7 +142,7 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
-                            <small>Confirme a senha:</small>
+                            <small>Confirme a senha: *</small>
                             <input type="password" name="password_confirmation"
                                 class="form-control @error('password_confirmation') is-invalid @enderror"
                                 placeholder="******" />
@@ -166,7 +169,6 @@
 
     </form>
     <br />
-
 @stop
 
 @section('css')

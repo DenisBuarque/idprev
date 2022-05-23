@@ -70,7 +70,7 @@
                     <div class="col-md-12 my-3">
                         <div class="form-group m-0">
                             <small>Permissões de acessi ao sistema:</small>
-                            <select name="permission[]" class="form-control" multiple style="height: 300px;">
+                            <select name="permission[]" class="form-control" multiple style="max-height: 300px;">
                                 @foreach ($permissions as $key => $value)
                                     @php
                                         $selected = '';

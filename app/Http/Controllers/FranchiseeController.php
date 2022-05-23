@@ -91,10 +91,6 @@ class FranchiseeController extends Controller
 
         if ($create = $this->user->create($data))
         {
-            //$create->notify(new userNotification);
-            /*if(!empty($data['client_id'])){
-                $create->clients()->sync($data['client_id']);
-            }*/
             return redirect('admin/franchisees')->with('success', 'Registro inserido com sucesso!');
         } else {
             return redirect('admin/franchisee/create')->with('error', 'Erro ao inserido o registro!');
@@ -127,11 +123,7 @@ class FranchiseeController extends Controller
 
         $user = $this->user->find($id);
         if ($user) {
-            return view('admin.franchisees.edit', [
-                'user' => $user, 
-                //'clients' => $clients, 
-                //'clientsNotIn' => $clientsNotIn
-            ]);
+            return view('admin.franchisees.edit', ['user' => $user, ]);
         } else {
             return redirect('admin/franchisees')->with('alert', 'Não encontramos o registro, tente outra vez!');
         }
@@ -170,9 +162,6 @@ class FranchiseeController extends Controller
         }
 
         if ($record->update($data)) :
-            /*if(!empty($data['client_id'])){
-                $record->clients()->sync($data['client_id']);
-            }*/
             return redirect('admin/franchisees')->with('success', 'Registro alterado com sucesso!');
         else :
             return redirect('admin/franchisees')->with('error', 'Erro ao alterar o registro!');

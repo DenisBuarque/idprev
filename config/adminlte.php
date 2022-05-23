@@ -250,20 +250,24 @@ return [
             'text'        => 'Usuários',
             'url'         => 'admin/users',
             'icon'        => 'far fa-fw fa-user',
+            'can'         => 'list-user',
         ],
         [
             'text'        => 'Leads',
             'url'         => 'admin/leads',
             'icon'        => 'fa fa-check',
+            'can'         => 'list-lead'
         ],
         [
             'text'        => 'Clientes',
             'url'         => 'admin/clients',
             'icon'        => 'fas fa-fw fa-users',
+            'can'         => 'list-client'
         ],
         [
             'text'    => 'Franqueados',
             'icon'    => 'fa fa-id-card',
+            'can'     => 'list-franchisee',
             'submenu' => [
                 [
                     'text' => 'Conveniados',
@@ -272,12 +276,14 @@ return [
                 [
                     'text' => 'Advogados',
                     'url'  => 'admin/lawyers',
+                    'can'  => 'list-lawyer'
                 ],
             ],
         ],
         [
             'text'    => 'Treinamento',
             'icon'    => 'fa fa-trophy',
+            'can'     => 'list-file',
             'submenu' => [
                 [
                     'text' => 'Arquivos',
@@ -286,12 +292,14 @@ return [
                 [
                     'text' => 'Eventos',
                     'url'  => 'admin/training/events',
+                    'can'     => 'list-event',
                 ],
             ],
         ],
         [
             'text'    => 'Documentos',
             'icon'    => 'fa fa-file-pdf',
+            'can'     => 'list-action',
             'submenu' => [
                 [
                     'text' => 'Tipos de Ação',
@@ -300,43 +308,50 @@ return [
                 [
                     'text' => 'Modelos Documentos',
                     'url'  => 'admin/document/models',
+                    'can'     => 'list-document',
                 ],
                 [
                     'text' => 'Planilhas de Cálculo',
                     'url'  => 'admin/worksheets',
+                    'can'     => 'list-worksheet',
                 ],
             ],
         ],
-
         [
             'text'        => 'Tickets',
             'url'         => 'admin/tickets',
             'icon'        => 'fa fa-tag',
+            'can'         => 'list-ticket',
         ],
         [
             'text'        => 'Prazos',
             'url'         => 'admin/clients/term',
             'icon'        => 'fa fa-hourglass-end',
+            'can'         => 'list-term',
         ],
         [
             'text'        => 'Financeiro',
             'url'         => 'admin/financial',
-            'icon'        => 'fas fa-fw fa-pen-nib',
+            'icon'        => 'fa fa-coins',
+            'can'         => 'list-financial'
         ],
         [
-            'text'        => 'Arq. Auto Findos',
-            'url'         => 'admin/files',
-            'icon'        => 'fas fa-fw fa-pen-nib',
+            'text'        => 'Auto Findos',
+            'url'         => '/admin/financial/autofindos',
+            'icon'        => 'fa fa-coins',
+            'can'         => 'list-autofindos',
         ],
         [
             'text'        => 'Obrigações',
-            'url'         => 'admin/obligations',
+            'url'         => '',
             'icon'        => 'fas fa-fw fa-address-card',
+            'can'         => 'list-obrigations'
         ],
         [
             'text'        => 'Serviços',
             'url'         => 'admin/services',
-            'icon'        => 'fas fa-fw fa-pen-nib',
+            'icon'        => 'fas fa-flag',
+            'can'         => 'list-services',
         ],
         
         /*[

@@ -309,7 +309,8 @@ class ClientController extends Controller
         {
             if(isset($data['comments'])){
                 $lead->feedbackLeads()->create([
-                    'comments' => $data['comments']
+                    'comments' => $data['comments'],
+                    'user_id' => $data['user_id']
                 ]);
             }
             

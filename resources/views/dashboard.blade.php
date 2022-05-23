@@ -9,7 +9,6 @@
 @section('content')
 
     <div class="row">
-
         <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
                 <div class="inner">
@@ -19,9 +18,16 @@
                 <div class="icon">
                     <i class="fas fa-user-plus"></i>
                 </div>
-                <a href="{{ route('admin.franchisees.index') }}" class="small-box-footer">
-                    Listar registros <i class="fas fa-arrow-circle-right"></i>
-                </a>
+                @can('list-franchisee')
+                    <a href="{{ route('admin.franchisees.index') }}" class="small-box-footer">
+                        Listar registros <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @else
+                    <a class="small-box-footer">
+                        Sem permissão <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @endcan
+
             </div>
         </div>
         <div class="col-lg-3 col-6">
@@ -33,9 +39,15 @@
                 <div class="icon">
                     <i class="fas fa-clock"></i>
                 </div>
-                <a href="{{route('admin.leads.tag',['tag' => 2])}}" class="small-box-footer">
-                    Listar registros <i class="fas fa-arrow-circle-right"></i>
-                </a>
+                @can('list-lead')
+                    <a href="{{ route('admin.leads.tag', ['tag' => 2]) }}" class="small-box-footer">
+                        Listar registros <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @else
+                    <a class="small-box-footer">
+                        Sem permissão <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @endcan
             </div>
         </div>
         <div class="col-lg-3 col-6">
@@ -47,9 +59,15 @@
                 <div class="icon">
                     <i class="fas fa-thumbs-up"></i>
                 </div>
-                <a href="{{route('admin.leads.tag',['tag' => 3])}}" class="small-box-footer">
-                    Listar registros <i class="fas fa-arrow-circle-right"></i>
-                </a>
+                @can('list-lead')
+                    <a href="{{ route('admin.leads.tag', ['tag' => 3]) }}" class="small-box-footer">
+                        Listar registros <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @else
+                    <a class="small-box-footer">
+                        Sem permissão <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @endcan
             </div>
         </div>
         <div class="col-lg-3 col-6">
@@ -61,12 +79,17 @@
                 <div class="icon">
                     <i class="fas fa-thumbs-down"></i>
                 </div>
-                <a href="{{route('admin.leads.tag',['tag' => 4])}}" class="small-box-footer">
-                    Listar registros <i class="fas fa-arrow-circle-right"></i>
-                </a>
+                @can('list-lead')
+                    <a href="{{ route('admin.leads.tag', ['tag' => 4]) }}" class="small-box-footer">
+                        Listar registros <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @else
+                    <a class="small-box-footer">
+                        Sem permissão <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @endcan
             </div>
         </div>
-
     </div>
 
     <div class="row">
@@ -74,7 +97,7 @@
         <div class="col-lg-9 col-6">
 
             @if (session('success'))
-                <div class="alert alert-success mb-2" role="alert">
+                <div id="message" class="alert alert-success mb-2" role="alert">
                     {{ session('success') }}
                 </div>
             @endif
@@ -85,8 +108,10 @@
                         <div class="card-header">
                             <h3 class="card-title">Lista de leads de atendimento</h3>
                             <div class="card-tools">
-                                <a href="" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-lead"><i
-                                        class="fa fa-plus mr-2"></i> Adicionar novo lead</a>
+                                @can('create-lead')
+                                    <a href="" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-lead"><i
+                                            class="fa fa-plus mr-2"></i> Adicionar novo lead</a>
+                                @endcan
                             </div>
                         </div>
 
@@ -122,29 +147,29 @@
                                                 @endphp
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-xs border" data-toggle="modal"
-                                                    data-target="#modal-{{ $lead->id }}">
-                                                    <i class="fa fa-comments"></i>
-                                                    {{ count($lead->feedbackLeads) }}
-                                                </a>
+                                                @can('comments-lead')
+                                                    <a href="#" class="btn btn-xs border" data-toggle="modal"
+                                                        data-target="#modal-{{ $lead->id }}">
+                                                        <i class="fa fa-comments"></i>
+                                                        {{ count($lead->feedbackLeads) }}
+                                                    </a>
+                                                @endcan
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
-
                 </div>
             </div>
 
             @foreach ($leads as $lead)
                 <div class="modal fade" id="modal-{{ $lead->id }}" style="display: none;" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
-                        <form method="POST" action="{{ route('dashboard.feedback')}}">
+                        <form method="POST" action="{{ route('dashboard.feedback') }}">
                             @csrf
-                            <input type="hidden" name="lead_id" value="{{$lead->id}}" />
+                            <input type="hidden" name="lead_id" value="{{ $lead->id }}" />
                             <div class="modal-content">
                                 <div class="modal-header bg-info">
                                     <h4 class="modal-title">Comentário Lead: {{ $lead->name }}</h4>
@@ -159,12 +184,14 @@
                                             @if ($feed->user_id == auth()->user()->id)
                                                 <div class="direct-chat-msg">
                                                     <div class="direct-chat-infos clearfix mb-1">
-                                                        <span class="direct-chat-name float-left">{{ auth()->user()->name }}</span>
+                                                        <span
+                                                            class="direct-chat-name float-left">{{ auth()->user()->name }}</span>
                                                         <span
                                                             class="direct-chat-timestamp ml-2">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
                                                     </div>
                                                     <div>
-                                                        <span class="bg-info rounded p-2 float-left">{!! $feed->comments !!}</span>
+                                                        <span
+                                                            class="bg-info rounded p-2 float-left">{!! $feed->comments !!}</span>
                                                     </div>
                                                 </div>
                                             @else
@@ -174,19 +201,22 @@
                                                             @if ($feed->user_id == $user->id)
                                                                 <span
                                                                     class="direct-chat-timestamp ml-2 float-right">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
-                                                                <span class="direct-chat-name float-right">{{ $user->name }}</span>
+                                                                <span
+                                                                    class="direct-chat-name float-right">{{ $user->name }}</span>
                                                             @endif
                                                         @endforeach
                                                     </div>
                                                     <div>
-                                                        <span class="bg-success rounded p-2 float-right">{!! $feed->comments !!}</span>
+                                                        <span
+                                                            class="bg-success rounded p-2 float-right">{!! $feed->comments !!}</span>
                                                     </div>
                                                 </div>
                                             @endif
                                         @endforeach
                                     </div>
-                                    
-                                    <textarea name="comments" class="form-control h-20 @error('comments') is-invalid @enderror" placeholder="Digite um comentário aqui."></textarea>
+
+                                    <textarea name="comments" class="form-control h-20 @error('comments') is-invalid @enderror"
+                                        placeholder="Digite um comentário aqui."></textarea>
                                     @error('comments')
                                         <div class="text-red">{{ $message }}</div>
                                     @enderror
@@ -219,7 +249,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group m-0">
                                             <small>Nome: (obrigatório)</small>
-                                            <input type="text" name="name" value="{{ old('name') }}"
+                                            <input type="text" name="name" value="{{ old('name') }}" autofocus
                                                 class="form-control @error('name') is-invalid @enderror" maxlength="100" />
                                             @error('name')
                                                 <div class="text-red">{{ $message }}</div>
@@ -240,7 +270,8 @@
                                     <div class="col-sm-3">
                                         <div class="form-group m-0">
                                             <small>Franqueado: (obrigatório)</small>
-                                            <select name="user_id" class="form-control @error('user_id') is-invalid @enderror">
+                                            <select name="user_id"
+                                                class="form-control @error('user_id') is-invalid @enderror">
                                                 <option value="">Selecione um franqueado</option>
                                                 @foreach ($users as $user)
                                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -367,13 +398,14 @@
 
     <div class="card card-success">
         <div class="card-body">
-            
+
             <div class="row">
 
-                @foreach ($events as $event)    
+                @foreach ($events as $event)
                     <div class="col-md-12 col-lg-6 col-xl-4">
                         <div class="card mb-2">
-                            <img class="card-img-top" src="{{ asset('storage/'.$event->image) }}" alt="{{ $event->title }}">
+                            <img class="card-img-top" src="{{ asset('storage/' . $event->image) }}"
+                                alt="{{ $event->title }}">
                             <div class="d-flex flex-column justify-content-end mt-2 p-3">
                                 <h4 class="text-primary mb-3">{{ $event->title }}</h4>
                                 <strong>Data: {{ $event->date_event->format('d/m/Y') }}</strong>
@@ -385,9 +417,7 @@
             </div>
         </div>
     </div>
-    
-    
-    
+
 @stop
 
 @section('css')
@@ -399,6 +429,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+
+        setTimeout(() => {
+            document.getElementById('message').style.display = 'none';
+        }, 6000);
 
         // ChartJs Line - Gráfio em linhas
         const context = document.getElementById('myChartLine');

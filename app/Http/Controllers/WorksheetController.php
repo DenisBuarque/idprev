@@ -91,7 +91,7 @@ class WorksheetController extends Controller
         $material = $this->worksheet->create($data);
         if($material)
         {
-            return redirect('admin/worksheets')->with('success', 'Registro inserido com sucesso!');
+            return redirect('admin/worksheet/create')->with('success', 'Registro inserido com sucesso!');
         } else {
             return redirect('admin/worksheet/create')->with('error', 'Erro ao inserir o registro!');
         }

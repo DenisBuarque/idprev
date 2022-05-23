@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Nome completo:</small>
+                            <small>Nome: *</small>
                             <input type="text" name="name" value="{{ $user->name ?? old('name') }}"
                                 class="form-control @error('name') is-invalid @enderror" maxlength="100" />
                             @error('name')
@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Telefone:</small>
+                            <small>Telefone: *</small>
                             <input type="text" name="phone" value="{{ $user->phone ?? old('phone') }}"
                                 onkeypress="mascara(this, '## #####-####')"
                                 class="form-control @error('phone') is-invalid @enderror" placeholder="Ex: 82 90000-0000"
@@ -57,7 +57,7 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Endereço:</small>
+                            <small>Endereço: *</small>
                             <input type="text" name="address" id="address" value="{{ $user->address ?? old('address') }}"
                                 onblur="pesquisacep(this.value);"
                                 class="form-control @error('address') is-invalid @enderror" maxlength="250" />
@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group m-0">
-                            <small>Número:</small>
+                            <small>Número: *</small>
                             <input type="text" name="number" value="{{ $user->number ?? old('number') }}"
                                 class="form-control @error('number') is-invalid @enderror" placeholder="nº" maxlength="5" />
                             @error('number')
@@ -78,7 +78,7 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group m-0">
-                            <small>Bairro:</small>
+                            <small>Bairro: *</small>
                             <input type="text" name="district" id="district"
                                 value="{{ $user->district ?? old('district') }}"
                                 class="form-control @error('district') is-invalid @enderror" maxlength="50" />
@@ -89,7 +89,7 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group m-0">
-                            <small>Cidade:</small>
+                            <small>Cidade: *</small>
                             <input type="text" name="city" id="city" value="{{ $user->city ?? old('city') }}"
                                 class="form-control @error('city') is-invalid @enderror" maxlength="50" />
                             @error('city')
@@ -99,7 +99,7 @@
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group m-0">
-                            <small>Estado:</small>
+                            <small>Estado: *</small>
                             <input type="text" name="state" id="state" value="{{ $user->state ?? old('state') }}"
                                 class="form-control @error('state') is-invalid @enderror" maxlength="2" />
                             @error('state')
@@ -116,7 +116,7 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group m-0">
-                            <small>E-mail:</small>
+                            <small>E-mail: *</small>
                             <input type="email" name="email" value="{{ $user->email ?? old('email') }}"
                                 class="form-control @error('email') is-invalid @enderror" maxlength="100" />
                             @error('email')
@@ -145,22 +145,6 @@
                             @enderror
                         </div>
                     </div>
-                    <!-- div class="col-sm-12">
-                            <div class="form-group m-0">
-                                <p>Selecione um ou mais clientes para esse franqueado:</p>
-                                lista os clientes selecionados
-                                @ foreach ($clients as $client)
-                                    @ if($advisor->clients->contains($client))
-                                        <input type="checkbox" name="client_id[]" value="{ { $client->id}}" checked /> { { $client->name}}<br/>
-                                    @ endif
-                                @ endforeach -->
-                    <!-- lista os clientes não selecionados
-                                @ foreach ($clientsNotIn as $client)
-                                    <input type="checkbox" name="client_id[]" value="{ {$client->id } }"/> { { $client->name}}<br/>
-                                @ endforeach
-                            </div>
-                        </div -->
-
                 </div>
             </div>
             <div class="card-footer">
@@ -176,9 +160,8 @@
                 </a>
             </div>
         </div>
-
     </form>
-    <br /><br />
+    <br />
 
 @stop
 

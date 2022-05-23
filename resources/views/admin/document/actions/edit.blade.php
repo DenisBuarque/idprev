@@ -24,7 +24,7 @@
                         <div class="form-group m-0">
                             <small>Ação:</small>
                             <input type="text" name="name" value="{{ $action->name ?? old('name') }}" placeholder="Digite o tipo da ação"
-                                class="form-control @error('name') is-invalid @enderror" maxlength="100" />
+                                class="form-control @error('name') is-invalid @enderror" maxlength="100" autofocus />
                             @error('name')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror

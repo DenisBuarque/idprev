@@ -31,6 +31,11 @@ class FinancialController extends Controller
      */
     public function index(Request $request)
     {
+        $total = $this->financial->sum('value_total');
+        $received = $this->financial->where('payment_confirmation','=','S')->sum('payment_amount');
+        $unreceived = $this->financial->where('payment_confirmation','=','N')->sum('payment_amount');
+        $fees = $this->financial->where('payment_confirmation','=','N')->sum('fees');
+        
         $search = "";
         if (isset($request->search)) {
             $search = $request->search;
@@ -48,7 +53,36 @@ class FinancialController extends Controller
             $leads = $this->lead->whereIn('situation',[3])->orderBy('id', 'DESC')->paginate(10);
         }
 
-        return view('admin.financial.index', ['leads' => $leads, 'search' => $search]);
+        return view('admin.financial.index', [
+            'leads' => $leads, 
+            'search' => $search, 
+            'total' => $total, 
+            'received' => $received,
+            'unreceived' => $unreceived,
+            'fees' => $fees
+        ]);
+    }
+
+    public function autofindos(Request $request)
+    {
+        $search = "";
+        if (isset($request->search)) {
+            $search = $request->search;
+
+            $query = $this->lead;
+            
+            $columns = ['name','phone','email','address','district','city','state'];
+            foreach($columns as $key => $value):
+                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
+            endforeach;
+
+            $leads = $query->whereIn('situation',[3])->orderBy('id','DESC')->get();
+
+        } else {
+            $leads = $this->lead->whereIn('situation',[3])->orderBy('id', 'DESC')->paginate(10);
+        }
+
+        return view('admin.financial.autofindos', ['leads' => $leads, 'search' => $search]);
     }
 
     /**

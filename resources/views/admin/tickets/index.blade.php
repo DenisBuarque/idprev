@@ -5,18 +5,23 @@
 @section('content_header')
     <form method="GET" action="{{ route('admin.tickets.index') }}">
         <div style="display: flex; justify-content: space-between;">
-            <div class="input-group" style="width: 30%">
-                <select name="search" class="form-control" required>
-                    <option value="">Selecione um status</option>
-                    <option value="1" @if ($search == 1) selected @endif>Aberto</option>
-                    <option value="2" @if ($search == 2) selected @endif>Resolvido</option>
-                    <option value="3" @if ($search == 3) selected @endif>Pendente</option>
-                </select>
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search mr-2"></i> Buscar</button>
-                </span>
-            </div>
-            <a href="{{ route('admin.tickets.create') }}" class="btn bg-info"><i class="fa fa-tag"></i> Abrir Ticket de Atendimento</a>
+            @can('search-ticket')
+                <div class="input-group" style="width: 30%">
+                    <select name="search" class="form-control" required>
+                        <option value="">Selecione um status</option>
+                        <option value="1" @if ($search == 1) selected @endif>Aberto</option>
+                        <option value="2" @if ($search == 2) selected @endif>Resolvido</option>
+                        <option value="3" @if ($search == 3) selected @endif>Pendente</option>
+                    </select>
+                    <span class="input-group-append">
+                        <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search mr-2"></i> Buscar</button>
+                    </span>
+                </div>
+            @endcan
+            @can('create-ticket')
+                <a href="{{ route('admin.tickets.create') }}" class="btn bg-info"><i class="fa fa-tag"></i> Abrir Ticket
+                    de Atendimento</a>
+            @endcan
         </div>
     </form>
 @stop
@@ -34,21 +39,24 @@
             </div>
             <div class="col-sm-3 col-6">
                 <div class="description-block border-right">
-                    <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> {{ $open != 0 ?? '' }}0%</span>
+                    <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i>
+                        {{ $open != 0 ?? '' }}0%</span>
                     <h5 class="description-header">{{ $open }}</h5>
                     <span class="description-text">TICKETS ABERTOS</span>
                 </div>
             </div>
             <div class="col-sm-3 col-6">
                 <div class="description-block border-right">
-                    <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> {{ $resolved != 0 ?? '' }}0%</span>
+                    <span class="description-percentage text-success"><i class="fas fa-caret-up"></i>
+                        {{ $resolved != 0 ?? '' }}0%</span>
                     <h5 class="description-header">{{ $resolved }}</h5>
                     <span class="description-text">TICKETS RESOLVIDOS</span>
                 </div>
             </div>
             <div class="col-sm-3 col-6">
                 <div class="description-block">
-                    <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> {{ $pending != 0 ?? '' }}0%</span>
+                    <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i>
+                        {{ $pending != 0 ?? '' }}0%</span>
                     <h5 class="description-header">{{ $pending }}</h5>
                     <span class="description-text">TICKETS PENDETES</span>
                 </div>
@@ -61,7 +69,7 @@
         <div class="col-12">
 
             @if (session('success'))
-                <div class="alert alert-success mb-2" role="alert">
+                <div id="message" class="alert alert-success mb-2" role="alert">
                     {{ session('success') }}
                 </div>
             @endif
@@ -104,31 +112,40 @@
                                                 @endforeach
                                             </td>
                                             <td class='d-flex flex-row align-content-center justify-content-center'>
-                                                <a href="{{ route('admin.tickets.response', ['id' => $ticket->id]) }}"
-                                                    class="btn btn-xs px-2 border mr-1">
-                                                    <i class="fa fa-comments"></i> {{ count($ticket->feedbackTickets) }}
-                                                </a>
-
-                                                @if ($ticket->status != 2)
-                                                    <a href="{{ route('admin.tickets.edit', ['id' => $ticket->id]) }}"
-                                                        class="btn btn-info btn-xs px-2 mr-1">
-                                                        <i class="fas fa-edit"></i>
+                                                @can('comments-ticket')
+                                                    <a href="{{ route('admin.tickets.response', ['id' => $ticket->id]) }}"
+                                                        class="btn btn-xs px-2 border mr-1">
+                                                        <i class="fa fa-comments"></i> {{ count($ticket->feedbackTickets) }}
                                                     </a>
-                                                    <form method="POST" onsubmit="return(confirmaExcluir())"
-                                                        action="{{ route('admin.tickets.destroy', ['id' => $ticket->id]) }}">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-xs px-2">
+                                                @endcan
+                                                @if ($ticket->status != 2)
+                                                    @can('edit-ticket')
+                                                        <a href="{{ route('admin.tickets.edit', ['id' => $ticket->id]) }}"
+                                                            class="btn btn-info btn-xs px-2 mr-1">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    @endcan
+                                                    @can('delete-ticket')
+                                                        <form method="POST" onsubmit="return(confirmaExcluir())"
+                                                            action="{{ route('admin.tickets.destroy', ['id' => $ticket->id]) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-xs px-2">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endcan
+                                                @else
+                                                    @can('editi-ticket')
+                                                        <button type="button" class="btn btn-lingt btn-xs px-2 mr-1">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    @endcan
+                                                    @can('delete-ticket')
+                                                        <button type="button" class="btn btn-lingt btn-xs px-2 mr-1">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
-                                                    </form>
-                                                @else
-                                                    <button type="button" class="btn btn-lingt btn-xs px-2 mr-1">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-lingt btn-xs px-2 mr-1">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
+                                                    @endcan
                                                 @endif
 
                                             </td>
@@ -150,14 +167,8 @@
 
                 </div>
             </div>
-
-
-
-
         </div>
-
     </div>
-
 @stop
 
 @section('css')
@@ -174,5 +185,9 @@
                 return false;
             }
         }
+
+        setTimeout(() => {
+            document.getElementById('message').style.display = 'none';
+        }, 10000);
     </script>
 @stop

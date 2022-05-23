@@ -62,30 +62,30 @@ Route::get('/admin/user/edit/{id}', [UserController::class, 'edit'])->middleware
 Route::put('/admin/user/update/{id}', [UserController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.update');
 Route::delete('/admin/user/delete/{id}', [UserController::class, 'destroy'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.destroy');
 
-Route::get('/admin/leads', [LeadController::class, 'index'])->name('admin.leads.index');
-Route::get('/admin/lead/create', [LeadController::class, 'create'])->name('admin.leads.create');
-Route::get('/admin/leads/{tag}', [LeadController::class, 'leads'])->name('admin.leads.tag');
-Route::post('/admin/lead/store', [LeadController::class, 'store'])->name('admin.leads.store');
-Route::get('/admin/lead/edit/{id}', [LeadController::class, 'edit'])->name('admin.leads.edit');
-Route::get('/admin/lead/show/{id}', [LeadController::class, 'show'])->name('admin.leads.show');
-Route::put('/admin/lead/update/{id}', [LeadController::class, 'update'])->name('admin.leads.update');
-Route::delete('/admin/lead/delete/{id}', [LeadController::class, 'destroy'])->name('admin.leads.destroy');
-Route::delete('/admin/lead/document/remove', [LeadController::class, 'remove'])->name('admin.lead.document.remove');
-Route::get('/admin/lead/documents/{id}', [LeadController::class, 'documents'])->name('admin.lead.documents');
-Route::post('/admin/lead/feedback', [LeadController::class, 'feedback'])->name('admin.lead.feedback');
-Route::get('/admin/lead/document/download/{id}', [LeadController::class, 'download'])->name('admin.lead.document.download');
+Route::get('/admin/leads', [LeadController::class, 'index'])->middleware(['auth:sanctum', 'verified'])->name('admin.leads.index');
+Route::get('/admin/lead/create', [LeadController::class, 'create'])->middleware(['auth:sanctum', 'verified'])->name('admin.leads.create');
+Route::get('/admin/leads/{tag}', [LeadController::class, 'leads'])->middleware(['auth:sanctum', 'verified'])->name('admin.leads.tag');
+Route::post('/admin/lead/store', [LeadController::class, 'store'])->middleware(['auth:sanctum', 'verified'])->name('admin.leads.store');
+Route::get('/admin/lead/edit/{id}', [LeadController::class, 'edit'])->middleware(['auth:sanctum', 'verified'])->name('admin.leads.edit');
+Route::get('/admin/lead/show/{id}', [LeadController::class, 'show'])->middleware(['auth:sanctum', 'verified'])->name('admin.leads.show');
+Route::put('/admin/lead/update/{id}', [LeadController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->name('admin.leads.update');
+Route::delete('/admin/lead/delete/{id}', [LeadController::class, 'destroy'])->middleware(['auth:sanctum', 'verified'])->name('admin.leads.destroy');
+Route::delete('/admin/lead/document/remove', [LeadController::class, 'remove'])->middleware(['auth:sanctum', 'verified'])->name('admin.lead.document.remove');
+Route::get('/admin/lead/documents/{id}', [LeadController::class, 'documents'])->middleware(['auth:sanctum', 'verified'])->name('admin.lead.documents');
+Route::post('/admin/lead/feedback', [LeadController::class, 'feedback'])->middleware(['auth:sanctum', 'verified'])->name('admin.lead.feedback');
+Route::get('/admin/lead/document/download/{id}', [LeadController::class, 'download'])->middleware(['auth:sanctum', 'verified'])->name('admin.lead.document.download');
 
-Route::get('/admin/clients', [ClientController::class, 'index'])->name('admin.clients.index');
-Route::get('/admin/clients/term', [ClientController::class, 'term'])->name('admin.clients.term');
-Route::get('/admin/client/term/edit/{id}', [ClientController::class, 'edit_term'])->name('admin.clients.edit_term');
-Route::get('/admin/client/create', [ClientController::class, 'create'])->name('admin.clients.create');
-Route::post('/admin/client/store', [ClientController::class, 'store'])->name('admin.clients.store');
-Route::get('/admin/client/edit/{id}', [ClientController::class, 'edit'])->name('admin.clients.edit');
-Route::get('/admin/client/tag/{tag}', [ClientController::class, 'tag'])->name('admin.clients.tag');
-Route::get('/admin/client/situation/{situation}', [ClientController::class, 'situation'])->name('admin.clients.situation');
-Route::get('/admin/client/show/{id}', [ClientController::class, 'show'])->name('admin.clients.show');
-Route::put('/admin/client/update/{id}', [ClientController::class, 'update'])->name('admin.clients.update');
-Route::put('/admin/client/update/term/{id}', [ClientController::class, 'update_term'])->name('admin.clients.update_term');
+Route::get('/admin/clients', [ClientController::class, 'index'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.index');
+Route::get('/admin/clients/term', [ClientController::class, 'term'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.term');
+Route::get('/admin/client/term/edit/{id}', [ClientController::class, 'edit_term'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.edit_term');
+Route::get('/admin/client/create', [ClientController::class, 'create'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.create');
+Route::post('/admin/client/store', [ClientController::class, 'store'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.store');
+Route::get('/admin/client/edit/{id}', [ClientController::class, 'edit'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.edit');
+Route::get('/admin/client/tag/{tag}', [ClientController::class, 'tag'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.tag');
+Route::get('/admin/client/situation/{situation}', [ClientController::class, 'situation'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.situation');
+Route::get('/admin/client/show/{id}', [ClientController::class, 'show'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.show');
+Route::put('/admin/client/update/{id}', [ClientController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.update');
+Route::put('/admin/client/update/term/{id}', [ClientController::class, 'update_term'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.update_term');
 
 
 
@@ -173,6 +173,7 @@ Route::get('/admin/ticket/response/{id}', [TicketController::class, 'response'])
 Route::post('/admin/ticket/feedback', [TicketController::class, 'feedback'])->name('admin.tickets.feedback');
 
 Route::get('/admin/financial', [FinancialController::class, 'index'])->name('admin.financial.index');
+Route::get('/admin/financial/autofindos', [FinancialController::class, 'autofindos'])->name('admin.financial.autofindos');
 Route::get('/admin/financial/create', [FinancialController::class, 'create'])->name('admin.financial.create');
 Route::post('/admin/financial/store', [FinancialController::class, 'store'])->name('admin.financial.store');
 Route::get('/admin/financial/edit/{id}', [FinancialController::class, 'edit'])->name('admin.financial.edit');

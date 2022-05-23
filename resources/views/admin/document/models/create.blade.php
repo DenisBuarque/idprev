@@ -12,7 +12,7 @@
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div id="message" class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
             {{ session('success') }}
         </div>
     @elseif (session('error'))
@@ -96,5 +96,9 @@
             document.getElementById("button").style.display = "none"; 
             document.getElementById("spinner").style.display = "block"; 
         }
+
+        setTimeout(() => {
+            document.getElementById('message').style.display = 'none';
+        }, 6000);
     </script>
 @stop

@@ -63,8 +63,8 @@
                 <div class="icon">
                     <i class="fas fa-thumbs-up"></i>
                 </div>
-                <a href="{{route('admin.leads.tag',['tag' => 3])}}" class="small-box-footer">
-                    Listar registros <i class="fas fa-arrow-circle-right"></i>
+                <a class="small-box-footer">
+                    Sem permissão <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div>
@@ -77,8 +77,8 @@
                 <div class="icon">
                     <i class="fas fa-thumbs-down"></i>
                 </div>
-                <a href="{{route('admin.leads.tag',['tag' => 4])}}" class="small-box-footer">
-                    Listar registros <i class="fas fa-arrow-circle-right"></i>
+                <a class="small-box-footer">
+                    Sem permissão <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div>
@@ -110,6 +110,7 @@
                     <tr>
                         <th>Nome</th>
                         <th>Telefone</th>
+                        <th>Franqueado</th>
                         <th>Etiqueta</th>
                         <th style='width: 160px'>Criado</th>
                         <th style='width: 160px'>Atualizado</th>
@@ -121,6 +122,7 @@
                         <tr>
                             <td>{{ $lead->name }}</td>
                             <td>{{ $lead->phone }}</td>
+                            <td>{{ $lead->user->name }}</td>
                             <td>
                                 @php
                                     $array_tags = [1 => 'Novo Lead', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];

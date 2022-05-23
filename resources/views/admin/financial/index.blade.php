@@ -5,6 +5,7 @@
 @section('content_header')
     <form method="GET" action="{{ route('admin.financial.index') }}">
         <div style="display: flex; justify-content: start;">
+            @can('search-financial')
             <div class="input-group" style="width: 30%">
                 <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
                     required />
@@ -15,19 +16,82 @@
                     </button>
                 </span>
             </div>
-           
+            @endcan
         </div>
     </form>
 @stop
 
 @section('content')
 
+<div class="row">
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{number_format($total,2,',','.')}}</h3>
+                <p>Acumulado</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-coins"></i>
+            </div>
+                <a href="{{ route('admin.franchisees.index') }}" class="small-box-footer">
+                    Listar registros <i class="fas fa-arrow-circle-right"></i>
+                </a>
+
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>{{number_format($received,2,',','.')}}</h3>
+                <p>Recebidos</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-thumbs-up"></i>
+            </div>
+                <a href="" class="small-box-footer">
+                    Listar registros <i class="fas fa-arrow-circle-right"></i>
+                </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>{{number_format($fees,2,',','.')}}</h3>
+                <p>Honorários a Pagar</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-clock"></i>
+            </div>
+                <a href="" class="small-box-footer">
+                    Listar registros <i class="fas fa-arrow-circle-right"></i>
+                </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>{{number_format($unreceived,2,',','.')}}</h3>
+                <p>A receber</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-thumbs-down"></i>
+            </div>
+                <a href="" class="small-box-footer">
+                    Listar registros <i class="fas fa-arrow-circle-right"></i>
+                </a>
+        </div>
+    </div>
+
+</div>
+
+
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert">
+        <div id="message" class="alert alert-success mb-2" role="alert">
             {{ session('success') }}
         </div>
     @elseif (session('alert'))
-        <div class="alert alert-warning mb-2" role="alert">
+        <div id="message" class="alert alert-warning mb-2" role="alert">
             {{ session('alert') }}
         </div>
     @elseif (session('error'))
@@ -40,8 +104,7 @@
         <div class="card-header">
             <h3 class="card-title">Financeiro</h3>
         </div>
-
-        <div class="card-body p-0">
+        <div class="card-body table-responsive p-0">
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -92,10 +155,13 @@
                                 @endif
                             </td>
                             <td class='d-flex flex-row align-content-center justify-content-center'>
+                                @can('edit-financial')
                                 <a href="{{ route('admin.financial.edit', ['id' => $lead->id]) }}"
                                     class="btn btn-info btn-xs px-2 mr-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                @endcan
+                                @can('delete-financial')
                                 <form method="POST" action="{{ route('admin.financial.destroy', ['id' => $lead->id]) }}"
                                     onsubmit="return(confirmaExcluir())">
                                     @csrf
@@ -104,19 +170,17 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach
-
                 </tbody>
             </table>
-
             <div class="mt-3 mr-3 ml-3">
                 @if (!$search && $leads)
                     {{ $leads->links() }}
                 @endif
             </div>
-
         </div>
     </div>
 @stop
@@ -135,5 +199,9 @@
                 return false;
             }
         }
+
+        setTimeout(() => {
+            document.getElementById('message').style.display = 'none';
+        }, 6000);
     </script>
 @stop
