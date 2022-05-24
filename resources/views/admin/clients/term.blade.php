@@ -34,11 +34,17 @@
                         <th>Situação</th>
                         <th>Nome</th>
                         <th>Franqueado</th>
-                        <th>Etiqueta</th>
+                        <th></th>
                         <th>Anexos</th>
                         <th>Criado</th>
                         <th>Atualizado</th>
-                        <th class='text-center' style="width: 150px">Ações</th>
+                        @can('edit-term')
+                            <th style='width: 60px' class='text-center'>Comts.</th>
+                            <th style='width: 60px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-term')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -94,7 +100,7 @@
                                     
                                     if ($anexos > $docs) {
                                         $falta = $anexos - $docs;
-                                        echo $docs .' <i class="fas fa-paperclip"></i> falta ' . $falta . ' doc.';
+                                        echo $docs . ' <i class="fas fa-paperclip"></i> falta ' . $falta . ' doc.';
                                     } else {
                                         echo '<i class="fas fa-thumbs-up"></i> ' . $docs . ' anexo(s)';
                                     }
@@ -104,19 +110,23 @@
                             </td>
                             <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $lead->updated_at->format('d/m/Y H:m:s') }}</td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
+                            <td class='px-1'>
                                 <a href="{{ route('admin.clients.show', ['id' => $lead->id]) }}"
-                                    class="btn btn-xs border mr-1"><i class="fa fa-comments"></i>
+                                    class="btn btn-xs border btn-block"><i class="fa fa-comments"></i>
                                     {{ count($lead->feedbackLeads) }}</a>
+                            </td>
+                            <td class='px-1'>
                                 <a href="{{ route('admin.clients.edit_term', ['id' => $lead->id]) }}"
-                                    class="btn btn-info btn-xs px-2 mr-1">
+                                    class="btn btn-info btn-xs btn-block">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                            </td>
+                            <td class='px-1'>
                                 <form method="POST" onsubmit="return(confirmaExcluir())"
                                     action="{{ route('admin.clients.destroy', ['id' => $lead->id]) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-xs px-2">
+                                    <button type="submit" class="btn btn-danger btn-xs btn-block">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -125,13 +135,11 @@
                     @endforeach
                 </tbody>
             </table>
-
             <div class="mt-3 mr-3 ml-3">
                 @if (!$search && $leads)
                     {{ $leads->links() }}
                 @endif
             </div>
-
         </div>
     </div>
 @stop

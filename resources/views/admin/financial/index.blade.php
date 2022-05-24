@@ -6,16 +6,16 @@
     <form method="GET" action="{{ route('admin.financial.index') }}">
         <div style="display: flex; justify-content: start;">
             @can('search-financial')
-            <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
-                    required />
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">
-                        <i class="fa fa-search mr-1"></i>
-                        Buscar
-                    </button>
-                </span>
-            </div>
+                <div class="input-group" style="width: 30%">
+                    <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
+                        required />
+                    <span class="input-group-append">
+                        <button type="submit" class="btn btn-info btn-flat">
+                            <i class="fa fa-search mr-1"></i>
+                            Buscar
+                        </button>
+                    </span>
+                </div>
             @endcan
         </div>
     </form>
@@ -23,67 +23,67 @@
 
 @section('content')
 
-<div class="row">
+    <div class="row">
 
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-info">
-            <div class="inner">
-                <h3>{{number_format($total,2,',','.')}}</h3>
-                <p>Acumulado</p>
-            </div>
-            <div class="icon">
-                <i class="fa fa-coins"></i>
-            </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ number_format($total, 2, ',', '.') }}</h3>
+                    <p>Acumulado</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-coins"></i>
+                </div>
                 <a href="{{ route('admin.franchisees.index') }}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
 
+            </div>
         </div>
-    </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-success">
-            <div class="inner">
-                <h3>{{number_format($received,2,',','.')}}</h3>
-                <p>Recebidos</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-thumbs-up"></i>
-            </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ number_format($received, 2, ',', '.') }}</h3>
+                    <p>Recebidos</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-thumbs-up"></i>
+                </div>
                 <a href="" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
+            </div>
         </div>
-    </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3>{{number_format($fees,2,',','.')}}</h3>
-                <p>Honorários a Pagar</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-clock"></i>
-            </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ number_format($fees, 2, ',', '.') }}</h3>
+                    <p>Honorários a Pagar</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-clock"></i>
+                </div>
                 <a href="" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
+            </div>
         </div>
-    </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
-            <div class="inner">
-                <h3>{{number_format($unreceived,2,',','.')}}</h3>
-                <p>A receber</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-thumbs-down"></i>
-            </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ number_format($unreceived, 2, ',', '.') }}</h3>
+                    <p>A receber</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-thumbs-down"></i>
+                </div>
                 <a href="" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
+            </div>
         </div>
-    </div>
 
-</div>
+    </div>
 
 
     @if (session('success'))
@@ -110,11 +110,16 @@
                     <tr>
                         <th>Cliente</th>
                         <th>Franqueado</th>
-                        <th>Conf. Pag.</th>
+                        <th>Confirmação</th>
                         <th>Valor Total</th>
                         <th>Data Pag.</th>
                         <th>Valor Rec.</th>
-                        <th style="width: 100px; text-align: center">Ações</th>
+                        @can('edit-financial')
+                            <th style='width: 60px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-financial')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -135,43 +140,45 @@
                             </td>
                             <td>
                                 @if (isset($lead->financy->value_total))
-                                    {{ number_format($lead->financy->value_total,2,',','.')}}
+                                    {{ number_format($lead->financy->value_total, 2, ',', '.') }}
                                 @else
                                     <small class="badge badge-warning">Aguardando</small>
                                 @endif
                             </td>
                             <td>
                                 @if (isset($lead->financy->receipt_date))
-                                    {{$lead->financy->receipt_date->format('d/m/Y')}}
+                                    {{ $lead->financy->receipt_date->format('d/m/Y') }}
                                 @else
                                     <small class="badge badge-warning">Aguardando</small>
                                 @endif
                             </td>
                             <td>
                                 @if (isset($lead->financy->payment_amount))
-                                    {{number_format($lead->financy->payment_amount,2,',','.')}}
+                                    {{ number_format($lead->financy->payment_amount, 2, ',', '.') }}
                                 @else
                                     <small class="badge badge-warning">Aguardando</small>
                                 @endif
                             </td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
-                                @can('edit-financial')
-                                <a href="{{ route('admin.financial.edit', ['id' => $lead->id]) }}"
-                                    class="btn btn-info btn-xs px-2 mr-1">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                @endcan
-                                @can('delete-financial')
-                                <form method="POST" action="{{ route('admin.financial.destroy', ['id' => $lead->id]) }}"
-                                    onsubmit="return(confirmaExcluir())">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-xs px-2">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                                @endcan
-                            </td>
+                            @can('edit-financial')
+                                <td class='px-1'>
+                                    <a href="{{ route('admin.financial.edit', ['id' => $lead->id]) }}"
+                                        class="btn btn-info btn-xs btn-block">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            @endcan
+                            @can('delete-financial')
+                                <td class='px-1'>
+                                    <form method="POST" action="{{ route('admin.financial.destroy', ['id' => $lead->id]) }}"
+                                        onsubmit="return(confirmaExcluir())">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

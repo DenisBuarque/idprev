@@ -17,6 +17,8 @@ class TicketController extends Controller
 
     public function __construct(Ticket $ticket, Advisor $advisor, FeedbackTicket $feedback)
     {
+        $this->middleware('auth');
+        
         $this->ticket = $ticket;
         $this->advisor = $advisor;
         $this->feedback = $feedback;
@@ -35,15 +37,23 @@ class TicketController extends Controller
         $resolved = $this->ticket->where('status','2')->get()->count();
         $pending = $this->ticket->where('status','3')->get()->count();
 
-        //total * (valor/100);
+        $type_user = auth()->user()->type;
 
         $search = "";
         if (isset($request->search)) 
         {
             $search = $request->search;
-            $tickets = $this->ticket->orWhere('status', $search)->orderBy('id','DESC')->get();
+            if($type_user == 'F'){
+                $tickets = $this->ticket->where('user_id',auth()->user()->id)->orWhere('status', $search)->orderBy('id','DESC')->get();
+            } else {
+                $tickets = $this->ticket->orWhere('status', $search)->orderBy('id','DESC')->get();
+            }
         } else {
-            $tickets = $this->ticket->whereIn('status',[1,3])->orderBy('id', 'DESC')->paginate(10);
+            if($type_user == 'F'){
+                $tickets = $this->ticket->where('user_id',auth()->user()->id)->whereIn('status',[1,3])->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $tickets = $this->ticket->whereIn('status',[1,3])->orderBy('id', 'DESC')->paginate(10);
+            }
         }
 
         return view('admin.tickets.index', [

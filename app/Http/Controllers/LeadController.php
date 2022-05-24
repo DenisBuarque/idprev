@@ -22,6 +22,8 @@ class LeadController extends Controller
 
     public function __construct(User $user, Lead $lead, Action $action, ModelDoc $modeldoc, FeedbackLead $feedback)
     {   
+        $this->middleware('auth');
+        
         $this->user = $user;
         $this->lead = $lead;
         $this->action = $action;
@@ -45,7 +47,8 @@ class LeadController extends Controller
         $resources = $this->lead->where('situation','5')->get();
 
         $users = $this->user->all();
-
+        $type_user = auth()->user()->type;
+        
         $search = "";
         if(isset($request->search))
         {
@@ -57,10 +60,19 @@ class LeadController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $leads = $query->whereIn('tag',[1,2])->orderBy('id','DESC')->get();
+            if($type_user == "F"){ // se for franqueado
+                $leads = $query->where('user_id',auth()->user()->id)->whereIn('tag',[1,2])->orderBy('id','DESC')->get();
+            }else{ // se for admin.
+                $leads = $query->whereIn('tag',[1,2])->orderBy('id','DESC')->get();
+            }
 
         } else {
-            $leads = $this->lead->whereIn('tag',[1,2])->orderBy('id','DESC')->paginate(10);
+
+            if($type_user == "F"){ // se for franqueado
+                $leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag',[1,2])->orderBy('id','DESC')->paginate(10);
+            } else { // se for admin.
+                $leads = $this->lead->whereIn('tag',[1,2])->orderBy('id','DESC')->paginate(10);
+            }
         }
         
         return view('admin.leads.index',[

@@ -47,11 +47,16 @@
                     <tr>
                         <th>Cliente</th>
                         <th>Franqueado</th>
-                        <th>Conf. Pag.</th>
+                        <th>Confirmação</th>
                         <th>Valor Total</th>
                         <th>Data Pag.</th>
                         <th>Valor Rec.</th>
-                        <th style="width: 100px; text-align: center">Ações</th>
+                        @can('edit-financial')
+                            <th style='width: 60px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-financial')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -93,20 +98,22 @@
                                             <small class="badge badge-warning">Aguardando</small>
                                         @endif
                                     </td>
-                                    <td class='d-flex flex-row align-content-center justify-content-center'>
+                                    <td class='px-1'>
                                         @can('edit-financial')
                                             <a href="{{ route('admin.financial.edit', ['id' => $lead->id]) }}"
-                                                class="btn btn-info btn-xs px-2 mr-1">
+                                                class="btn btn-info btn-xs btn-block">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                         @endcan
+                                    </td>
+                                    <td class='px-1'>
                                         @can('delete-financial')
                                             <form method="POST"
                                                 action="{{ route('admin.financial.destroy', ['id' => $lead->id]) }}"
                                                 onsubmit="return(confirmaExcluir())">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-xs px-2">
+                                                <button type="submit" class="btn btn-danger btn-xs btn-block">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>

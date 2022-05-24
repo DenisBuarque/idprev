@@ -258,17 +258,7 @@
 @section('js')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 
-    <script src="https://cdn.tiny.cloud/1/cr3szni52gwqfslu3w63jcsfxdpbitqgg2x8tnnzdgktmhzq/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
-
     <script>
-
-        tinymce.init({
-            selector: 'textarea',
-            plugins: 'advlist autolink lists link image charmap preview anchor pagebreak',
-            toolbar_mode: 'floating',
-        });
-
         document.getElementById("button").style.display = "block";
         document.getElementById("spinner").style.display = "none";
 

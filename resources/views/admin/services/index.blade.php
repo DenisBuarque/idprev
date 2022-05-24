@@ -11,7 +11,7 @@
                         placeholder="Título do serviço" required />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
-                            <i class="fa fa-search"></i>  Buscar
+                            <i class="fa fa-search"></i> Buscar
                         </button>
                     </span>
                 </div>
@@ -51,7 +51,12 @@
                     <tr>
                         <th>Título</th>
                         <th>Status</th>
-                        <th style="width: 100px; text-align: center">Ações</th>
+                        @can('edit-service')
+                            <th style='width: 60px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-service')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -65,24 +70,26 @@
                                     Inativo
                                 @endif
                             </td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
-                                @can('edit-service')
+                            @can('edit-service')
+                                <td class='px-1'>
                                     <a href="{{ route('admin.services.edit', ['id' => $service->id]) }}"
-                                        class="btn btn-info btn-sm mr-1">
+                                        class="btn btn-info btn-xs btn-block">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                @endcan
-                                @can('delete-service')
+                                </td>
+                            @endcan
+                            @can('delete-service')
+                                <td class='px-1'>
                                     <form method="POST" onsubmit="return(confirmaExcluir())"
                                         action="{{ route('admin.services.destroy', ['id' => $service->id]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                @endcan
-                            </td>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

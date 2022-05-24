@@ -54,7 +54,12 @@
                         <th>Data do Evento</th>
                         <th style="width: 160px;">Criado</th>
                         <th style="width: 160px;">Atualizado</th>
-                        <th class='text-center' style="width: 100px;">Ações</th>
+                        @can('edit-event')
+                            <th style='width: 60px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-event')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -64,19 +69,21 @@
                             <td>{{ $event->date_event->format('d/m/Y') }}</td>
                             <td>{{ $event->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $event->updated_at->format('d/m/Y H:m:s') }}</td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
+                            <td class='px-1'>
                                 @can('edit-event')
                                     <a href="{{ route('admin.training.events.edit', ['id' => $event->id]) }}"
-                                        class="btn btn-info btn-xs px-2 mr-1">
+                                        class="btn btn-info btn-xs btn-block">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 @endcan
+                            </td>
+                            <td class='px-1'>
                                 @can('delete-event')
                                     <form method="POST" onsubmit="return(confirmaExcluir())"
                                         action="{{ route('admin.training.events.destroy', ['id' => $event->id]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-xs px-2">
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
@@ -84,7 +91,6 @@
                             </td>
                         </tr>
                     @endforeach
-
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">

@@ -49,7 +49,7 @@
                 <div class="icon">
                     <i class="fas fa-clock"></i>
                 </div>
-                <a href="{{route('admin.leads.tag',['tag' => 2])}}" class="small-box-footer">
+                <a href="{{ route('admin.leads.tag', ['tag' => 2]) }}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -63,9 +63,15 @@
                 <div class="icon">
                     <i class="fas fa-thumbs-up"></i>
                 </div>
-                <a class="small-box-footer">
-                    Sem permissão <i class="fas fa-arrow-circle-right"></i>
-                </a>
+                @can('list-client')
+                    <a href="{{ route('admin.clients.tag', ['tag' => 3]) }}" class="small-box-footer">
+                        Listar registros <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @else
+                    <a class="small-box-footer">
+                        &nbsp;
+                    </a>
+                @endcan
             </div>
         </div>
         <div class="col-lg-3 col-6">
@@ -77,9 +83,15 @@
                 <div class="icon">
                     <i class="fas fa-thumbs-down"></i>
                 </div>
-                <a class="small-box-footer">
-                    Sem permissão <i class="fas fa-arrow-circle-right"></i>
-                </a>
+                @can('list-client')
+                    <a href="{{ route('admin.clients.tag', ['tag' => 4]) }}" class="small-box-footer">
+                        Listar registros <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @else
+                    <a class="small-box-footer">
+                        &nbsp;
+                    </a>
+                @endcan
             </div>
         </div>
 
@@ -111,10 +123,18 @@
                         <th>Nome</th>
                         <th>Telefone</th>
                         <th>Franqueado</th>
-                        <th>Etiqueta</th>
+                        <th></th>
                         <th style='width: 160px'>Criado</th>
                         <th style='width: 160px'>Atualizado</th>
-                        <th style='width: 160px' class='text-center'>Ações</th>
+                        @can('comments-lead')
+                            <th style='width: 60px' class='text-center'></th>
+                        @endcan
+                        @can('edit-lead')
+                            <th style='width: 50px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-lead')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -143,23 +163,34 @@
                             </td>
                             <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $lead->updated_at->format('d/m/Y H:m:s') }}</td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
-                                <a href="{{route('admin.leads.show',['id' => $lead->id])}}" class="btn btn-xs px-2 btn-light border mr-1">
-                                    <i class="fa fa-comments"></i> {{ count($lead->feedbackLeads) }}
-                                </a>
-                                <a href="{{ route('admin.leads.edit', ['id' => $lead->id]) }}"
-                                    class="btn btn-info btn-xs px-2 mr-1">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form method="POST" onsubmit="return(confirmaExcluir())"
-                                    action="{{ route('admin.leads.destroy', ['id' => $lead->id]) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-xs px-2">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
+                            @can('comments-lead')
+                                <td class="px-1">
+                                    <a href="{{ route('admin.leads.show', ['id' => $lead->id]) }}"
+                                        class="btn btn-xs btn-light border btn-block">
+                                        <i class="fa fa-comments"></i> {{ count($lead->feedbackLeads) }}
+                                    </a>
+                                </td>
+                            @endcan
+                            @can('edit-lead')
+                                <td class="px-1">
+                                    <a href="{{ route('admin.leads.edit', ['id' => $lead->id]) }}"
+                                        class="btn btn-info btn-xs btn-block">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            @endcan
+                            @can('delete-lead')
+                                <td class="px-1">
+                                    <form method="POST" onsubmit="return(confirmaExcluir())"
+                                        action="{{ route('admin.leads.destroy', ['id' => $lead->id]) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

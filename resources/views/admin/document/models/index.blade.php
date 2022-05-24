@@ -53,7 +53,13 @@
                         <th>Tipo de Ação</th>
                         <th style="width: 160px;">Criado</th>
                         <th style="width: 160px;">Atualizado</th>
-                        <th class='text-center' style="width: 100px;">Ações</th>
+                        @can('edit-document')
+                            <th style='width: 60px' class='text-center'>Down</th>    
+                            <th style='width: 60px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-document')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -63,28 +69,32 @@
                             <td>{{ $model->action->name }}</td>
                             <td>{{ $model->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $model->updated_at->format('d/m/Y H:m:s') }}</td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
+                            <td class='px-1'>
                                 @can('edit-document')
                                     <a href="{{ route('admin.document.models.download', ['id' => $model->id]) }}"
-                                        class="btn btn-default btn-xs px-2 mr-1">
+                                        class="btn btn-default btn-xs btn-block">
                                         <i class="fas fa-download"></i>
                                     </a>
+                                </td>
+                                <td class="px-1">
                                     <a href="{{ route('admin.document.models.edit', ['id' => $model->id]) }}"
-                                        class="btn btn-info btn-xs px-2 mr-1">
+                                        class="btn btn-info btn-xs btn-block">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                @endcan
-                                @can('delete-document')
+                                </td>
+                            @endcan
+                            @can('delete-document')
+                                <td class="px-1">
                                     <form method="POST" onsubmit="return(confirmaExcluir())"
                                         action="{{ route('admin.document.models.destroy', ['id' => $model->id]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-xs px-2">
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                @endcan
-                            </td>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

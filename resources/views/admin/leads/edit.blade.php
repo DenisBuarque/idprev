@@ -19,10 +19,11 @@
                 <h3 class="card-title">Formulário edição de lead:</h3>
             </div>
             <div class="card-body">
+                <small>Os campos com * são de preenchimento obrigatório:</small>
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         <div class="form-group m-0">
-                            <small>Nome completo: *</small>
+                            <small>Nome: *</small>
                             <input type="text" name="name" value="{{ $lead->name ?? old('name') }}"
                                 class="form-control @error('name') is-invalid @enderror" maxlength="100" />
                             @error('name')
@@ -30,7 +31,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Telefones: *</small>
                             <input type="text" name="phone" value="{{ $lead->phone ?? old('phone') }}"
@@ -41,7 +42,25 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
+                        <div class="form-group m-0">
+                            <small>Franqueado: *</small>
+                            <select name="user_id" class="form-control">
+                                <option value="">Selecione um franqueado</option>
+                                @foreach ($users as $user)
+                                    @if ($user->id == $lead->user_id)
+                                        <option value="{{ $user->id }}" selected>{{ $user->name }}</option>
+                                    @else
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('user_id')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
                         <div class="form-group m-0">
                             <small>E-mail:</small>
                             <input type="email" name="email" value="{{ $lead->email ?? old('email') }}"
@@ -57,24 +76,6 @@
                                 <option value="3" @if ($lead->tag == 3) selected @endif>Convertido</option>
                                 <option value="4" @if ($lead->tag == 4) selected @endif>Não Convertido</option>
                             </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Franqueado:</small>
-                            <select name="user_id" class="form-control">
-                                <option value="">Selecione um franqueado</option>
-                                @foreach ($users as $user)
-                                    @if ($user->id == $lead->user_id)
-                                        <option value="{{ $user->id }}" selected>{{ $user->name }}</option>
-                                    @else
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            @error('user_id')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-3">
@@ -93,34 +94,33 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Número:</small>
                             <input type="text" name="number" value="{{ $lead->number ?? old('number') }}"
                                 class="form-control" placeholder="nº" maxlength="5" />
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Bairro:</small>
                             <input type="text" name="district" id="district"
                                 value="{{ $lead->district ?? old('district') }}" class="form-control" maxlength="50" />
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Cidade:</small>
                             <input type="text" name="city" id="city" value="{{ $lead->city ?? old('city') }}"
                                 class="form-control" maxlength="50" />
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Estado:</small>
                             <input type="text" name="state" id="state" value="{{ $lead->state ?? old('state') }}"
                                 class="form-control" maxlength="2" />
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="card-footer">

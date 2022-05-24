@@ -50,30 +50,39 @@
                 <thead>
                     <tr>
                         <th>Tipo de ação</th>
+                        <th class="text-center">Docs.</th>
                         <th style="width: 160px">Criado</th>
                         <th style="width: 160px">Atualizado</th>
-                        <th class='text-center' style="width: 100px;">Ações</th>
+                        @can('edit-action')
+                            <th style='width: 60px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-action')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($actions as $action)
                         <tr>
                             <td>{{ $action->name }}</td>
+                            <td class="text-center">{{ count($action->modeldocs) }}</td>
                             <td>{{ $action->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $action->updated_at->format('d/m/Y H:m:s') }}</td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
+                            <td class='px-1'>
                                 @can('edit-action')
                                     <a href="{{ route('admin.document.actions.edit', ['id' => $action->id]) }}"
-                                        class="btn btn-info btn-xs px-2 mr-1">
+                                        class="btn btn-info btn-xs btn-block">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 @endcan
+                            </td>
+                            <td class='px-1'>
                                 @can('delete-action')
                                     <form method="POST" onsubmit="return(confirmaExcluir())"
                                         action="{{ route('admin.document.actions.destroy', ['id' => $action->id]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-xs px-2">
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>

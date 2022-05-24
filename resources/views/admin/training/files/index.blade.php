@@ -49,7 +49,13 @@
                         <th>Título</th>
                         <th style="width: 160px;">Criado</th>
                         <th style="width: 160px;">Atualizado</th>
-                        <th class='text-center' style="width: 140px;">Ações</th>
+                        @can('edit-file')
+                            <th style='width: 60px' class='text-center'>Down</th>
+                            <th style='width: 60px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-file')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -58,28 +64,32 @@
                             <td>{{ $file->title }}</td>
                             <td>{{ $file->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $file->updated_at->format('d/m/Y H:m:s') }}</td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
-                                <a href="{{ route('admin.training.files.download', ['id' => $file->id]) }}"
-                                    class="btn btn-default btn-xs px-2 mr-1">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                @can('edit-file')
+                            @can('edit-file')
+                                <td class='px-1'>
+                                    <a href="{{ route('admin.training.files.download', ['id' => $file->id]) }}"
+                                        class="btn btn-default btn-xs btn-block">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </td>
+                                <td class='px-1'>
                                     <a href="{{ route('admin.training.files.edit', ['id' => $file->id]) }}"
-                                        class="btn btn-info btn-xs px-2 mr-1">
+                                        class="btn btn-info btn-xs btn-block">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                @endcan
-                                @can('delete-file')
+                                </td>
+                            @endcan
+                            @can('delete-file')
+                                <td class='px-1'>
                                     <form method="POST" onsubmit="return(confirmaExcluir())"
                                         action="{{ route('admin.training.files.destroy', ['id' => $file->id]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-xs px-2">
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                @endcan
-                            </td>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

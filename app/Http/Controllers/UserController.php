@@ -15,8 +15,10 @@ class UserController extends Controller
 
    public function __construct(User $user, Permission $permission)
    {
-       $this->user = $user;
-       $this->permission = $permission;
+        $this->middleware('auth');
+
+        $this->user = $user;
+        $this->permission = $permission;
    }
     /**
      * Display a listing of the resource.
@@ -36,10 +38,10 @@ class UserController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $users = $query->orderBy('id','DESC')->get();
+            $users = $query->where('type','A')->orderBy('id','DESC')->get();
 
         } else {
-            $users = $this->user->orderBy('id', 'DESC')->paginate(10);
+            $users = $this->user->where('type','A')->orderBy('id', 'DESC')->paginate(10);
         }
 
         return view('admin.users.index', ['users' => $users, 'search' => $search]);

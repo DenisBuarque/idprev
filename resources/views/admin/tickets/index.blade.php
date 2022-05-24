@@ -95,7 +95,13 @@
                                         <th>Código</th>
                                         <th>Franqueado</th>
                                         <th>Status</th>
-                                        <th style="width: 150px;" class="text-center">Ação</th>
+                                        @can('edit-ticket')
+                                            <th style='width: 60px' class='text-center'></th>
+                                            <th style='width: 60px' class='text-center'>Edit</th>
+                                        @endcan
+                                        @can('delete-ticket')
+                                            <th style='width: 50px' class='text-center'>Del</th>
+                                        @endcan
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -111,44 +117,32 @@
                                                     @endif
                                                 @endforeach
                                             </td>
-                                            <td class='d-flex flex-row align-content-center justify-content-center'>
-                                                @can('comments-ticket')
+                                            @can('edit-ticket')
+                                                <td class='px-1'>
                                                     <a href="{{ route('admin.tickets.response', ['id' => $ticket->id]) }}"
-                                                        class="btn btn-xs px-2 border mr-1">
+                                                        class="btn btn-xs px-2 border btn-block">
                                                         <i class="fa fa-comments"></i> {{ count($ticket->feedbackTickets) }}
                                                     </a>
-                                                @endcan
-                                                @if ($ticket->status != 2)
-                                                    @can('edit-ticket')
-                                                        <a href="{{ route('admin.tickets.edit', ['id' => $ticket->id]) }}"
-                                                            class="btn btn-info btn-xs px-2 mr-1">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                    @endcan
-                                                    @can('delete-ticket')
-                                                        <form method="POST" onsubmit="return(confirmaExcluir())"
-                                                            action="{{ route('admin.tickets.destroy', ['id' => $ticket->id]) }}">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-xs px-2">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endcan
-                                                @else
-                                                    @can('editi-ticket')
-                                                        <button type="button" class="btn btn-lingt btn-xs px-2 mr-1">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                    @endcan
-                                                    @can('delete-ticket')
-                                                        <button type="button" class="btn btn-lingt btn-xs px-2 mr-1">
+                                                </td>
+                                                <td class='px-1'>
+                                                    <a href="{{ route('admin.tickets.edit', ['id' => $ticket->id]) }}"
+                                                        class="btn btn-info btn-xs btn-block">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                </td>
+                                            @endcan
+                                            @can('delete-ticket')
+                                                <td class='px-1'>
+                                                    <form method="POST" onsubmit="return(confirmaExcluir())"
+                                                        action="{{ route('admin.tickets.destroy', ['id' => $ticket->id]) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
-                                                    @endcan
-                                                @endif
-
-                                            </td>
+                                                    </form>
+                                                </td>
+                                            @endcan
                                         </tr>
                                     @endforeach
 

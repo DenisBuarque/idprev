@@ -6,21 +6,21 @@
     <form method="GET" action="{{ route('admin.franchisees.index') }}">
         <div style="display: flex; justify-content: space-between;">
             @can('search-franchisee')
-            <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
-                    required />
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">
-                        <i class="fa fa-search mr-1"></i>
-                        Buscar
-                    </button>
-                </span>
-            </div>
+                <div class="input-group" style="width: 30%">
+                    <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
+                        required />
+                    <span class="input-group-append">
+                        <button type="submit" class="btn btn-info btn-flat">
+                            <i class="fa fa-search mr-1"></i>
+                            Buscar
+                        </button>
+                    </span>
+                </div>
             @endcan
             @can('create-franchisee')
-            <a href="{{ route('admin.franchisees.create') }}" class="btn bg-info">
-                <i class="fa fa-plus mr-1"></i> Adicionar Registro
-            </a>
+                <a href="{{ route('admin.franchisees.create') }}" class="btn bg-info">
+                    <i class="fa fa-plus mr-1"></i> Adicionar Registro
+                </a>
             @endcan
         </div>
     </form>
@@ -56,7 +56,12 @@
                         <th class='text-center'>Lead(s)</th>
                         <th style="width: 160px;">Criado</th>
                         <th style="width: 160px;">Atualizado</th>
-                        <th style="width: 100px; text-align: center">Ações</th>
+                        @can('edit-franchisee')
+                            <th style='width: 60px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-franchisee')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -68,27 +73,29 @@
                             <td class='text-center'>{{ count($user->leads) }}</td>
                             <td>{{ $user->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $user->updated_at->format('d/m/Y H:m:s') }}</td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
-                                @can('edit-franchisee')
-                                <a href="{{ route('admin.franchisees.edit', ['id' => $user->id]) }}"
-                                    class="btn btn-info btn-xs px-2 mr-1">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                @endcan
-                                @can('delete-franchisee')
-                                <form method="POST" action="{{ route('admin.franchisees.destroy', ['id' => $user->id]) }}"
-                                    onsubmit="return(confirmaExcluir())">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-xs px-2">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                                @endcan
-                            </td>
+                            @can('edit-franchisee')
+                                <td class="px-1">
+                                    <a href="{{ route('admin.franchisees.edit', ['id' => $user->id]) }}"
+                                        class="btn btn-info btn-xs btn-block">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            @endcan
+                            @can('delete-franchisee')
+                                <td class="px-1">
+                                    <form method="POST"
+                                        action="{{ route('admin.franchisees.destroy', ['id' => $user->id]) }}"
+                                        onsubmit="return(confirmaExcluir())">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
-
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">

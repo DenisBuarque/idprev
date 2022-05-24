@@ -26,14 +26,20 @@
                             @if (!empty($lead->email))
                                 <br />E-mail: {{ $lead->email }}
                             @endif
+                            <p class="text-sm mb-0">Criado:
+                                <b class="d-block">{{ $lead->created_at->format('d/m/Y H:m:s') }}</b>
+                            </p>
+                            <p class="text-sm">Atualizado:
+                                    <b class="d-block">{{ $lead->updated_at->format('d/m/Y H:m:s') }}</b>
+                            </p>
                             @if (!empty($lead->address))
-                                <p class="text-sm">Endereço:
+                                <p class="text-sm mb-0">Endereço:
                                     <b class="d-block">{{ $lead->address.', nº '.$lead->number }}</b>
                                 </p>
-                                <p class="text-sm">Bairro:
+                                <p class="text-sm mb-0">Bairro:
                                     <b class="d-block">{{ $lead->district }}</b>
                                 </p>
-                                <p class="text-sm">Cidade/Estado:
+                                <p class="text-sm mb-0">Cidade/Estado:
                                     <b class="d-block">{{ $lead->city.'/'.$lead->state }}</b>
                                 </p>
                                 <p class="text-sm">Cep:

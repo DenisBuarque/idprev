@@ -49,18 +49,18 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 Route::post('/dashboard/create', [DashboardController::class, 'store'])->middleware(['auth:sanctum', 'verified'])->name('dashboard.store');
 Route::post('/dashboard/feedback', [DashboardController::class, 'feedback'])->middleware(['auth:sanctum', 'verified'])->name('dashboard.feedback');
 
-Route::group(['middleware' => 'advisor'], function () {
+/*Route::group(['middleware' => 'advisor'], function () {
     Route::get('/franqueado/logout',[HomeController::class, 'logout'])->name('logout.franchisee');
     Route::get('/franqueado', [HomeController::class, 'franchisee'])->name('site.franchisee');
     Route::get('/cliente/{id}', [HomeController::class, 'detail'])->name('franchisee.client');
-});
+});*/
 
-Route::get('/admin/users', [UserController::class, 'index'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.index');
-Route::get('/admin/user/create', [UserController::class, 'create'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.create');
-Route::post('/admin/user/store', [UserController::class, 'store'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.store');
-Route::get('/admin/user/edit/{id}', [UserController::class, 'edit'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.edit');
-Route::put('/admin/user/update/{id}', [UserController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.update');
-Route::delete('/admin/user/delete/{id}', [UserController::class, 'destroy'])->middleware(['auth:sanctum', 'verified'])->name('admin.users.destroy');
+Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
+Route::get('/admin/user/create', [UserController::class, 'create'])->name('admin.users.create');
+Route::post('/admin/user/store', [UserController::class, 'store'])->name('admin.users.store');
+Route::get('/admin/user/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
+Route::put('/admin/user/update/{id}', [UserController::class, 'update'])->name('admin.users.update');
+Route::delete('/admin/user/delete/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 
 Route::get('/admin/leads', [LeadController::class, 'index'])->middleware(['auth:sanctum', 'verified'])->name('admin.leads.index');
 Route::get('/admin/lead/create', [LeadController::class, 'create'])->middleware(['auth:sanctum', 'verified'])->name('admin.leads.create');
@@ -87,20 +87,12 @@ Route::get('/admin/client/show/{id}', [ClientController::class, 'show'])->middle
 Route::put('/admin/client/update/{id}', [ClientController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.update');
 Route::put('/admin/client/update/term/{id}', [ClientController::class, 'update_term'])->middleware(['auth:sanctum', 'verified'])->name('admin.clients.update_term');
 
-
-
-
-
-
-
 Route::get('/admin/services', [ServiceController::class, 'index'])->name('admin.services.index');
 Route::get('/admin/service/create', [ServiceController::class, 'create'])->name('admin.services.create');
 Route::post('/admin/service/store', [ServiceController::class, 'store'])->name('admin.services.store');
 Route::get('/admin/service/edit/{id}', [ServiceController::class, 'edit'])->name('admin.services.edit');
 Route::put('/admin/service/update/{id}', [ServiceController::class, 'update'])->name('admin.services.update');
 Route::delete('/admin/service/delete/{id}', [ServiceController::class, 'destroy'])->name('admin.services.destroy');
-
-
 
 Route::get('/admin/training/files', [FileController::class, 'index'])->name('admin.training.files.index');
 Route::get('/admin/training/file/create', [FileController::class, 'create'])->name('admin.training.files.create');
@@ -139,8 +131,6 @@ Route::post('/admin/document/action/store', [ActionController::class, 'store'])-
 Route::get('/admin/document/action/edit/{id}', [ActionController::class, 'edit'])->name('admin.document.actions.edit');
 Route::put('/admin/document/action/update/{id}', [ActionController::class, 'update'])->name('admin.document.actions.update');
 Route::delete('/admin/document/action/delete/{id}', [ActionController::class, 'destroy'])->name('admin.document.actions.destroy');
-
-
 
 Route::delete('/admin/client/delete/{id}', [ClientController::class, 'destroy'])->name('admin.clients.destroy');
 Route::delete('/admin/client/document/remove', [ClientController::class, 'remove'])->name('admin.client.document.remove');

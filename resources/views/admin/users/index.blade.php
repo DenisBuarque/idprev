@@ -5,7 +5,7 @@
 @section('content_header')
     <form method="GET" action="{{ route('admin.users.index') }}">
         <div style="display: flex; justify-content: space-between;">
-                @can('search-user')
+            @can('search-user')
                 <div class="input-group" style="width: 30%">
                     <input type="search" name="search" value="{{ $search }}" class="form-control"
                         placeholder="Nome do usuário" required />
@@ -15,12 +15,12 @@
                         </button>
                     </span>
                 </div>
-                @endcan
-                @can('create-user')
-                    <a href="{{ route('admin.users.create') }}" class="btn bg-info">
-                        <i class="fa fa-plus"></i> Adicionar Registro
-                    </a>
-                @endcan
+            @endcan
+            @can('create-user')
+                <a href="{{ route('admin.users.create') }}" class="btn bg-info">
+                    <i class="fa fa-plus"></i> Adicionar Registro
+                </a>
+            @endcan
         </div>
     </form>
 @stop
@@ -53,9 +53,14 @@
                         <th>Nome</th>
                         <th>E-mail</th>
                         <th>Status</th>
-                        <th style='width: 160px'>Criado</th>
-                        <th style='width: 160px'>Atualizado</th>
-                        <th style="width: 100px; text-align: center">Ações</th>
+                        <th>Criado</th>
+                        <th>Atualizado</th>
+                        @can('edit-user')
+                            <th style="width: 60px; text-align: center">Edit</th>
+                        @endcan
+                        @can('delete-user')
+                            <th style="width: 40px; text-align: center">Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -72,24 +77,26 @@
                             </td>
                             <td>{{ $user->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $user->updated_at->format('d/m/Y H:m:s') }}</td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
-                                @can('edit-user')
-                                <a href="{{ route('admin.users.edit', ['id' => $user->id]) }}"
-                                    class="btn btn-info btn-xs px-2 mr-1">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                @endcan
-                                @can('delete-user')
-                                <form method="POST" onsubmit="return(confirmaExcluir())"
-                                    action="{{ route('admin.users.destroy', ['id' => $user->id]) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger px-2 btn-xs">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                                @endcan
-                            </td>
+                            @can('edit-user')
+                                <td class="px-1">
+                                    <a href="{{ route('admin.users.edit', ['id' => $user->id]) }}"
+                                        class="btn btn-info btn-xs btn-block">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            @endcan
+                            @can('delete-user')
+                                <td class='px-1'>
+                                    <form method="POST" onsubmit="return(confirmaExcluir())"
+                                        action="{{ route('admin.users.destroy', ['id' => $user->id]) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-block btn-xs">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

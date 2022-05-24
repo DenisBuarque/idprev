@@ -19,6 +19,8 @@ class DashboardController extends Controller
 
     public function __construct(User $user, Lead $lead, Ticket $ticket, FeedbackLead $feedback, Event $event)
     {
+        $this->middleware('auth');
+        
         $this->user = $user;
         $this->lead = $lead;
         $this->ticket = $ticket;
@@ -39,6 +41,7 @@ class DashboardController extends Controller
         $unconverted_lead = $this->lead->where('tag','4')->get()->count();
         //$progress_in_order = $this->lead->where('situation','2')->get();
         $tickets = $this->ticket->where('status','1')->get()->count();
+        $tickets_pendentes = $this->ticket->where('status','3')->get()->count();
         $originating_customers = $this->lead->where('situation','3')->get()->count(); // clientes precedentes
         $unfounded_customers = $this->lead->where('situation','4')->get()->count(); // clientes improcedentes
         $resources = $this->lead->where('situation','5')->get()->count(); //recursos
@@ -46,7 +49,13 @@ class DashboardController extends Controller
         $users = $this->user->where('type','F')->get();
         $events = $this->event->all();
 
-        $leads = $this->lead->whereIn('tag', [1])->orderBy('id','DESC')->get();
+        $type_user = auth()->user()->type;
+
+        if($type_user == "F"){
+            $leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag', [1])->orderBy('id','DESC')->get();
+        } else {
+            $leads = $this->lead->whereIn('tag', [1])->orderBy('id','DESC')->get();
+        }
 
         return view('dashboard',[
             'leads'                 => $leads, 
@@ -59,6 +68,7 @@ class DashboardController extends Controller
             'resources'             => $resources,
             'users'                 => $users,
             'events'                => $events,
+            'tickets_pendentes'     => $tickets_pendentes,
         ]);
     }
 

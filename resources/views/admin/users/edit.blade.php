@@ -14,7 +14,7 @@
     <form method="POST" action="{{route('admin.users.update',['id' => $user->id])}}">
         @csrf
         @method('PUT')
-        <div class="card card-info" style="max-width: 700px; margin: auto">
+        <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
                 <h3 class="card-title">Formulário edição de administrador:</h3>
             </div>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="col-md-12 my-3">
                         <div class="form-group m-0">
-                            <small>Permissões de acessi ao sistema:</small>
+                            <small>Permissões de acesso ao sistema:</small>
                             <select name="permission[]" class="form-control" multiple style="height: 300px;">
                                 @foreach($permissions as $key => $value)
                                     @php

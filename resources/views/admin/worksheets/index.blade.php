@@ -6,20 +6,20 @@
     <form method="GET" action="{{ route('admin.worksheets.index') }}">
         <div style="display: flex; justify-content: space-between;">
             @can('search-worksheet')
-            <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control"
-                    placeholder="Título da planilha" required />
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat"> 
-                        <i class="fa fa-search"></i> Buscar
-                    </button>
-                </span>
-            </div>
+                <div class="input-group" style="width: 30%">
+                    <input type="search" name="search" value="{{ $search }}" class="form-control"
+                        placeholder="Título da planilha" required />
+                    <span class="input-group-append">
+                        <button type="submit" class="btn btn-info btn-flat">
+                            <i class="fa fa-search"></i> Buscar
+                        </button>
+                    </span>
+                </div>
             @endcan
             @can('create-worksheet')
-            <a href="{{ route('admin.worksheets.create') }}" class="btn bg-info">
-                <i class="fa fa-plus mr-2"></i> Adicionar Registro
-            </a>
+                <a href="{{ route('admin.worksheets.create') }}" class="btn bg-info">
+                    <i class="fa fa-plus mr-2"></i> Adicionar Registro
+                </a>
             @endcan
         </div>
     </form>
@@ -52,7 +52,13 @@
                         <th>Título</th>
                         <th style="width: 160px;">Criado</th>
                         <th style="width: 160px;">Atualizado</th>
-                        <th class='text-center' style="width: 100px;">Ações</th>
+                        @can('edit-worksheet')
+                            <th style='width: 60px' class='text-center'>Down</th>
+                            <th style='width: 60px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-worksheet')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -61,28 +67,34 @@
                             <td>{{ $worksheet->title }}</td>
                             <td>{{ $worksheet->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $worksheet->updated_at->format('d/m/Y H:m:s') }}</td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
-                                @can('edit-worksheet')
-                                <a href="{{ route('admin.worksheets.download', ['id' => $worksheet->id]) }}"
-                                    class="btn btn-default btn-xs px-2 mr-1">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                <a href="{{ route('admin.worksheets.edit', ['id' => $worksheet->id]) }}"
-                                    class="btn btn-info btn-xs px-2 mr-1">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                @endcan
-                                @can('delete-worksheet')
-                                <form method="POST" onsubmit="return(confirmaExcluir())"
-                                    action="{{ route('admin.worksheets.destroy', ['id' => $worksheet->id]) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-xs px-2">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                                @endcan
-                            </td>
+                            @can('edit-worksheet')
+                                <td class='px-1'>
+                                    <a href="{{ route('admin.worksheets.download', ['id' => $worksheet->id]) }}"
+                                        class="btn btn-default btn-xs btn-block">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </td>
+                            @endcan
+                            @can('edit-worksheet')
+                                <td class="px-1">
+                                    <a href="{{ route('admin.worksheets.edit', ['id' => $worksheet->id]) }}"
+                                        class="btn btn-info btn-xs btn-block">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            @endcan
+                            @can('delete-worksheet')
+                                <td class="px-1">
+                                    <form method="POST" onsubmit="return(confirmaExcluir())"
+                                        action="{{ route('admin.worksheets.destroy', ['id' => $worksheet->id]) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

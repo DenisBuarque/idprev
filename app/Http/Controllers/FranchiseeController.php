@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Client;
+use App\models\Permission;
 use App\Notifications\AdvisorNotification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -13,14 +14,16 @@ use Illuminate\Validation\Rule;
 class FranchiseeController extends Controller
 {
     private $user;
+    private $permission;
     private $client;
 
-    public function __construct(User $user, Client $client)
+    public function __construct(User $user, Client $client, Permission $permission)
     {
+        $this->middleware('auth');
+        
         $this->user = $user;
         $this->client = $client;
-        
-        $this->middleware('auth');
+        $this->permission = $permission;
     }
 
     /**
@@ -57,11 +60,8 @@ class FranchiseeController extends Controller
      */
     public function create()
     {
-        //compara duas tabelas e pega a disferença entre elas...
-        //$advisorClient = \App\Models\AdvisorClient::select('client_id')->get()->toArray();
-        //$clients = $this->client->whereNotIn('id', $advisorClient)->get();
-
-        return view('admin.franchisees.create');
+        $permissions = $this->permission->all();
+        return view('admin.franchisees.create',['permissions' => $permissions]);
     }
 
     /**
@@ -89,8 +89,15 @@ class FranchiseeController extends Controller
         $data['type'] = 'F';
         $data['password'] =  bcrypt($request->password);
 
-        if ($create = $this->user->create($data))
+        $record = $this->user->create($data);
+        if ($record)
         {
+            if(isset($data['permission']) && count($data['permission']))
+            {
+                foreach($data['permission'] as $key => $value):
+                    $record->permissions()->attach($value);
+                endforeach;
+            }
             return redirect('admin/franchisees')->with('success', 'Registro inserido com sucesso!');
         } else {
             return redirect('admin/franchisee/create')->with('error', 'Erro ao inserido o registro!');
@@ -116,14 +123,10 @@ class FranchiseeController extends Controller
      */
     public function edit($id)
     {
-        //$clients = $this->client->all();
-        //compara duas tabelas e pega a disferença entre elas...
-        //$advisorClient = \App\Models\AdvisorClient::select('client_id')->get()->toArray();
-        //$clientsNotIn = $this->client->whereNotIn('id', $advisorClient)->get();
-
+        $permissions = $this->permission->all();
         $user = $this->user->find($id);
         if ($user) {
-            return view('admin.franchisees.edit', ['user' => $user, ]);
+            return view('admin.franchisees.edit', ['user' => $user, 'permissions' => $permissions]);
         } else {
             return redirect('admin/franchisees')->with('alert', 'Não encontramos o registro, tente outra vez!');
         }
@@ -162,6 +165,21 @@ class FranchiseeController extends Controller
         }
 
         if ($record->update($data)) :
+
+            $permissions = $record->permissions;
+            if(count($permissions)){
+                foreach($permissions as $key => $value):
+                    $record->permissions()->detach($value->id);
+                endforeach;
+            }
+
+            if(isset($data['permission']) && count($data['permission']))
+            {
+                foreach($data['permission'] as $key => $value):
+                    $record->permissions()->attach($value);
+                endforeach;
+            }
+            
             return redirect('admin/franchisees')->with('success', 'Registro alterado com sucesso!');
         else :
             return redirect('admin/franchisees')->with('error', 'Erro ao alterar o registro!');

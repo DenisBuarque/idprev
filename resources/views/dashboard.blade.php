@@ -122,8 +122,13 @@
                                         <th>Data</th>
                                         <th>Nome</th>
                                         <th>Contato</th>
-                                        <th>Etiqueta</th>
-                                        <th class="text-center">Coments</th>
+                                        <th></th>
+                                        @can('comments-lead')
+                                            <th class="text-center" style="width: 60px"></th>
+                                        @endcan
+                                        @can('edit-lead')
+                                            <th class="text-center" style="width: 40px">Edit</th>
+                                        @endcan
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -146,15 +151,22 @@
                                                     }
                                                 @endphp
                                             </td>
-                                            <td class="text-center">
-                                                @can('comments-lead')
-                                                    <a href="#" class="btn btn-xs border" data-toggle="modal"
-                                                        data-target="#modal-{{ $lead->id }}">
-                                                        <i class="fa fa-comments"></i>
-                                                        {{ count($lead->feedbackLeads) }}
+                                            @can('comments-lead')
+                                                <td class="px-1">
+                                                    <a href="{{ route('admin.leads.show', ['id' => $lead->id]) }}"
+                                                        class="btn btn-xs btn-light border btn-block">
+                                                        <i class="fa fa-comments"></i> {{ count($lead->feedbackLeads) }}
                                                     </a>
-                                                @endcan
-                                            </td>
+                                                </td>
+                                            @endcan
+                                            @can('edit-lead')
+                                                <td class="px-1">
+                                                    <a href="{{ route('admin.leads.edit', ['id' => $lead->id]) }}"
+                                                        class="btn btn-info btn-xs btn-block">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                </td>
+                                            @endcan
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -163,75 +175,6 @@
                     </div>
                 </div>
             </div>
-
-            @foreach ($leads as $lead)
-                <div class="modal fade" id="modal-{{ $lead->id }}" style="display: none;" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <form method="POST" action="{{ route('dashboard.feedback') }}">
-                            @csrf
-                            <input type="hidden" name="lead_id" value="{{ $lead->id }}" />
-                            <div class="modal-content">
-                                <div class="modal-header bg-info">
-                                    <h4 class="modal-title">Comentário Lead: {{ $lead->name }}</h4>
-
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">x</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="direct-chat-messages">
-                                        @foreach ($lead->feedbackLeads as $feed)
-                                            @if ($feed->user_id == auth()->user()->id)
-                                                <div class="direct-chat-msg">
-                                                    <div class="direct-chat-infos clearfix mb-1">
-                                                        <span
-                                                            class="direct-chat-name float-left">{{ auth()->user()->name }}</span>
-                                                        <span
-                                                            class="direct-chat-timestamp ml-2">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span
-                                                            class="bg-info rounded p-2 float-left">{!! $feed->comments !!}</span>
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div class="direct-chat-msg">
-                                                    <div class="direct-chat-infos clearfix mb-1">
-                                                        @foreach ($users as $user)
-                                                            @if ($feed->user_id == $user->id)
-                                                                <span
-                                                                    class="direct-chat-timestamp ml-2 float-right">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
-                                                                <span
-                                                                    class="direct-chat-name float-right">{{ $user->name }}</span>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
-                                                    <div>
-                                                        <span
-                                                            class="bg-success rounded p-2 float-right">{!! $feed->comments !!}</span>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        @endforeach
-                                    </div>
-
-                                    <textarea name="comments" class="form-control h-20 @error('comments') is-invalid @enderror"
-                                        placeholder="Digite um comentário aqui."></textarea>
-                                    @error('comments')
-                                        <div class="text-red">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="modal-footer justify-content-between">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                                    <button type="submit" class="btn btn-info">
-                                        <i class="fa fa-save mr-2"></i> Enviar Comentário
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            @endforeach
 
             <div class="modal fade" id="modal-lead" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
@@ -245,10 +188,11 @@
                                 </button>
                             </div>
                             <div class="modal-body">
+                                <small>Os campos com * são de preenchimento obrigatório:</small>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group m-0">
-                                            <small>Nome: (obrigatório)</small>
+                                            <small>Nome: *</small>
                                             <input type="text" name="name" value="{{ old('name') }}" autofocus
                                                 class="form-control @error('name') is-invalid @enderror" maxlength="100" />
                                             @error('name')
@@ -258,7 +202,7 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="form-group m-0">
-                                            <small>Telefones: (obrigatório)</small>
+                                            <small>Telefones: *</small>
                                             <input type="text" name="phone" value="{{ old('phone') }}"
                                                 class="form-control @error('phone') is-invalid @enderror" maxlength="50"
                                                 placeholder="Ex: 82 99925-8977, 98854-7889 ..." />
@@ -269,7 +213,7 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="form-group m-0">
-                                            <small>Franqueado: (obrigatório)</small>
+                                            <small>Franqueado: *</small>
                                             <select name="user_id"
                                                 class="form-control @error('user_id') is-invalid @enderror">
                                                 <option value="">Selecione um franqueado</option>
@@ -291,7 +235,7 @@
 
                                     <div class="col-sm-10">
                                         <div class="form-group m-0">
-                                            <small>Endreço:</small>
+                                            <small>Endereço:</small>
                                             <input type="text" name="address" id="address" value="{{ old('address') }}"
                                                 class="form-control" maxlength="250" />
                                         </div>
@@ -346,11 +290,11 @@
             <div class="info-box bg-warning">
                 <span class="info-box-icon"><i class="fas fa-tag"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Tickets Abertos</span>
-                    <span class="info-box-number">{{ $tickets }}</span>
+                    <span class="info-box-text">Tickets</span>
+                    <span class="info-box-number">Abertos: {{ $tickets }} Penentes:
+                        {{ $tickets_pendentes }}</span>
                 </div>
             </div>
-
             <div class="info-box">
                 <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
                 <div class="info-box-content">
@@ -358,7 +302,6 @@
                     <span class="info-box-number">{{ $originating_customers }}</span>
                 </div>
             </div>
-
             <div class="info-box">
                 <span class="info-box-icon bg-danger"><i class="far fa-flag"></i></span>
                 <div class="info-box-content">
@@ -366,7 +309,6 @@
                     <span class="info-box-number">{{ $unfounded_customers }}</span>
                 </div>
             </div>
-
             <div class="info-box">
                 <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
                 <div class="info-box-content">
@@ -374,7 +316,6 @@
                     <span class="info-box-number">{{ $resources }}</span>
                 </div>
             </div>
-
             <div class="info-box">
                 <span class="info-box-icon bg-info"><i class="far fa-star"></i></span>
                 <div class="info-box-content">
@@ -382,9 +323,7 @@
                     <span class="info-box-number">0</span>
                 </div>
             </div>
-
         </div>
-
     </div>
 
     <div class="row row-cols-2 my-5">
@@ -429,7 +368,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-
         setTimeout(() => {
             document.getElementById('message').style.display = 'none';
         }, 6000);

@@ -53,9 +53,15 @@
                 <div class="icon">
                     <i class="fas fa-clock"></i>
                 </div>
-                <a href="{{ route('admin.leads.tag', ['tag' => 2]) }}" class="small-box-footer">
-                    Listar registros <i class="fas fa-arrow-circle-right"></i>
-                </a>
+                @can('list-client')
+                    <a href="{{ route('admin.leads.tag', ['tag' => 2]) }}" class="small-box-footer">
+                        Listar registros <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @else
+                    <a class="small-box-footer">
+                        &nbsp;
+                    </a>
+                @endcan
             </div>
         </div>
         <div class="col-lg-3 col-6">
@@ -67,9 +73,15 @@
                 <div class="icon">
                     <i class="fas fa-thumbs-up"></i>
                 </div>
-                <a class="small-box-footer">
-                    Sem permissão <i class="fas fa-arrow-circle-right"></i>
-                </a>
+                @can('list-client')
+                    <a href="{{ route('admin.clients.tag', ['tag' => 3]) }}" class="small-box-footer">
+                        Listar registros <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @else
+                    <a class="small-box-footer">
+                        &nbsp;
+                    </a>
+                @endcan
             </div>
         </div>
 
@@ -82,9 +94,15 @@
                 <div class="icon">
                     <i class="fas fa-thumbs-down"></i>
                 </div>
-                <a class="small-box-footer">
-                    Sem permissão <i class="fas fa-arrow-circle-right"></i>
-                </a>
+                @can('list-client')
+                    <a href="{{ route('admin.clients.tag', ['tag' => 4]) }}" class="small-box-footer">
+                        Listar registros <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                @else
+                    <a class="small-box-footer">
+                        &nbsp;
+                    </a>
+                @endcan
             </div>
         </div>
     </div>
@@ -112,21 +130,29 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Nome</th>
                         <th>Franqueado</th>
+                        <th>Nome</th>
                         <th>Telefone</th>
-                        <th>Etiqueta</th>
+                        <th></th>
                         <th style='width: 160px'>Criado</th>
                         <th style='width: 160px'>Atualizado</th>
-                        <th style='width: 160px' class='text-center'>Ações</th>
+                        @can('comments-lead')
+                            <th style='width: 60px' class='text-center'></th>
+                        @endcan
+                        @can('edit-lead')
+                            <th style='width: 50px' class='text-center'>Edit</th>
+                        @endcan
+                        @can('delete-lead')
+                            <th style='width: 50px' class='text-center'>Del</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($leads as $lead)
                         <tr>
+                            <td>{{ $lead->user->name }}</td>
                             <td>{{ $lead->name }}</td>
                             <td>{{ $lead->phone }}</td>
-                            <td>{{ $lead->user->name }}</td>
                             <td>
                                 @php
                                     $array_tags = [1 => 'Novo Lead', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
@@ -147,30 +173,34 @@
                             </td>
                             <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $lead->updated_at->format('d/m/Y H:m:s') }}</td>
-                            <td class='d-flex flex-row align-content-center justify-content-center'>
-                                @can('comments-lead')
+                            @can('comments-lead')
+                                <td class="px-1">
                                     <a href="{{ route('admin.leads.show', ['id' => $lead->id]) }}"
-                                        class="btn btn-xs px-2 btn-light border mr-1">
+                                        class="btn btn-xs btn-light border btn-block">
                                         <i class="fa fa-comments"></i> {{ count($lead->feedbackLeads) }}
                                     </a>
-                                @endcan
-                                @can('edit-lead')
+                                </td>
+                            @endcan
+                            @can('edit-lead')
+                                <td class="px-1">
                                     <a href="{{ route('admin.leads.edit', ['id' => $lead->id]) }}"
-                                        class="btn btn-info btn-xs px-2 mr-1">
+                                        class="btn btn-info btn-xs btn-block">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                @endcan
-                                @can('delete-lead')
+                                </td>
+                            @endcan
+                            @can('delete-lead')
+                                <td class="px-1">
                                     <form method="POST" onsubmit="return(confirmaExcluir())"
                                         action="{{ route('admin.leads.destroy', ['id' => $lead->id]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-xs px-2">
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                @endcan
-                            </td>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

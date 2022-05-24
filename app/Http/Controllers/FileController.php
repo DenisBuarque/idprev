@@ -14,6 +14,8 @@ class FileController extends Controller
 
     public function __construct(File $file)
     {
+        $this->middleware('auth');
+        
         $this->file = $file;
     }
 

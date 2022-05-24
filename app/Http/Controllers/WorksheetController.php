@@ -14,6 +14,8 @@ class WorksheetController extends Controller
 
     public function __construct(Worksheet $worksheet)
     {
+        $this->middleware('auth');
+        
         $this->worksheet = $worksheet;
     }
 

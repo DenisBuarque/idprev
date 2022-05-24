@@ -121,9 +121,17 @@
                                 <th>Nome</th>
                                 <th>Franqueado</th>
                                 <th>Etiqueta</th>
-                                <th>Situação</th>
-                                <th style="width: 130px;">Anexos</th>
-                                <th class='text-center' style="width: 140px;">Ações</th>
+                                <th></th>
+                                <th class='text-center' style="width: 130px;">Anexos</th>
+                                @can('comments-client')
+                                    <th style='width: 60px' class='text-center'></th>
+                                @endcan
+                                @can('edit-client')
+                                    <th style='width: 50px' class='text-center'>Edit</th>
+                                @endcan
+                                @can('delete-client')
+                                    <th style='width: 50px' class='text-center'>Del</th>
+                                @endcan
                             </tr>
                         </thead>
                         <tbody>
@@ -159,42 +167,54 @@
                                             }
                                         @endphp
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @php
                                             $docs = count($lead->photos);
                                             $anexos = 0;
-                                            foreach($models as $model){
-                                                if($model->action_id == $lead->action){
+                                            foreach ($models as $model) {
+                                                if ($model->action_id == $lead->action) {
                                                     $anexos += 1;
                                                 }
                                             }
-
-                                            if($anexos > $docs){
-                                                $falta = $anexos - $docs;
-                                                echo $docs .' <i class="fas fa-paperclip"></i> falta ' . $falta . ' doc.';
+                                            
+                                            if ($docs == 0) {
+                                                echo '<i class="fa fa-exclamation-triangle" title="Você ainda não anexou os documentos"></i>';
                                             } else {
-                                                echo '<i class="fas fa-thumbs-up"></i> '.$docs.' anexo(s)';
+                                                if ($anexos > $docs) {
+                                                    $falta = $anexos - $docs;
+                                                    echo $docs . ' <i class="fas fa-paperclip"></i> falta ' . $falta . ' doc.';
+                                                } else {
+                                                    echo '<i class="fas fa-thumbs-up"></i> ' . $docs . ' anexo(s)';
+                                                }
                                             }
-
                                         @endphp
-                                        
                                     </td>
-                                    <td class='d-flex flex-row align-content-center justify-content-center'>
-                                        <a href="{{ route('admin.clients.show', ['id' => $lead->id]) }}"
-                                            class="btn btn-xs border mr-1"><i class="fa fa-comments"></i>
-                                            {{ count($lead->feedbackLeads) }}</a>
-                                        <a href="{{ route('admin.clients.edit', ['id' => $lead->id]) }}"
-                                            class="btn btn-info btn-xs px-2 mr-1">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form method="POST" onsubmit="return(confirmaExcluir())"
-                                            action="{{ route('admin.clients.destroy', ['id' => $lead->id]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-xs px-2">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
+                                    <td class='px-1'>
+                                        @can('comments-client')
+                                            <a href="{{ route('admin.clients.show', ['id' => $lead->id]) }}"
+                                                class="btn btn-xs border btn-block"><i class="fa fa-comments"></i>
+                                                {{ count($lead->feedbackLeads) }}</a>
+                                        @endcan
+                                    </td>
+                                    <td class='px-1'>
+                                        @can('edit-client')
+                                            <a href="{{ route('admin.clients.edit', ['id' => $lead->id]) }}"
+                                                class="btn btn-info btn-xs btn-block">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                    </td>
+                                    <td class='px-1'>
+                                        @can('delete-client')
+                                            <form method="POST" onsubmit="return(confirmaExcluir())"
+                                                action="{{ route('admin.clients.destroy', ['id' => $lead->id]) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-xs btn-block">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
@@ -221,7 +241,7 @@
                 </div>
                 <div class="col-12">
                     <div class="info-box">
-                        <span class="info-box-icon bg-warning"><i class="fa fa-users"></i></span>
+                        <span class="info-box-icon bg-warning"><i class="fa fa-clock"></i></span>
                         <div class="info-box-content">
                             <a href="{{ route('admin.clients.situation', ['situation' => 2]) }}">
                                 <span class="info-box-text">Aguardando Cumprimento</span>
@@ -232,7 +252,7 @@
                 </div>
                 <div class="col-12">
                     <div class="info-box">
-                        <span class="info-box-icon bg-success"><i class="fa fa-users"></i></span>
+                        <span class="info-box-icon bg-success"><i class="fas fa-thumbs-up"></i></span>
                         <div class="info-box-content">
                             <a href="{{ route('admin.clients.situation', ['situation' => 3]) }}">
                                 <span class="info-box-text">Finalizado Procedente</span>
@@ -243,7 +263,7 @@
                 </div>
                 <div class="col-12">
                     <div class="info-box">
-                        <span class="info-box-icon bg-danger"><i class="fa fa-users"></i></span>
+                        <span class="info-box-icon bg-danger"><i class="fas fa-thumbs-down"></i></span>
                         <div class="info-box-content">
                             <a href="{{ route('admin.clients.situation', ['situation' => 4]) }}">
                                 <span class="info-box-text">Finalizado Improcedente</span>

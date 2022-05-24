@@ -14,6 +14,8 @@ class ModelController extends Controller
 
     public function __construct(ModelDoc $model)
     {
+        $this->middleware('auth');
+        
         $this->model = $model;
     }
     /**

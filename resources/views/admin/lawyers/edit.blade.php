@@ -23,7 +23,8 @@
                     <div class="col-sm-9">
                         <div class="form-group m-0">
                             <small>Nome:</small>
-                            <input type="text" name="name" value="{{ $lawyer->name ?? old('name') }}" placeholder="Digite o título do evento"
+                            <input type="text" name="name" value="{{ $lawyer->name ?? old('name') }}"
+                                placeholder="Digite o título do evento"
                                 class="form-control @error('name') is-invalid @enderror" maxlength="100" />
                             @error('name')
                                 <div class="text-red">{{ $message }}</div>
@@ -33,7 +34,7 @@
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>OAB:</small>
-                            <input type="text" name="oab" value="{{ $lawyer->oab ?? old('oab') }}" 
+                            <input type="text" name="oab" value="{{ $lawyer->oab ?? old('oab') }}"
                                 class="form-control @error('oab') is-invalid @enderror" />
                             @error('oab')
                                 <div class="text-red">{{ $message }}</div>
@@ -81,12 +82,12 @@
 
 @section('js')
     <script>
-        document.getElementById("button").style.display = "block"; 
-        document.getElementById("spinner").style.display = "none"; 
+        document.getElementById("button").style.display = "block";
+        document.getElementById("spinner").style.display = "none";
 
-    function ocultarExibir() {
-        document.getElementById("button").style.display = "none"; 
-        document.getElementById("spinner").style.display = "block"; 
-    }
+        function ocultarExibir() {
+            document.getElementById("button").style.display = "none";
+            document.getElementById("spinner").style.display = "block";
+        }
     </script>
 @stop

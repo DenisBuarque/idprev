@@ -70,9 +70,11 @@
                             <p class="text-sm m-0">Responsável:
                                 <b class="d-block">{{ $lead->responsible }}</b>
                             </p>
-                            <p class="text-sm m-0">Data Cumprimento:
-                                <b class="d-block">{{ $lead->date_fulfilled->format('d/m/Y') }}</b>
-                            </p>
+                            @isset($lead->date_fulfilled)    
+                                <p class="text-sm m-0">Data Cumprimento:
+                                    <b class="d-block">{{ $lead->date_fulfilled->format('d/m/Y') }}</b>
+                                </p>
+                            @endisset
                             <p class="text-sm m-0">Cumprimento:
                                 <b class="d-block">{!! $lead->greeting !!}</b>
                             </p>

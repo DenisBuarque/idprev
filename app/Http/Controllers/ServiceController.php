@@ -12,6 +12,8 @@ class ServiceController extends Controller
 
     public function __construct(Service $service)
     {
+        $this->middleware('auth');
+        
         $this->service = $service;
     }
     /**

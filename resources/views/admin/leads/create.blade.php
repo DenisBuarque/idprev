@@ -28,10 +28,11 @@
                 <h3 class="card-title">Formulário cadastro de lead:</h3>
             </div>
             <div class="card-body">
+                <small>Os campos com * são de preenchimento obrigatório:</small>
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         <div class="form-group m-0">
-                            <small>Nome completo: *</small>
+                            <small>Nome: *</small>
                             <input type="text" name="name" value="{{ old('name') }}"
                                 class="form-control @error('name') is-invalid @enderror" maxlength="100" />
                             @error('name')
@@ -39,7 +40,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Telefones: *</small>
                             <input type="text" name="phone" value="{{ old('phone') }}"
@@ -50,25 +51,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group m-0">
-                            <small>E-mail:</small>
-                            <input type="email" name="email" value="{{ old('email') }}" class="form-control"
-                                maxlength="100" />
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group m-0">
-                            <small>Etiqueta:</small>
-                            <select name="tag" class="form-control">
-                                <option value="1">Novo</option>
-                                <option value="2">Aguardando</option>
-                                <option value="3">Convertido</option>
-                                <option value="4">Não Convertido</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Franqueado: *</small>
                             <select name="user_id" class="form-control @error('phone') is-invalid @enderror">
@@ -82,6 +65,25 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-sm-8">
+                        <div class="form-group m-0">
+                            <small>E-mail:</small>
+                            <input type="email" name="email" value="{{ old('email') }}" class="form-control"
+                                maxlength="100" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group m-0">
+                            <small>Etiqueta: *</small>
+                            <select name="tag" class="form-control">
+                                <option value="1">Novo</option>
+                                <option value="2">Aguardando</option>
+                                <option value="3">Convertido</option>
+                                <option value="4">Não Convertido</option>
+                            </select>
+                        </div>
+                    </div>
+                    
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Cep:</small>
@@ -91,7 +93,7 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
-                            <small>Endreço:</small>
+                            <small>Endereço:</small>
                             <input type="text" name="address" id="address" value="{{ old('address') }}"
                                 class="form-control" maxlength="250" />
                         </div>
@@ -126,7 +128,7 @@
                     </div>
 
                     <div class="col-sm-12">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Comentários:</small>
                             <textarea name="comments" class="form-control" placeholder="Digite aqui o seu comentário.">{{ old('comments') }}</textarea>
                         </div>

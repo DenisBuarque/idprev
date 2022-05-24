@@ -14,6 +14,8 @@ class ActionController extends Controller
 
     public function __construct(Action $action)
     {
+        $this->middleware('auth');
+        
         $this->action = $action;
     }
 

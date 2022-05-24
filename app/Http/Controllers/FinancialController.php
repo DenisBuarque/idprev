@@ -18,11 +18,12 @@ class FinancialController extends Controller
 
     public function __construct(User $user, Lead $lead, Action $action, Financial $financial)
     {
+        $this->middleware('auth');
+
         $this->user = $user;
         $this->lead = $lead;
         $this->action = $action;
         $this->financial = $financial;
-        //$this->middleware('auth');
     }
     /**
      * Display a listing of the resource.

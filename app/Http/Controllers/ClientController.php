@@ -25,6 +25,8 @@ class ClientController extends Controller
 
     public function __construct(Lead $lead, User $user, Action $action, ModelDoc $model, FeedbackLead $feedback, ClientPhotos $clientPhotos)
     {   
+        $this->middleware('auth');
+        
         $this->lead = $lead;
         $this->user = $user;
         $this->action = $action;
@@ -50,6 +52,8 @@ class ClientController extends Controller
         $resources = $this->lead->where('situation','5')->get()->count();
         $models = $this->model->all();
 
+        $type_user = auth()->user()->type;
+
         $search = "";
         if(isset($request->search))
         {
@@ -60,11 +64,18 @@ class ClientController extends Controller
             foreach($columns as $key => $value):
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
-
-            $leads = $query->whereIn('tag',[3])->orderBy('id','DESC')->get();
+            if($type_user == "F"){
+                $leads = $query->where('user_id',auth()->user()->id)->whereIn('tag',[3])->orderBy('id','DESC')->get();
+            } else {
+                $leads = $query->whereIn('tag',[3])->orderBy('id','DESC')->get();
+            }
 
         } else {
-            $leads = $this->lead->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
+            if($type_user == "F"){
+                $leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
+            }else {
+                $leads = $this->lead->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
+            }
         }
         
         return view('admin.clients.index',[

@@ -14,6 +14,8 @@ class LawyerController extends Controller
 
     public function __construct(Lawyer $lawyer, User $user)
     {
+        $this->middleware('auth');
+        
         $this->lawyer = $lawyer;
         $this->user = $user;
     }
