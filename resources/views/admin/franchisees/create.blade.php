@@ -23,7 +23,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.franchisees.store') }}">
+    <form method="POST" action="{{ route('admin.franchisees.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
@@ -119,10 +119,16 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
+                        <small>Foto do franqueado:</small>
+                        <div class="form-group">
+                            <input type="file" name="image" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
                         <small>O preencimendo dos campos e-mail e senha garante o acesso do franqueado ao sistema:</small>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group m-0">
+                        <div class="form-group">
                             <small>E-mail: *</small>
                             <input type="email" name="email" value="{{ old('email') }}"
                                 class="form-control @error('email') is-invalid @enderror" maxlength="100" />
@@ -153,64 +159,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 my-3">
+                <div class="col-md-12 mt-2">
                     <div class="form-group m-0">
-
-                        @php
-                            $arr = [
-                                6 => 'Lista leads',
-                                7 => 'Adicionar lead',
-                                8 => 'Alterar lead',
-                                9 => 'Excluir lead',
-                                10 => 'Pesquisar lead',
-                                11 => 'Comentários lead',
-                                12 => 'Listar clientes',
-                                13 => 'Adicionar cliente',
-                                14 => 'Alterar cliente',
-                                15 => 'Excluir cliente',
-                                16 => 'Pesquisar cliente',
-                                17 => 'Comentários cliente',
-                                28 => 'Listar arquivo treinamento',
-                                29 => 'Adicionar arquivo treinamento',
-                                30 => 'Alterar arquivo treinamento',
-                                31 => 'Excluir arquivo treinamento',
-                                32 => 'Pesquisar arquivo treinamento',
-                                33 => 'Listar eventos',
-                                34 => 'Adicionar evento',
-                                35 => 'Alterar evento',
-                                36 => 'Excluir evento',
-                                37 => 'Pesquisar evento',
-                                53 => 'Listar ticket de atendimento',
-                                54 => 'Abrir ticket de atendimento',
-                                55 => 'Alterar ticket de atendimento',
-                                56 => 'Excluir ticket de atendimento',
-                                57 => 'Pesquisar ticket de atendimento',
-                                58 => 'Listar prazo cliente',
-                                59 => 'Alterar prazo cliente',
-                                60 => 'Excluir prazo cliente',
-                                61 => 'Pesquisar prazo cliente',
-                            ];
-                        @endphp
-
-                        <small>Permissões de acesso ao sistema:</small>
-                        <select name="permission[]" class="form-control" multiple style="height: 300px;">
-                            @foreach ($arr as $key1 => $value)
+                        <small>Permissões de acesso ao sistema: Pressione a tecla 'Ctrl' e clique sobre a opção para selecionar.</small>
+                        <select name="permission[]" class="form-control" multiple style="height: 350px;">
+                            @foreach ($permissions as $key => $value)
                                 @php
                                     $selected = '';
                                     if (old('permission')):
-                                        foreach (old('permission') as $key2 => $value2):
-                                            if ($key1 == $key2):
+                                        foreach (old('permission') as $key => $value2):
+                                            if ($value->id == $value2->id):
                                                 $selected = 'selected';
                                             endif;
                                         endforeach;
                                     endif;
                                 @endphp
-                                <option {{ $selected }} value="{{ $key1 }}">{{ $value }}</option>
+                                <option {{ $selected }} value="{{ $value->id }}">{{ $value->name }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-
             </div>
             <div class="card-footer">
                 <a href="{{ route('admin.franchisees.index') }}" type="submit" class="btn btn-default">Cancelar</a>

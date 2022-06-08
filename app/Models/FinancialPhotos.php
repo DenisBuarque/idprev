@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Lawyer extends Model
+class FinancialPhotos extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','oab','image','user_id'];
+    protected $fillable = ['image'];
 
-    public function user()
+    public function financials()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Financial::class);
     }
 }

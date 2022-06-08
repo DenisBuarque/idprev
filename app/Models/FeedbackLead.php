@@ -15,4 +15,9 @@ class FeedbackLead extends Model
     {
         return $this->belongsTo(Lead::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

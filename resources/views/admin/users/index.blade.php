@@ -6,7 +6,7 @@
     <form method="GET" action="{{ route('admin.users.index') }}">
         <div style="display: flex; justify-content: space-between;">
             @can('search-user')
-                <div class="input-group" style="width: 30%">
+                <div class="input-group" style="width: 40%">
                     <input type="search" name="search" value="{{ $search }}" class="form-control"
                         placeholder="Nome do usuário" required />
                     <span class="input-group-append">
@@ -66,7 +66,14 @@
                 <tbody>
                     @foreach ($users as $user)
                         <tr>
-                            <td>{{ $user->name }}</td>
+                            <td>
+                                @if (isset($user->image))
+                                    <img src="{{asset('storage/' . $user->image) }}" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @else
+                                    <img src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @endif
+                                {{ $user->name }}
+                            </td>
                             <td>{{ $user->email }}</td>
                             <td>
                                 @if ($user->type == 'A')

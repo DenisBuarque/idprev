@@ -59,14 +59,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($files as $file)
+                    @forelse ($files as $file)
                         <tr>
                             <td>{{ $file->title }}</td>
                             <td>{{ $file->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $file->updated_at->format('d/m/Y H:m:s') }}</td>
                             @can('edit-file')
                                 <td class='px-1'>
-                                    <a href="{{ route('admin.training.files.download', ['id' => $file->id]) }}"
+                                    <a href="{{ Storage::url($file->arquivo) }}" target="_blank"
                                         class="btn btn-default btn-xs btn-block">
                                         <i class="fas fa-download"></i>
                                     </a>
@@ -91,7 +91,11 @@
                                 </td>
                             @endcan
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td class="text-center" colspan="6">Nenhum registro encontrado</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">

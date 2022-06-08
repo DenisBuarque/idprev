@@ -120,9 +120,9 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Nome</th>
-                        <th>Telefone</th>
                         <th>Franqueado</th>
+                        <th>Cliente</th>
+                        <th>Telefone</th>
                         <th></th>
                         <th style='width: 160px'>Criado</th>
                         <th style='width: 160px'>Atualizado</th>
@@ -140,9 +140,16 @@
                 <tbody>
                     @foreach ($leads as $lead)
                         <tr>
+                            <td>
+                                @if (isset($lead->user->image))
+                                    <img src="{{asset('storage/' . $lead->user->image) }}" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @else
+                                    <img src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @endif
+                                {{ $lead->user->name }}
+                            </td>
                             <td>{{ $lead->name }}</td>
                             <td>{{ $lead->phone }}</td>
-                            <td>{{ $lead->user->name }}</td>
                             <td>
                                 @php
                                     $array_tags = [1 => 'Novo Lead', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];

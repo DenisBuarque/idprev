@@ -60,7 +60,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($services as $service)
+                    @forelse ($services as $service)
                         <tr>
                             <td>{{ $service->title }}</td>
                             <td>
@@ -91,7 +91,13 @@
                                 </td>
                             @endcan
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                <span>Nenhum registro adicionado</span>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">

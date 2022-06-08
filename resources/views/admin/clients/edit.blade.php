@@ -14,7 +14,7 @@
     <form method="POST" action="{{ route('admin.clients.update', ['id' => $lead->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        <div class="card card-info" style="max-width: 800px; margin: auto">
+        <div class="card card-info" style="max-width: 900px; margin: auto">
             <div class="card-header">
                 <h3 class="card-title">Formulário edição de cliente:</h3>
             </div>
@@ -109,7 +109,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <div class="form-group m-0">
                             <small>Franqueado: *</small>
                             <select name="user_id" class="form-control @error('phone') is-invalid @enderror">
@@ -127,7 +127,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-4">
                         <div class="form-group m-0">
                             <small>Etiqueta: *</small>
                             <select name="tag" class="form-control">
@@ -137,7 +137,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <div class="form-group m-0">
                             <small>Situação: *</small>
                             <select name="situation" class="form-control">
@@ -149,29 +149,13 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-2">
-                        <div class="form-group m-0">
-                            <small>Processo Nº:</small>
-                            <input type="text" name="process" id="process" value="{{ $lead->process ?? old('process') }}"
-                                class="form-control" maxlength="30" />
-                        </div>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <div class="form-group m-0">
-                            <small>Financeiro:</small>
-                            <input type="text" name="financial" id="financial" onkeyup="moeda(this);"
-                                value="{{ $lead->financial ? number_format($lead->financial,2,',','.') : old('financial') }}" class="form-control" maxlength="13"
-                                placeholder="0,00" />
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <div class="form-group m-0">
                             <small>Tipo de Ação: *</small>
                             <select name="action" class="form-control" onchange="showDocuments(this.value)">
                                 <option value="">Selecione a ação</option>
                                 @foreach ($actions as $action)
-                                    @if ($action->id == $lead->action && old('action') == $action->id)
+                                    @if ($action->id == $lead->action or old('action') == $action->id)
                                         <option value="{{ $action->id }}" selected>{{ $action->name }}</option>
                                     @else
                                         <option value="{{ $action->id }}">{{ $action->name }}</option>
@@ -180,21 +164,36 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
+                        <div class="form-group m-0">
+                            <small>Processo Nº:</small>
+                            <input type="text" name="process" id="process" value="{{ $lead->process ?? old('process') }}"
+                                class="form-control" maxlength="30" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group m-0">
+                            <small>Financeiro:</small>
+                            <input type="text" name="financial" id="financial" onkeyup="moeda(this);"
+                                value="{{ $lead->financial ? number_format($lead->financial,2,',','.') : old('financial') }}" class="form-control" maxlength="13"
+                                placeholder="0,00" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
                         <div class="form-group m-0">
                             <small>Tribunal:</small>
                             <input type="text" name="court" id="court" value="{{ $lead->court ?? old('court') }}"
                                 class="form-control" maxlength="50" />
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <small>Vara:</small>
                             <input type="text" name="stick" id="stick" value="{{ $lead->stick ?? old('stick') }}"
                                 class="form-control" maxlength="50" />
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <small>Prazo:</small>
                             @if (!empty($lead->ter))
@@ -207,7 +206,6 @@
                             @enderror
                         </div>
                     </div>
-
                     <div class="col-md-12">
                         <div class="form-group">
                             <small>Anexo de documentos do cliente:</small>
@@ -217,7 +215,13 @@
                     </div>
 
                     <div class="col-md-12">
-                        <div id="todo-list"></div>
+                        <div id="todo-list">
+                            @foreach ($models as $model)
+                                @if ($model->id == $lead->action)
+                                    <span>{{$model->name}} - <a href="{{ Storage::url($model->document) }}" target="_blank">Download</a></span><br/>
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
 
                 </div>

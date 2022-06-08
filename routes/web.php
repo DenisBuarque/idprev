@@ -108,7 +108,7 @@ Route::post('/admin/document/model/store', [ModelController::class, 'store'])->n
 Route::get('/admin/document/model/edit/{id}', [ModelController::class, 'edit'])->name('admin.document.models.edit');
 Route::put('/admin/document/model/update/{id}', [ModelController::class, 'update'])->name('admin.document.models.update');
 Route::delete('/admin/document/model/delete/{id}', [ModelController::class, 'destroy'])->name('admin.document.models.destroy');
-Route::get('/admin/document/model/download/{id}', [ModelController::class, 'download'])->name('admin.document.models.download');
+Route::get('/admin/document/model/download/{slug}', [ModelController::class, 'download'])->name('admin.document.models.download');
 
 Route::get('/admin/worksheets', [WorksheetController::class, 'index'])->name('admin.worksheets.index');
 Route::get('/admin/worksheet/create', [WorksheetController::class, 'create'])->name('admin.worksheets.create');

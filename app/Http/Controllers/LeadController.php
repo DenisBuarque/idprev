@@ -38,16 +38,27 @@ class LeadController extends Controller
      */
     public function index(Request $request)
     {
-        $leads_total = $this->lead->whereIn('tag',[1,2])->count();
-        $waiting = $this->lead->where('tag','2')->get()->count();
-        $converted_lead = $this->lead->where('tag','3')->get()->count();
-        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-        $originating_customers = $this->lead->where('situation','3')->get();
-        $unfounded_customers = $this->lead->where('situation','4')->get();
-        $resources = $this->lead->where('situation','5')->get();
-
-        $users = $this->user->all();
         $type_user = auth()->user()->type;
+        
+        if($type_user == "F"){
+            $leads_total = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag',[1,2])->count();
+            $waiting = $this->lead->where('user_id',auth()->user()->id)->where('tag','2')->get()->count();
+            $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
+            $originating_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get();
+            $unfounded_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get();
+            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get();
+        } else {
+            $leads_total = $this->lead->whereIn('tag',[1,2])->count();
+            $waiting = $this->lead->where('tag','2')->get()->count();
+            $converted_lead = $this->lead->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+            $originating_customers = $this->lead->where('situation','3')->get();
+            $unfounded_customers = $this->lead->where('situation','4')->get();
+            $resources = $this->lead->where('situation','5')->get();
+        }
+        
+        $users = $this->user->all();
         
         $search = "";
         if(isset($request->search))
@@ -91,12 +102,26 @@ class LeadController extends Controller
 
     public function leads($tag)
     {
-        $leads_total = $this->lead->whereIn('id',[1,2])->count();
-        $waiting = $this->lead->where('tag','2')->get()->count();
-        $converted_lead = $this->lead->where('tag','3')->get()->count();
-        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-        $originating_customers = $this->lead->where('situation','3')->get();
-        $unfounded_customers = $this->lead->where('situation','4')->get();
+        $type_user = auth()->user()->type;
+        
+        if($type_user == "F"){
+            $leads_total = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag',[1,2])->count();
+            $waiting = $this->lead->where('user_id',auth()->user()->id)->where('tag','2')->get()->count();
+            $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
+            $originating_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get();
+            $unfounded_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get();
+            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get();
+        } else {
+            $leads_total = $this->lead->whereIn('tag',[1,2])->count();
+            $waiting = $this->lead->where('tag','2')->get()->count();
+            $converted_lead = $this->lead->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+            $originating_customers = $this->lead->where('situation','3')->get();
+            $unfounded_customers = $this->lead->where('situation','4')->get();
+            $resources = $this->lead->where('situation','5')->get();
+        }
+        
         $search = '';
 
         $leads = $this->lead->where('tag',$tag)->orderBy('id','DESC')->get();
@@ -184,6 +209,17 @@ class LeadController extends Controller
             'user_id' => 'required',
         ])->validate();
 
+        if($data['tag'] == 3){
+            Validator::make($data, [
+                'zip_code' => 'required|string|max:9',
+                'address' => 'required|string|max:255',
+                'number' => 'required|string|max:5',
+                'district' => 'required|string|max:50',
+                'city' => 'required|string|max:50',
+                'state' => 'required|string|max:2',
+            ])->validate();
+        }
+
         if(isset($data['financial'])):
             $data['financial'] = str_replace(['.', ','], ['', '.'], $data['financial']);
         else:
@@ -269,18 +305,22 @@ class LeadController extends Controller
         $data = $request->all();
         $record = $this->lead->find($id);
 
-        if($data['tag'] == 3){
-
-            Validator::make($data, [
-                'user_id' => 'required|string',
-            ])->validate();
-
-        }
-
         Validator::make($data, [
             'name' => 'required|string|min:3',
             'phone' => 'required|string',
+            'user_id' => 'required|string',
         ])->validate();
+
+        if($data['tag'] == 3){
+            Validator::make($data, [
+                'zip_code' => 'required|string|max:9',
+                'address' => 'required|string|max:255',
+                'number' => 'required|string|max:5',
+                'district' => 'required|string|max:50',
+                'city' => 'required|string|max:50',
+                'state' => 'required|string|max:2',
+            ])->validate();
+        }
 
         if(isset($data['financial'])):
             $data['financial'] = str_replace(['.', ','], ['', '.'], $data['financial']);

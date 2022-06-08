@@ -21,7 +21,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.lawyers.store') }}">
+    <form method="POST" action="{{ route('admin.lawyers.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
@@ -61,6 +61,12 @@
                             @error('advisor_id')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <small>Foto do advogado:</small>
+                        <div class="form-group">
+                            <input type="file" name="image" />
                         </div>
                     </div>
                 </div>

@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.users.store') }}">
+    <form method="POST" action="{{ route('admin.users.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        <div class="form-group m-0">
+                        <div class="form-group">
                             <small>E-mail:</small>
                             <input type="email" name="email" value="{{ old('email') }}"
                                 class="form-control @error('email') is-invalid @enderror"
@@ -44,6 +44,12 @@
                             @error('email')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <small>Foto do usuário:</small>
+                        <div class="form-group">
+                            <input type="file" name="image" />
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -69,8 +75,9 @@
                     </div>
                     <div class="col-md-12 my-3">
                         <div class="form-group m-0">
-                            <small>Permissões de acesso ao sistema:</small>
-                            <select name="permission[]" class="form-control" multiple style="max-height: 300px;">
+                            <small>Permissões de acesso ao sistema: Pressione a tecla 'Ctrl' e clique sobre a opção para
+                                selecionar.</small>
+                            <select name="permission[]" class="form-control" multiple style="height: 300px;">
                                 @foreach ($permissions as $key => $value)
                                     @php
                                         $selected = '';
@@ -87,7 +94,6 @@
                             </select>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="card-footer">

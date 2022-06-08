@@ -11,244 +11,301 @@
 
 @section('content')
 
-    <section class="content">
+    @php
+    $anexos = 0;
+    foreach ($models as $model) {
+        if ($model->action_id == $lead->action) {
+            $anexos++;
+        }
+    }
 
-        @if (session('err'))
-            <div class="alert alert-danger mb-2" role="alert">
-                {{ session('err') }}
-            </div>
-        @endif
-
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Acompanhe os detalhes do seu lead:</h3>
-                <div class="card-tools">
+    $docs = count($lead->photos);
+    if ($docs < $anexos) {
+        echo '
+                <div class="callout callout-info">
+                    <h5><i class="fas fa-info"></i> Observação:</h5>
+                    <span>Você não anexou todos os documentos necessários para esse cliente, <a href="' .
+            route('admin.clients.edit', ['id' => $lead->id]) .
+            '">clique aqui</a>.</span>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12 col-md-12 col-lg-4">
-                        <h3 class="text-primary"><i class="fas fa-user"></i> {{ $lead->name }}</h3>
-                        <p class="text-muted">
-                            @if (!empty($lead->address))
-                                {{ $lead->address . ', ' . $lead->number . ', ' . $lead->district . ', ' . $lead->zip_code . ' ' . $lead->city . ', ' . $lead->state }}<br />
-                            @endif
-                            Telefone: {{ $lead->phone }}
-                            @if (!empty($lead->email))
-                                <br />E-mail: {{ $lead->email }}
-                            @endif
-                        </p>
-                        <p class="text-sm">Franqueado:
-                            <b class="d-block">{{ $lead->user->name }}</b>
-                        </p>
-                        <p class="text-sm m-0">Criado:
-                            <b class="d-block">{{ $lead->created_at->format('d/m/Y H:m:s') }}</b>
-                        </p>
-                        <p class="text-sm m-0">Atualizado:
-                            <b class="d-block">{{ $lead->updated_at->format('d/m/Y H:m:s') }}</b>
-                        </p>
-                        <p class="text-sm m-0">Nº Processo:
-                            <b class="d-block">{{ $lead->process }}</b>
-                        </p>
-                        <p class="text-sm m-0">Tipo de Ação:
-                            @foreach ($actions as $action)
-                                @if ($action->id == $lead->action)
-                                    <b class="d-block">{{ $action->name }}</b>
+                ';
+    }
+    @endphp
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+
+                    <div class="card card-primary card-outline">
+                        <div class="card-body box-profile">
+                            <div class="text-center">
+                                @if (isset($lead->user->image))
+                                    <img class="profile-user-img img-fluid img-circle"
+                                        src="{{ asset('storage/' . $lead->user->image) }}" alt="Franqueado">
                                 @endif
-                            @endforeach
-                        </p>
-                        <p class="text-sm m-0">Tribunal:
-                            <b class="d-block">{{ $lead->court }}</b>
-                        </p>
-                        <p class="text-sm m-0">Vara:
-                            <b class="d-block">{{ $lead->stick }}</b>
-                        </p>
-                        @if ($lead->situation == 2)
-                            <p class="text-sm m-0">Prazo:
-                                <b class="d-block">{{ $lead->term->format('d/m/Y') }}</b>
+                            </div>
+                            <h3 class="profile-username text-center">{{ $lead->name }}</h3>
+                            <p class="text-muted text-center">Franqueado</p>
+
+                            <ul class="list-group list-group-unbordered mb-3">
+                                <li class="list-group-item">
+                                    <b>Comentários lead</b> <a class="float-right">{{ count($feedbackLeads) }}</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Advogados</b> <a
+                                        class="float-right">{{ count($lead->user->lawyers) }}</a>
+                                </li>
+                            </ul>
+
+                            <ul class="users-list">
+                                @foreach ($lead->user->lawyers as $lawyer)
+                                <li>
+                                    @if (isset($lawyer->image))
+                                        <img src="{{asset('storage/' . $lawyer->image) }}" alt="Foto">
+                                    @else
+                                        <img src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Foto">
+                                    @endif
+                                    <a class="users-list-name" href="#">{{ $lawyer->name }}</a>
+                                    <span class="users-list-date">
+                                        Adv.
+                                    </span>
+                                </li>
+                                @endforeach
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Informações sobre o lead</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <strong><i class="fas fa-pencil-alt mr-1"></i> Nome</strong>
+                            <p class="text-muted">
+                                {{ $lead->name }}<br />
+                                {{ $lead->phone }}<br />
+                                @isset($lead->email)
+                                    {{ $lead->email }}
+                                @endisset
                             </p>
-                            <p class="text-sm m-0">Responsável:
-                                <b class="d-block">{{ $lead->responsible }}</b>
-                            </p>
-                            @isset($lead->date_fulfilled)    
-                                <p class="text-sm m-0">Data Cumprimento:
-                                    <b class="d-block">{{ $lead->date_fulfilled->format('d/m/Y') }}</b>
+                            <hr>
+                            <strong><i class="fas fa-map-marker-alt mr-1"></i> Endereço:</strong>
+                            @isset($lead->address)
+                                <p class="text-muted">
+                                    {{ $lead->address . ', nº ' . $lead->number . ', Cep: ' . $lead->zip_code . ' ' . $lead->district . ', ' . $lead->city . '/' . $lead->state }}
                                 </p>
                             @endisset
-                            <p class="text-sm m-0">Cumprimento:
-                                <b class="d-block">{!! $lead->greeting !!}</b>
-                            </p>
-                        @endif
+                            <hr>
+                            <strong><i class="fas fa-book mr-1"></i> Processo</strong>
+                            <p class="text-muted">
+                                Nº {{ $lead->process }}<br />
+                                Tribunal: {{ $lead->court }}<br />
+                                Vara: {{ $lead->stick }}<br />
 
-                        <h5 class="mt-4 text-muted">Modelos de documentos a anexar:</h5>
-                        <ul class="list-unstyled">
-                            @foreach ($models as $model)
-                                @if ($model->action_id == $lead->action)
+                                @if ($lead->situation == 2)
+                                    Prazo: {{ $lead->term->format('d/m/Y') }}<br />
+                                    Responsável: {{ $lead->responsible }}<br />
+                                @endif
+
+                                @isset($lead->date_fulfilled)
+                                    Data Cumprimento: {{ $lead->date_fulfilled->format('d/m/Y') }}<br />
+                                @endisset
+                            </p>
+
+                            @isset($lead->greeting)
+                                <p>{!! $lead->greeting !!}</p>
+                            @endisset
+                            <hr>
+                            <strong><i class="far fa-file-alt mr-1"></i> Outros</strong>
+                            <p class="text-muted">
+                                Criado em: {{ $lead->created_at->format('d/m/Y H:m:s') }}<br />
+                                Atualidado: {{ $lead->updated_at->format('d/m/Y H:m:s') }}<br />
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Anexo documentos</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <strong><i class="far fa-file-alt mr-1"></i> Modelos de documentos</strong>
+                            <ul class="list-unstyled">
+                                @foreach ($models as $model)
+                                    @if ($model->action_id == $lead->action)
+                                        <li>
+                                            <a href="{{ Storage::url($model->document) }}" target="_blank"
+                                                title="Clique para baixar o documento" class="btn-link text-secondary">
+                                                {{ $model->title }}
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                            <hr>
+                            <strong><i class="far fa-file-alt mr-1"></i> Documentos anexados</strong>
+                            <ul class="list-unstyled">
+                                @foreach ($lead->photos as $key => $photo)
                                     <li>
-                                        <a href="{{ route('admin.client.model.download', ['id' => $model->id]) }}"
-                                            title="Clique para baixar o documento" class="btn-link text-secondary">
-                                            <i class="far fa-fw fa-file-pdf"></i> {{ $model->title }}
+                                        <a href="{{ Storage::url($photo->image) }}" target="_blank"
+                                            class="btn-link text-secondary">
+                                            {{ $key + 1 }} documento anexado<br />
                                         </a>
                                     </li>
-                                @endif
-                            @endforeach
-                        </ul>
+                                @endforeach
+                            </ul>
 
-                        <h5 class="mt-2 text-muted">Documentos anexados:</h5>
-                        <ul class="list-unstyled">
-                            @foreach ($lead->photos as $photo)
-                                <li>
-                                    <a href="{{ route('admin.client.document.download', ['id' => $photo->id, 'lead' => $lead->id]) }}"
-                                        class="btn-link text-secondary"><i class="far fa-fw fa-image"></i>
-                                        {{ Str::substr($photo->image, 30) }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-
-                    </div>
-                    <div class="col-12 col-md-12 col-lg-8">
-                        <div class="row">
-                            <div class="col-12 col-sm-4">
-                                <div class="info-box bg-light">
-                                    <div class="info-box-content">
-                                        <span class="info-box-text text-center text-muted">Criado</span>
-                                        <span
-                                            class="info-box-number text-center text-muted mb-0">{{ $lead->created_at->format('d/m/Y H:m:s') }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-4">
-                                <div class="info-box bg-light">
-                                    <div class="info-box-content">
-                                        <span class="info-box-text text-center text-muted">Etiqueta</span>
-                                        @php
-                                            $array_tags = [1 => 'Novo Lead', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
-                                            foreach ($array_tags as $key => $value) {
-                                                if ($key == $lead->tag) {
-                                                    echo '<span class="info-box-number text-center text-muted mb-0">' . $value . '</span>';
-                                                }
-                                            }
-                                        @endphp
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-4">
-                                <div class="info-box bg-light">
-                                    <div class="info-box-content">
-                                        <span class="info-box-text text-center text-muted">Situação</span>
-                                        @php
-                                            $arr = [1 => 'Andamento em ordem', 2 => 'Aguardando cumprimento', 3 => 'Finalizado Procedente', 4 => 'Finalizado Improcedente', 5 => 'Recursos'];
-                                            foreach ($arr as $key => $value) {
-                                                if ($key == $lead->situation) {
-                                                    echo '<span class="info-box-number text-center text-muted mb-0">' . $value . '</span>';
-                                                }
-                                            }
-                                        @endphp
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                @if (session('success'))
-                                    <div id="message" class="alert alert-success mb-2" role="alert"
-                                        style="max-width: 800px; margin: auto;">
-                                        {{ session('success') }}
-                                    </div>
-                                @elseif (session('error'))
-                                    <div class="alert alert-danger mb-2" role="alert"
-                                        style="max-width: 800px; margin: auto;">
-                                        {{ session('error') }}
-                                    </div>
-                                @endif
-
-                                <form method="POST" action="{{ route('admin.client.feedback') }}">
-                                    <input type="hidden" name="lead_id" value="{{ $lead->id }}" />
-                                    @csrf
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h4 class="card-title">Comentários do lead:</h4>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="direct-chat-messages">
-                                                @foreach ($feedbackLeads as $feed)
-                                                    @if ($feed->user_id == auth()->user()->id)
-                                                        <div class="direct-chat-msg">
-                                                            <div class="direct-chat-infos clearfix mb-1">
-                                                                <span
-                                                                    class="direct-chat-name float-left">{{ auth()->user()->name }}</span>
-                                                                <span
-                                                                    class="direct-chat-timestamp ml-2">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
-                                                            </div>
-                                                            <div>
-                                                                <span
-                                                                    class="bg-info rounded p-2 float-left">{!! $feed->comments !!}</span>
-                                                            </div>
-                                                        </div>
-                                                    @else
-                                                        <div class="direct-chat-msg">
-                                                            <div class="direct-chat-infos clearfix mb-1">
-                                                                @foreach ($users as $user)
-                                                                    @if ($feed->user_id == $user->id)
-                                                                        <span
-                                                                            class="direct-chat-timestamp ml-2 float-right">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
-                                                                        <span
-                                                                            class="direct-chat-name float-right">{{ $user->name }}</span>
-                                                                    @endif
-                                                                @endforeach
-                                                            </div>
-                                                            <div>
-                                                                <span
-                                                                    class="bg-success rounded p-2 float-right">{!! $feed->comments !!}</span>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
-
-                                            
-                                                @if ($lead->status != 2)
-                                                    <div class="form-group m-0 mt-3">
-                                                        <textarea name="comments" placeholder="Digite seu comentário aqui."
-                                                            class="form-control @error('comments') is-invalid @enderror">{{ old('description') }}</textarea>
-                                                        @error('comments')
-                                                            <div class="text-red">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                @endif
-                                           
-                                        </div>
-                                        <div class="card-footer">
-                                            <a href="{{ route('admin.leads.index') }}" type="submit"
-                                                class="btn btn-default">Cancelar</a>
-                                            
-                                                @if ($lead->status != 2)
-                                                    <button id="button" type="submit" onClick="ocultarExibir()"
-                                                        class="btn btn-md btn-info float-right">
-                                                        <div id="text">
-                                                            <i class="fas fa-save mr-2"></i>
-                                                            Salvar Comentário
-                                                        </div>
-                                                    </button>
-                                                
-                                                <a id="spinner" class="btn btn-md btn-info float-right text-center">
-                                                    <div id="spinner" class="spinner-border" role="status"
-                                                        style="width: 20px; height: 20px;">
-                                                        <span class="sr-only">Loading...</span>
-                                                    </div>
-                                                </a>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
                         </div>
                     </div>
+
                 </div>
+
+                <div class="col-md-9">
+
+                    <div class="row">
+                        <div class="col-12 col-sm-4">
+                            <div class="info-box bg-white">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">Criado</span>
+                                    <span
+                                        class="info-box-number text-center text-muted mb-0">{{ $lead->created_at->format('d/m/Y H:m:s') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="info-box bg-white">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">Etiqueta</span>
+                                    @php
+                                        $array_tags = [1 => 'Novo Lead', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
+                                        foreach ($array_tags as $key => $value) {
+                                            if ($key == $lead->tag) {
+                                                echo '<span class="info-box-number text-center text-muted mb-0">' . $value . '</span>';
+                                            }
+                                        }
+                                    @endphp
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="info-box bg-white">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">Situação</span>
+                                    @php
+                                        $arr = [1 => 'Andamento em ordem', 2 => 'Aguardando cumprimento', 3 => 'Finalizado Procedente', 4 => 'Finalizado Improcedente', 5 => 'Recursos'];
+                                        foreach ($arr as $key => $value) {
+                                            if ($key == $lead->situation) {
+                                                echo '<span class="info-box-number text-center text-muted mb-0">' . $value . '</span>';
+                                            }
+                                        }
+                                    @endphp
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (session('success'))
+                        <div id="message" class="alert alert-success mb-2" role="alert" style="width: 100%; margin: auto;">
+                            {{ session('success') }}
+                        </div>
+                    @elseif (session('error'))
+                        <div class="alert alert-danger mb-2" role="alert" style="width: 100%; margin: auto;">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <div class="card direct-chat direct-chat-primary">
+                        <div class="card-header ui-sortable-handle" style="cursor: move;">
+                            <h3 class="card-title">Comentários do lead</h3>
+                            <div class="card-tools">
+                                <span title="3 New Messages"
+                                    class="badge badge-primary">{{ count($feedbackLeads) }}</span>
+                            </div>
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="direct-chat-messages">
+
+                                @foreach ($feedbackLeads as $feed)
+                                    @if ($feed->user_id == auth()->user()->id)
+                                        <div class="direct-chat-msg">
+                                            <div class="direct-chat-infos clearfix">
+                                                <span
+                                                    class="direct-chat-name float-left">{{ auth()->user()->name }}</span>
+                                                <span
+                                                    class="direct-chat-timestamp float-right">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
+                                            </div>
+                                            @if (isset($feed->user->image))
+                                                <img class="direct-chat-img"
+                                                    src="{{ asset('storage/' . $feed->user->image) }}" alt="Foto">
+                                            @else
+                                                <img class="direct-chat-img" src="https://dummyimage.com/28x28/b6b7ba/fff"
+                                                    alt="Foto">
+                                            @endif
+                                            <div class="direct-chat-text">
+                                                {{ $feed->comments }}
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="direct-chat-msg right">
+                                            <div class="direct-chat-infos clearfix">
+                                                <span class="direct-chat-name float-right">{{ $lead->user->name }}</span>
+                                                <span
+                                                    class="direct-chat-timestamp float-left">{{ $feed->created_at->format('d/m/Y H:m:s') }}</span>
+                                            </div>
+                                            @if (isset($feed->user->image))
+                                                <img class="direct-chat-img"
+                                                    src="{{ asset('storage/' . $feed->user->image) }}" alt="Foto">
+                                            @else
+                                                <img class="direct-chat-img" src="https://dummyimage.com/28x28/b6b7ba/fff"
+                                                    alt="Foto">
+                                            @endif
+                                            <div class="direct-chat-text">
+                                                {{ $feed->comments }}
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer">
+                            <form method="POST" action="{{ route('admin.client.feedback') }}">
+                                @csrf
+                                <input type="hidden" name="lead_id" value="{{ $lead->id }}" />
+                                <div class="input-group">
+                                    <input type="text" name="comments" placeholder="Digite seu comentário aqui."
+                                        class="form-control">
+                                    <span class="input-group-append">
+                                        <button type="submit" class="btn btn-primary">Enviar</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
     </section>
+
+
+
+
 
 @stop
 

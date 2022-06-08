@@ -42,18 +42,57 @@ class ClientController extends Controller
      */
     public function index(Request $request)
     {
-        $waiting = $this->lead->where('tag','2')->get()->count();
-        $converted_lead = $this->lead->where('tag','3')->get()->count();
-        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-        $progress = $this->lead->where('situation','1')->get()->count();
-        $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
-        $procedente = $this->lead->where('situation','3')->get()->count();
-        $improcedente = $this->lead->where('situation','4')->get()->count();
-        $resources = $this->lead->where('situation','5')->get()->count();
-        $models = $this->model->all();
-
         $type_user = auth()->user()->type;
 
+        if($type_user == 'F'){
+            $waiting = $this->lead->where('user_id',auth()->user()->id)->where('tag','2')->get()->count();
+            $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
+            $progress = $this->lead->where('user_id',auth()->user()->id)->where('situation','1')->get()->count();
+            $awaiting_fulfillment = $this->lead->where('user_id',auth()->user()->id)->where('situation','2')->get()->count();
+            $procedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get()->count();
+            $improcedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get()->count();
+            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get()->count();
+        } else {
+            $waiting = $this->lead->where('tag','2')->get()->count();
+            $converted_lead = $this->lead->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+            $progress = $this->lead->where('situation','1')->get()->count();
+            $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
+            $procedente = $this->lead->where('situation','3')->get()->count();
+            $improcedente = $this->lead->where('situation','4')->get()->count();
+            $resources = $this->lead->where('situation','5')->get()->count();  
+        }
+
+        $query = $this->lead->query();
+
+        if(isset($request->search)){
+            //$query->where('title', 'LIKE', '%' . $request->search . '%');
+
+            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
+            foreach($columns as $key => $value):
+                $query->orWhere($value, 'LIKE', '%'.$request->search.'%');
+            endforeach;
+
+        }
+
+        if(isset($request->situation)){
+            $query->where('situation',$request->situation);
+        }
+
+        //$leads = $query->orderBy('id','DESC')->paginate(10);
+
+        if($type_user == "F"){
+            $leads = $query->where('user_id',auth()->user()->id)->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
+            //$leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
+        }else {
+            $leads = $query->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
+            //$leads = $this->lead->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
+        }
+        
+        $models = $this->model->all();
+
+        /*
         $search = "";
         if(isset($request->search))
         {
@@ -76,11 +115,10 @@ class ClientController extends Controller
             }else {
                 $leads = $this->lead->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
             }
-        }
+        }*/
         
         return view('admin.clients.index',[
             'leads' => $leads, 
-            'search' => $search,
             'waiting' => $waiting,
             'converted_lead' => $converted_lead, 
             'unconverted_lead' => $unconverted_lead,
@@ -95,20 +133,31 @@ class ClientController extends Controller
 
     public function tag($tag)
     {
-        $waiting = $this->lead->where('tag','2')->get()->count();
-        $converted_lead = $this->lead->where('tag','3')->get()->count();
-        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-        $progress = $this->lead->where('situation','1')->get()->count();
-        $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
-        $procedente = $this->lead->where('situation','3')->get()->count();
-        $improcedente = $this->lead->where('situation','4')->get()->count();
-        $resources = $this->lead->where('situation','5')->get()->count();
+        $type_user = auth()->user()->type;
+        if($type_user == 'F'){
+            $waiting = $this->lead->where('user_id',auth()->user()->id)->where('tag','2')->get()->count();
+            $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
+            $progress = $this->lead->where('user_id',auth()->user()->id)->where('situation','1')->get()->count();
+            $awaiting_fulfillment = $this->lead->where('user_id',auth()->user()->id)->where('situation','2')->get()->count();
+            $procedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get()->count();
+            $improcedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get()->count();
+            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get()->count();
+            $leads = $this->lead->where('user_id',auth()->user()->id)->where('tag',$tag)->orderBy('id','DESC')->get();
+        } else {
+            $waiting = $this->lead->where('tag','2')->get()->count();
+            $converted_lead = $this->lead->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+            $progress = $this->lead->where('situation','1')->get()->count();
+            $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
+            $procedente = $this->lead->where('situation','3')->get()->count();
+            $improcedente = $this->lead->where('situation','4')->get()->count();
+            $resources = $this->lead->where('situation','5')->get()->count();
+            $leads = $this->lead->where('tag',$tag)->orderBy('id','DESC')->get();
+        }
+
         $models = $this->model->all();
-
         $search = "";
-
-        $leads = $this->lead->where('tag',$tag)->orderBy('id','DESC')->get();
-        
         return view('admin.clients.tag',[
             'leads' => $leads, 
             'search' => $search,
@@ -126,20 +175,32 @@ class ClientController extends Controller
 
     public function situation($situation)
     {
-        $waiting = $this->lead->where('tag','2')->get()->count();
-        $converted_lead = $this->lead->where('tag','3')->get()->count();
-        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-        $progress = $this->lead->where('situation','1')->get()->count();
-        $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
-        $procedente = $this->lead->where('situation','3')->get()->count();
-        $improcedente = $this->lead->where('situation','4')->get()->count();
-        $resources = $this->lead->where('situation','5')->get()->count();
+        $type_user = auth()->user()->type;
+        if($type_user == 'F'){   
+            $waiting = $this->lead->where('user_id',auth()->user()->id)->where('tag','2')->get()->count();
+            $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
+            $progress = $this->lead->where('user_id',auth()->user()->id)->where('situation','1')->get()->count();
+            $awaiting_fulfillment = $this->lead->where('user_id',auth()->user()->id)->where('situation','2')->get()->count();
+            $procedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get()->count();
+            $improcedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get()->count();
+            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get()->count();
+            $leads = $this->lead->where('user_id',auth()->user()->id)->where('situation',$situation)->orderBy('id','DESC')->get();
+        } else {
+            $waiting = $this->lead->where('tag','2')->get()->count();
+            $converted_lead = $this->lead->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+            $progress = $this->lead->where('situation','1')->get()->count();
+            $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
+            $procedente = $this->lead->where('situation','3')->get()->count();
+            $improcedente = $this->lead->where('situation','4')->get()->count();
+            $resources = $this->lead->where('situation','5')->get()->count();
+            $leads = $this->lead->where('situation',$situation)->orderBy('id','DESC')->get();
+        }
         $models = $this->model->all();
 
         $search = "";
 
-        $leads = $this->lead->where('situation',$situation)->orderBy('id','DESC')->get();
-        
         return view('admin.clients.situation',[
             'leads' => $leads, 
             'search' => $search,
@@ -157,6 +218,8 @@ class ClientController extends Controller
 
     public function converted(Request $request)
     {
+        $type_user = auth()->user()->type;
+
         $search = "";
         if(isset($request->search))
         {
@@ -179,6 +242,8 @@ class ClientController extends Controller
 
     public function unconverted(Request $request)
     {
+        $type_user = auth()->user()->type;
+
         $search = "";
         if(isset($request->search))
         {
@@ -201,6 +266,8 @@ class ClientController extends Controller
 
     public function term(Request $request)
     {
+        $type_user = auth()->user()->type;
+
         $models = $this->model->all();
         $search = "";
         if(isset($request->search))
@@ -213,10 +280,19 @@ class ClientController extends Controller
                 $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
             endforeach;
 
-            $leads = $query->whereIn('situation',[2])->orderBy('id','DESC')->get();
+            if($type_user == 'F'){
+                $leads = $query->where('user_id',auth()->user()->id)->whereIn('situation',[2])->orderBy('id','DESC')->get();
+            } else {
+                $leads = $query->whereIn('situation',[2])->orderBy('id','DESC')->get();
+            }
 
         } else {
-            $leads = $this->lead->whereIn('situation',[2])->orderBy('id','DESC')->paginate(10);
+            if($type_user == 'F'){
+                $leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('situation',[2])->orderBy('id','DESC')->paginate(10);
+            } else {
+                $leads = $this->lead->whereIn('situation',[2])->orderBy('id','DESC')->paginate(10);
+            }
+            
         }
         
         return view('admin.clients.term',[
@@ -240,27 +316,6 @@ class ClientController extends Controller
     {
         $documents = $this->modeldoc->where('action_id',$id)->get();
         return view('admin.clients.documents',['documents' => $documents]);
-    }
-
-    public function download($id)
-    {
-        $record = $this->model->find($id);
-
-        if(Storage::exists($record['document'])){
-            return Storage::download($record['document']);
-        } 
-
-        return redirect('/admin/client/show/'.$id)->with('alert', 'Desculpe! Não encontramos o documento!');
-    }
-
-    public function downloaddoc($id,$lead)
-    {
-        $record = $this->clientPhotos->find($id);
-
-        if(Storage::exists($record['image'])){
-            return Storage::download($record['image']);
-        } 
-        return redirect('/admin/client/show/'.$lead)->with('err', 'Desculpe! Erro ao baixar arquivo!');
     }
 
     /**
@@ -365,13 +420,15 @@ class ClientController extends Controller
     public function edit($id)
     {
         $actions = $this->action->all();
+        $models = $this->model->all();
         $users = $this->user->where('type','F')->get();
         $lead = $this->lead->find($id);
         if($lead){
             return view('admin.clients.edit',[
                 'lead' => $lead, 
                 'users' => $users, 
-                'actions' => $actions]
+                'actions' => $actions,
+                'models' => $models]
             );
         } else {
             return redirect('admin/clients')->with('alert', 'Desculpe! Não encontramos o registro!');

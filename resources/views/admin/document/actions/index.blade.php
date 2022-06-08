@@ -6,9 +6,9 @@
     <form method="GET" action="{{ route('admin.document.actions.index') }}">
         <div style="display: flex; justify-content: space-between;">
             @can('search-action')
-                <div class="input-group" style="width: 30%">
+                <div class="input-group" style="width: 40%">
                     <input type="search" name="search" value="{{ $search }}" class="form-control"
-                        placeholder="Título da ação" required />
+                        placeholder="Título" required />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
                             <i class="fa fa-search"></i> Buscar
@@ -50,7 +50,7 @@
                 <thead>
                     <tr>
                         <th>Tipo de ação</th>
-                        <th class="text-center">Docs.</th>
+                        <th class="text-center">Documentos</th>
                         <th style="width: 160px">Criado</th>
                         <th style="width: 160px">Atualizado</th>
                         @can('edit-action')
@@ -62,7 +62,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($actions as $action)
+                    @forelse ($actions as $action)
                         <tr>
                             <td>{{ $action->name }}</td>
                             <td class="text-center">{{ count($action->modeldocs) }}</td>
@@ -89,7 +89,13 @@
                                 @endcan
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <span>Nenhum registro adicionado</span>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">

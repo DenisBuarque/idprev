@@ -6,9 +6,14 @@
     <form method="GET" action="{{ route('admin.document.models.index') }}">
         <div style="display: flex; justify-content: space-between;">
             @can('search-document')
-                <div class="input-group" style="width: 30%">
-                    <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Título"
-                        required />
+                <div class="input-group" style="width: 40%">
+                    <input type="search" name="search" class="form-control" placeholder="Título"/>
+                    <select name="action" class="form-control" style="margin: 0 2px;">
+                        <option></option>
+                        @foreach ($actions as $action)
+                            <option value="{{ $action->id }}">{{ $action->name }}</option>
+                        @endforeach
+                    </select>
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
                             <i class="fa fa-search"></i> Buscar
@@ -50,11 +55,11 @@
                 <thead>
                     <tr>
                         <th>Título</th>
-                        <th>Tipo de Ação</th>
+                        <th>Ação</th>
                         <th style="width: 160px;">Criado</th>
                         <th style="width: 160px;">Atualizado</th>
                         @can('edit-document')
-                            <th style='width: 60px' class='text-center'>Down</th>    
+                            <th style='width: 60px' class='text-center'>Down</th>
                             <th style='width: 60px' class='text-center'>Edit</th>
                         @endcan
                         @can('delete-document')
@@ -63,7 +68,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($models as $model)
+                    @forelse ($models as $model)
                         <tr>
                             <td>{{ $model->title }}</td>
                             <td>{{ $model->action->name }}</td>
@@ -71,7 +76,7 @@
                             <td>{{ $model->updated_at->format('d/m/Y H:m:s') }}</td>
                             <td class='px-1'>
                                 @can('edit-document')
-                                    <a href="{{ route('admin.document.models.download', ['id' => $model->id]) }}"
+                                    <a href="{{ Storage::url($model->document) }}" target="_blank"
                                         class="btn btn-default btn-xs btn-block">
                                         <i class="fas fa-download"></i>
                                     </a>
@@ -96,11 +101,17 @@
                                 </td>
                             @endcan
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <span>Nenhum registro adicionado</span>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">
-                @if (!$search && $models)
+                @if ($models)
                     {{ $models->links() }}
                 @endif
             </div>

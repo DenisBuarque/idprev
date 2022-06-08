@@ -31,23 +31,29 @@ class TicketController extends Controller
      */
     public function index(Request $request)
     {
-        
-        $ticket_total = $this->ticket->all()->count();
-        $open = $this->ticket->where('status','1')->get()->count();
-        $resolved = $this->ticket->where('status','2')->get()->count();
-        $pending = $this->ticket->where('status','3')->get()->count();
-
         $type_user = auth()->user()->type;
-
+        if($type_user == 'F') {
+            $ticket_total = $this->ticket->where('user_id',auth()->user()->id)->get()->count();
+            $open = $this->ticket->where('user_id',auth()->user()->id)->where('status','1')->get()->count();
+            $resolved = $this->ticket->where('user_id',auth()->user()->id)->where('status','2')->get()->count();
+            $pending = $this->ticket->where('user_id',auth()->user()->id)->where('status','3')->get()->count();
+        } else {
+            $ticket_total = $this->ticket->all()->count();
+            $open = $this->ticket->where('status','1')->get()->count();
+            $resolved = $this->ticket->where('status','2')->get()->count();
+            $pending = $this->ticket->where('status','3')->get()->count();
+        }
+        
         $search = "";
         if (isset($request->search)) 
         {
             $search = $request->search;
             if($type_user == 'F'){
-                $tickets = $this->ticket->where('user_id',auth()->user()->id)->orWhere('status', $search)->orderBy('id','DESC')->get();
+                $tickets = $this->ticket->where('user_id',auth()->user()->id)->where('status', $search)->orderBy('id','DESC')->get();
             } else {
                 $tickets = $this->ticket->orWhere('status', $search)->orderBy('id','DESC')->get();
             }
+
         } else {
             if($type_user == 'F'){
                 $tickets = $this->ticket->where('user_id',auth()->user()->id)->whereIn('status',[1,3])->orderBy('id', 'DESC')->paginate(10);

@@ -6,9 +6,9 @@
     <form method="GET" action="{{ route('admin.worksheets.index') }}">
         <div style="display: flex; justify-content: space-between;">
             @can('search-worksheet')
-                <div class="input-group" style="width: 30%">
+                <div class="input-group" style="width: 40%">
                     <input type="search" name="search" value="{{ $search }}" class="form-control"
-                        placeholder="Título da planilha" required />
+                        placeholder="Título" required />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
                             <i class="fa fa-search"></i> Buscar
@@ -69,7 +69,7 @@
                             <td>{{ $worksheet->updated_at->format('d/m/Y H:m:s') }}</td>
                             @can('edit-worksheet')
                                 <td class='px-1'>
-                                    <a href="{{ route('admin.worksheets.download', ['id' => $worksheet->id]) }}"
+                                    <a href="{{ Storage::url($worksheet->arquivo) }}"
                                         class="btn btn-default btn-xs btn-block">
                                         <i class="fas fa-download"></i>
                                     </a>

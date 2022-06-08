@@ -50,9 +50,9 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Nome</th>
-                        <th class="text-center">OAB</th>
                         <th>Franqueado</th>
+                        <th>Advogado</th>
+                        <th class="text-center">OAB</th>
                         <th style="width: 160px;">Criado</th>
                         <th style="width: 160px;">Atualizado</th>
                         @can('edit-lawyer')
@@ -66,9 +66,23 @@
                 <tbody>
                     @foreach ($lawyers as $lawyer)
                         <tr>
-                            <td>{{ $lawyer->name }}</td>
+                            <td>
+                                @if (isset($lawyer->user->image))
+                                    <img src="{{asset('storage/' . $lawyer->user->image) }}" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @else
+                                    <img src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @endif
+                                {{ $lawyer->user->name }}
+                            </td>
+                            <td>
+                                @if (isset($lawyer->image))
+                                    <img src="{{asset('storage/' . $lawyer->image) }}" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @else
+                                    <img src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @endif
+                                {{ $lawyer->name }}
+                            </td>
                             <td class="text-center">{{ $lawyer->oab }}</td>
-                            <td>{{ $lawyer->user->name }}</td>
                             <td>{{ $lawyer->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $lawyer->updated_at->format('d/m/Y H:m:s') }}</td>
                             @can('edit-lawyer')

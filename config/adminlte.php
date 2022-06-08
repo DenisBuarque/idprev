@@ -265,6 +265,12 @@ return [
             'can'         => 'list-client'
         ],
         [
+            'text'        => 'Clientes em Prazo',
+            'url'         => 'admin/clients/term',
+            'icon'        => 'fa fa-hourglass-end',
+            'can'         => 'list-term',
+        ],
+        [
             'text'    => 'Franqueados',
             'icon'    => 'fa fa-id-card',
             'can'     => 'list-franchisee',
@@ -322,12 +328,6 @@ return [
             'url'         => 'admin/tickets',
             'icon'        => 'fa fa-tag',
             'can'         => 'list-ticket',
-        ],
-        [
-            'text'        => 'Prazos',
-            'url'         => 'admin/clients/term',
-            'icon'        => 'fa fa-hourglass-end',
-            'can'         => 'list-term',
         ],
         [
             'text'        => 'Financeiro',

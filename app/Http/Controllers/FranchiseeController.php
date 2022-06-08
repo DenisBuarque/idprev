@@ -7,9 +7,9 @@ use App\Models\User;
 use App\Models\Client;
 use App\models\Permission;
 use App\Notifications\AdvisorNotification;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-
 
 class FranchiseeController extends Controller
 {
@@ -89,6 +89,13 @@ class FranchiseeController extends Controller
         $data['type'] = 'F';
         $data['password'] =  bcrypt($request->password);
 
+        // salva a imagem de existir
+        if($request->hasFile('image') && $request->file('image')->isValid())
+        {
+            $file = $request->image->store('users','public');
+            $data['image'] = $file;
+        }
+
         $record = $this->user->create($data);
         if ($record)
         {
@@ -164,6 +171,19 @@ class FranchiseeController extends Controller
             $data['password'] =  bcrypt($request->password);
         }
 
+        // atualiza a imagem
+        if($request->hasFile('image') && $request->file('image')->isValid())
+        {
+            if($record['image'] != null){
+                if(Storage::exists($record['image'])) {
+                    Storage::delete($record['image']);
+                }
+            }
+            
+            $new_file = $request->image->store('users','public');
+            $data['image'] = $new_file;
+        }
+
         if ($record->update($data)) :
 
             $permissions = $record->permissions;
@@ -196,6 +216,14 @@ class FranchiseeController extends Controller
     {
         $data = $this->user->find($id);
         if ($data->delete()) {
+
+            // deleta a imagem da pasta
+            if($data['image'] != null){
+                if(Storage::exists($data['image'])){
+                    Storage::delete($data['image']);
+                }
+            } 
+            
             return redirect('admin/franchisees')->with('success', 'Registro excluído com sucesso!');
         } else {
             return redirect('admin/franchisees')->with('error', 'Erro ao excluir o registro!');

@@ -63,7 +63,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($events as $event)
+                    @forelse ($events as $event)
                         <tr>
                             <td>{{ $event->title }}</td>
                             <td>{{ $event->date_event->format('d/m/Y') }}</td>
@@ -90,7 +90,11 @@
                                 @endcan
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td class="text-center" colspan="6">Nenhum registro encontrado.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">

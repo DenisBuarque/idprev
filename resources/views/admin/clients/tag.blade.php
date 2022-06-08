@@ -6,21 +6,28 @@
     <form method="GET" action="{{ route('admin.clients.index') }}">
         <div style="display: flex; justify-content: space-between;">
             @can('search-client')
-            <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
-                    required />
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">
-                        <i class="fa fa-search mr-1"></i>
-                        Buscar
-                    </button>
-                </span>
-            </div>
+                <div class="input-group" style="width: 40%">
+                    <input type="search" name="search" class="form-control" placeholder="Pesquisa." />
+                    <select name="situation" class="form-control" style="margin: 0 2px;">
+                        <option></option>
+                        <option value="1">Andamento em ordem</option>
+                        <option value="2">Aguardando cumprimento</option>
+                        <option value="3">Finalizado procedente</option>
+                        <option value="4">Finalizado improcedente</option>
+                        <option value="5">Recursos</option>
+                    </select>
+                    <span class="input-group-append">
+                        <button type="submit" class="btn btn-info btn-flat">
+                            <i class="fa fa-search mr-1"></i>
+                            Buscar
+                        </button>
+                    </span>
+                </div>
             @endcan
             @can('create-client')
-            <a href="{{ route('admin.clients.create') }}" class="btn bg-info">
-                <i class="fa fa-plus mr-1"></i> Adicionar Registro
-            </a>
+                <a href="{{ route('admin.clients.create') }}" class="btn bg-info">
+                    <i class="fa fa-plus mr-1"></i> Adicionar Registro
+                </a>
             @endcan
         </div>
     </form>
@@ -29,7 +36,6 @@
 @section('content')
 
     <div class="row">
-
         <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
                 <div class="inner">
@@ -44,7 +50,6 @@
                 </a>
             </div>
         </div>
-
         <div class="col-lg-3 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
@@ -54,7 +59,7 @@
                 <div class="icon">
                     <i class="fas fa-clock"></i>
                 </div>
-                <a href="{{route('admin.clients.tag',['tag' => 2])}}" class="small-box-footer">
+                <a href="{{ route('admin.clients.tag', ['tag' => 2]) }}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -68,12 +73,11 @@
                 <div class="icon">
                     <i class="fas fa-thumbs-up"></i>
                 </div>
-                <a href="{{route('admin.clients.tag',['tag' => 3])}}" class="small-box-footer">
+                <a href="{{ route('admin.clients.tag', ['tag' => 3]) }}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div>
-
         <div class="col-lg-3 col-6">
             <div class="small-box bg-danger">
                 <div class="inner">
@@ -83,12 +87,11 @@
                 <div class="icon">
                     <i class="fas fa-thumbs-down"></i>
                 </div>
-                <a href="{{route('admin.clients.tag',['tag' => 4])}}" class="small-box-footer">
+                <a href="{{ route('admin.clients.tag', ['tag' => 4]) }}" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div>
-
     </div>
 
     @if (session('success'))
@@ -111,17 +114,17 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Lista de clientes convertidos</h3>
+                    <h3 class="card-title">Lista de clientes</h3>
                 </div>
 
                 <div class="card-body p-0">
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>Nome</th>
                                 <th>Franqueado</th>
-                                <th>Etiqueta</th>
+                                <th>Cliente</th>
                                 <th></th>
+                                <th>Situação</th>
                                 <th class='text-center' style="width: 130px;">Anexos</th>
                                 @can('comments-client')
                                     <th style='width: 60px' class='text-center'></th>
@@ -135,10 +138,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($leads as $lead)
+                            @forelse ($leads as $lead)
                                 <tr>
+                                    <td>
+                                        @if (isset($lead->user->image))
+                                            <img src="{{ asset('storage/' . $lead->user->image) }}" alt="Foto"
+                                                class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                        @else
+                                            <img src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Foto"
+                                                class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                        @endif
+                                        {{ $lead->user->name }}
+                                    </td>
                                     <td>{{ $lead->name }}</td>
-                                    <td>{{ $lead->user->name }}</td>
                                     <td>
                                         @php
                                             $array_tags = [1 => 'Novo Lead', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
@@ -176,17 +188,7 @@
                                                     $anexos += 1;
                                                 }
                                             }
-                                            
-                                            if ($docs == 0) {
-                                                echo '<i class="fa fa-exclamation-triangle" title="Você ainda não anexou os documentos"></i>';
-                                            } else {
-                                                if ($anexos > $docs) {
-                                                    $falta = $anexos - $docs;
-                                                    echo $docs . ' <i class="fas fa-paperclip"></i> falta ' . $falta . ' doc.';
-                                                } else {
-                                                    echo '<i class="fas fa-thumbs-up"></i> ' . $docs . ' anexo(s)';
-                                                }
-                                            }
+                                            echo $docs . ' de ' . $anexos;
                                         @endphp
                                     </td>
                                     <td class='px-1'>
@@ -217,7 +219,11 @@
                                         @endcan
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center">Nenhum registro encontrado</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
 
@@ -285,7 +291,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
 

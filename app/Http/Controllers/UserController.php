@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\models\Permission;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -77,8 +78,17 @@ class UserController extends Controller
         $data['type'] = 'A';
         $data['password'] =  bcrypt($request->password);
 
+        // salva a imagem de existir
+        if($request->hasFile('image') && $request->file('image')->isValid())
+        {
+            $file = $request->image->store('users','public');
+            $data['image'] = $file;
+        }
+
         $record = $this->user->create($data);
-        if($record){
+        if($record)
+        {
+            // salva as permissões
             if(isset($data['permission']) && count($data['permission']))
             {
                 foreach($data['permission'] as $key => $value):
@@ -146,21 +156,35 @@ class UserController extends Controller
             $data['password'] =  bcrypt($request->password);
         }
 
+        // atualiza as permissões
+        $permissions = $record->permissions;
+        if(count($permissions)){
+            foreach($permissions as $key => $value):
+                $record->permissions()->detach($value->id);
+            endforeach;
+        }
+
+        if(isset($data['permission']) && count($data['permission']))
+        {
+            foreach($data['permission'] as $key => $value):
+                $record->permissions()->attach($value);
+            endforeach;
+        }
+
+        // atualiza a imagem
+        if($request->hasFile('image') && $request->file('image')->isValid())
+        {
+            if($record['image'] != null){
+                if(Storage::exists($record['image'])) {
+                    Storage::delete($record['image']);
+                }
+            }
+            
+            $new_file = $request->image->store('users','public');
+            $data['image'] = $new_file;
+        }
+
         if($record->update($data)):
-
-            $permissions = $record->permissions;
-            if(count($permissions)){
-                foreach($permissions as $key => $value):
-                    $record->permissions()->detach($value->id);
-                endforeach;
-            }
-
-            if(isset($data['permission']) && count($data['permission']))
-            {
-                foreach($data['permission'] as $key => $value):
-                    $record->permissions()->attach($value);
-                endforeach;
-            }
 
             return redirect('admin/users')->with('success', 'Registro alterado com sucesso!');
         else:
@@ -178,6 +202,13 @@ class UserController extends Controller
     {
         $data = $this->user->find($id);
         if($data->delete()){
+            // deleta a imagem da pasta
+            if($data['image'] != null){
+                if(Storage::exists($data['image'])){
+                    Storage::delete($data['image']);
+                }
+            } 
+
             return redirect('admin/users')->with('success', 'Registro excluído com sucesso!');
         } else {
             return redirect('admin/users')->with('error', 'Erro ao excluir o registro!');

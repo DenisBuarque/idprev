@@ -12,18 +12,18 @@
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert" style="max-width: 800px; margin: auto;">
+        <div class="alert alert-success mb-2" role="alert" style="max-width: 900px; margin: auto;">
             {{ session('success') }}
         </div>
     @elseif (session('error'))
-        <div class="alert alert-danger mb-2" role="alert" style="max-width: 800px; margin: auto;">
+        <div class="alert alert-danger mb-2" role="alert" style="max-width: 900px; margin: auto;">
             {{ session('error') }}
         </div>
     @endif
 
     <form method="POST" action="{{ route('admin.leads.store') }}" enctype="multipart/form-data">
         @csrf
-        <div class="card card-info" style="max-width: 800px; margin: auto">
+        <div class="card card-info" style="max-width: 900px; margin: auto">
             <div class="card-header">
                 <h3 class="card-title">Formulário cadastro de lead:</h3>
             </div>
@@ -87,43 +87,61 @@
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Cep:</small>
-                            <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code') }}" class="form-control"
+                            <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code') }}" class="form-control @error('zip_code') is-invalid @enderror"
                                 maxlength="9" onkeypress="mascara(this, '#####-###')" onblur="pesquisacep(this.value);" />
+                                @error('zip_code')
+                                    <div class="text-red">{{ $message }}</div>
+                                @enderror
                         </div>
                     </div>
                     <div class="col-sm-9">
                         <div class="form-group m-0">
                             <small>Endereço:</small>
                             <input type="text" name="address" id="address" value="{{ old('address') }}"
-                                class="form-control" maxlength="250" />
+                                class="form-control @error('address') is-invalid @enderror" maxlength="250" />
+                                @error('address')
+                                    <div class="text-red">{{ $message }}</div>
+                                @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group">
                             <small>Número:</small>
-                            <input type="text" name="number" value="{{ old('number') }}" class="form-control"
+                            <input type="text" name="number" value="{{ old('number') }}" class="form-control @error('number') is-invalid @enderror"
                                 placeholder="nº" maxlength="5" />
+                                @error('number')
+                                    <div class="text-red">{{ $message }}</div>
+                                @enderror
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <small>Bairro:</small>
                             <input type="text" name="district" id="district" value="{{ old('district') }}"
-                                class="form-control" maxlength="50" />
+                                class="form-control @error('district') is-invalid @enderror" maxlength="50" />
+                                @error('district')
+                                    <div class="text-red">{{ $message }}</div>
+                                @enderror
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <small>Cidade:</small>
-                            <input type="text" name="city" id="city" value="{{ old('city') }}" class="form-control"
+                            <input type="text" name="city" id="city" value="{{ old('city') }}" class="form-control @error('city') is-invalid @enderror"
                                 maxlength="50" />
+                                @error('city')
+                                    <div class="text-red">{{ $message }}</div>
+                                @enderror
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group">
                             <small>Estado:</small>
-                            <input type="text" name="state" id="state" value="{{ old('state') }}" class="form-control"
+                            <input type="text" name="state" id="state" value="{{ old('state') }}" class="form-control @error('state') is-invalid @enderror"
                                 maxlength="2" />
+                                @error('state')
+                                    <div class="text-red">{{ $message }}</div>
+                                @enderror
                         </div>
                     </div>
 

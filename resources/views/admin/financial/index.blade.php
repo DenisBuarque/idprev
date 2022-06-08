@@ -6,7 +6,7 @@
     <form method="GET" action="{{ route('admin.financial.index') }}">
         <div style="display: flex; justify-content: start;">
             @can('search-financial')
-                <div class="input-group" style="width: 30%">
+                <div class="input-group" style="width: 40%">
                     <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
                         required />
                     <span class="input-group-append">
@@ -34,7 +34,7 @@
                 <div class="icon">
                     <i class="fa fa-coins"></i>
                 </div>
-                <a href="{{ route('admin.franchisees.index') }}" class="small-box-footer">
+                <a href="" class="small-box-footer">
                     Listar registros <i class="fas fa-arrow-circle-right"></i>
                 </a>
 
@@ -108,12 +108,12 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Cliente</th>
                         <th>Franqueado</th>
-                        <th>Confirmação</th>
+                        <th>Cliente</th>
+                        <th>Confirmação Matriz</th>
                         <th>Valor Total</th>
-                        <th>Data Pag.</th>
-                        <th>Valor Rec.</th>
+                        <th>Data Pagamento.</th>
+                        <th>Valor Rececebimento.</th>
                         @can('edit-financial')
                             <th style='width: 60px' class='text-center'>Edit</th>
                         @endcan
@@ -124,62 +124,60 @@
                 </thead>
                 <tbody>
                     @foreach ($leads as $lead)
-                        <tr>
-                            <td>{{ $lead->name }}</td>
-                            <td>{{ $lead->user->name }}</td>
-                            <td>
-                                @if (isset($lead->financy->payment_confirmation))
+                        @if ($lead->financy->payment_confirmation == 'N')
+                            <tr>
+                                <td>{{ $lead->user->name }}</td>
+                                <td>{{ $lead->name }}</td>
+                                <td>
                                     @if ($lead->financy->payment_confirmation == 'N')
-                                        <small class="badge badge-danger">Não confirmado</small>
+                                            <small class="badge badge-danger">Não confirmado</small>
+                                        @else
+                                            <small class="badge badge-success">Confirmado</small>
+                                        @endif
+                                </td>
+                                <td>
+                                    @if (isset($lead->financy->value_total))
+                                        {{ number_format($lead->financy->value_total, 2, ',', '.') }}
                                     @else
-                                        <small class="badge badge-success">Confirmado</small>
+                                        <small class="badge badge-warning">Aguardando</small>
                                     @endif
-                                @else
-                                    <small class="badge badge-warning">Aguardando</small>
-                                @endif
-                            </td>
-                            <td>
-                                @if (isset($lead->financy->value_total))
-                                    {{ number_format($lead->financy->value_total, 2, ',', '.') }}
-                                @else
-                                    <small class="badge badge-warning">Aguardando</small>
-                                @endif
-                            </td>
-                            <td>
-                                @if (isset($lead->financy->receipt_date))
-                                    {{ $lead->financy->receipt_date->format('d/m/Y') }}
-                                @else
-                                    <small class="badge badge-warning">Aguardando</small>
-                                @endif
-                            </td>
-                            <td>
-                                @if (isset($lead->financy->payment_amount))
-                                    {{ number_format($lead->financy->payment_amount, 2, ',', '.') }}
-                                @else
-                                    <small class="badge badge-warning">Aguardando</small>
-                                @endif
-                            </td>
-                            @can('edit-financial')
-                                <td class='px-1'>
-                                    <a href="{{ route('admin.financial.edit', ['id' => $lead->id]) }}"
-                                        class="btn btn-info btn-xs btn-block">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
                                 </td>
-                            @endcan
-                            @can('delete-financial')
-                                <td class='px-1'>
-                                    <form method="POST" action="{{ route('admin.financial.destroy', ['id' => $lead->id]) }}"
-                                        onsubmit="return(confirmaExcluir())">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                <td>
+                                    @if (isset($lead->financy->receipt_date))
+                                        {{ $lead->financy->receipt_date->format('d/m/Y') }}
+                                    @else
+                                        <small class="badge badge-warning">Aguardando</small>
+                                    @endif
                                 </td>
-                            @endcan
-                        </tr>
+                                <td>
+                                    @if (isset($lead->financy->payment_amount))
+                                        {{ number_format($lead->financy->payment_amount, 2, ',', '.') }}
+                                    @else
+                                        <small class="badge badge-warning">Aguardando</small>
+                                    @endif
+                                </td>
+                                @can('edit-financial')
+                                    <td class='px-1'>
+                                        <a href="{{ route('admin.financial.edit', ['id' => $lead->id]) }}"
+                                            class="btn btn-info btn-xs btn-block">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                @endcan
+                                @can('delete-financial')
+                                    <td class='px-1'>
+                                        <form method="POST" action="{{ route('admin.financial.destroy', ['id' => $lead->id]) }}"
+                                            onsubmit="return(confirmaExcluir())">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-xs btn-block">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                @endcan
+                            </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>

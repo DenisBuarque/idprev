@@ -91,9 +91,9 @@
                             <table class="table table-hover table-striped">
                                 <thead>
                                     <tr>
+                                        <th>Franqueado</th>
                                         <th>Aberto</th>
                                         <th>Código</th>
-                                        <th>Franqueado</th>
                                         <th>Status</th>
                                         @can('edit-ticket')
                                             <th style='width: 60px' class='text-center'></th>
@@ -105,11 +105,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($tickets as $ticket)
+                                    @forelse ($tickets as $ticket)
                                         <tr>
+                                            <td>
+                                                @if (isset($ticket->user->image))
+                                                    <img src="{{ asset('storage/' . $ticket->user->image) }}" alt="Foto"
+                                                        class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                                @else
+                                                    <img src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Foto"
+                                                        class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                                @endif
+                                                {{ $ticket->user->name }}
+                                            </td>
                                             <td>{{ $ticket->created_at->format('d/m/Y H:m:s') }}</td>
                                             <td>{{ $ticket->code }}</td>
-                                            <td>{{ $ticket->user->name }}</td>
                                             <td>
                                                 @foreach ($array as $key => $value)
                                                     @if ($key == $ticket->status)
@@ -144,7 +153,13 @@
                                                 </td>
                                             @endcan
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center">
+                                                <span>Nenhum registro cadastrado</span>
+                                            </td>
+                                        </tr>
+                                        @endforelse
 
                                 </tbody>
                             </table>

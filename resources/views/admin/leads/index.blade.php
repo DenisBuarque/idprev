@@ -6,8 +6,8 @@
     <form method="GET" action="{{ route('admin.leads.index') }}">
         <div style="display: flex; justify-content: space-between;">
             @can('search-lead')
-                <div class="input-group" style="width: 30%">
-                    <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa:"
+                <div class="input-group" style="width: 40%">
+                    <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Dados do cliente"
                         required />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
@@ -54,9 +54,41 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 @can('list-client')
-                    <a href="{{ route('admin.leads.tag', ['tag' => 2]) }}" class="small-box-footer">
+                    @if ($waiting > 0)
+                        <a href="{{ route('admin.leads.tag', ['tag' => 2]) }}" class="small-box-footer">
+                            Listar registros <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    @else
+                        <a class="small-box-footer">
+                            &nbsp;
+                        </a>
+                    @endif
+                @else
+                    <a class="small-box-footer">
+                        &nbsp;
+                    </a>
+                @endcan
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ $unconverted_lead }}</h3>
+                    <p>Leads não convertidos</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-thumbs-down"></i>
+                </div>
+                @can('list-client')
+                    @if($unconverted_lead > 0)
+                    <a href="{{ route('admin.clients.tag', ['tag' => 4]) }}" class="small-box-footer">
                         Listar registros <i class="fas fa-arrow-circle-right"></i>
                     </a>
+                    @else
+                        <a class="small-box-footer">
+                            &nbsp;
+                        </a>
+                    @endif
                 @else
                     <a class="small-box-footer">
                         &nbsp;
@@ -68,36 +100,21 @@
             <div class="small-box bg-success">
                 <div class="inner">
                     <h3>{{ $converted_lead }}</h3>
-                    <p>Leads Convertidos</p>
+                    <p>Clientes Convertidos</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-thumbs-up"></i>
                 </div>
                 @can('list-client')
+                    @if($converted_lead > 0)
                     <a href="{{ route('admin.clients.tag', ['tag' => 3]) }}" class="small-box-footer">
                         Listar registros <i class="fas fa-arrow-circle-right"></i>
                     </a>
-                @else
-                    <a class="small-box-footer">
-                        &nbsp;
-                    </a>
-                @endcan
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>{{ $unconverted_lead }}</h3>
-                    <p>Leads não convertidos</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-thumbs-down"></i>
-                </div>
-                @can('list-client')
-                    <a href="{{ route('admin.clients.tag', ['tag' => 4]) }}" class="small-box-footer">
-                        Listar registros <i class="fas fa-arrow-circle-right"></i>
-                    </a>
+                    @else
+                        <a class="small-box-footer">
+                            &nbsp;
+                        </a>
+                    @endif
                 @else
                     <a class="small-box-footer">
                         &nbsp;
@@ -131,7 +148,7 @@
                 <thead>
                     <tr>
                         <th>Franqueado</th>
-                        <th>Nome</th>
+                        <th>Cliente</th>
                         <th>Telefone</th>
                         <th></th>
                         <th style='width: 160px'>Criado</th>
@@ -148,9 +165,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($leads as $lead)
+                    @forelse ($leads as $lead)
                         <tr>
-                            <td>{{ $lead->user->name }}</td>
+                            <td>
+                                @if (isset($lead->user->image))
+                                    <img src="{{asset('storage/' . $lead->user->image) }}" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @else
+                                    <img src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @endif
+                                {{ $lead->user->name }}
+                            </td>
                             <td>{{ $lead->name }}</td>
                             <td>{{ $lead->phone }}</td>
                             <td>
@@ -202,7 +226,13 @@
                                 </td>
                             @endcan
                         </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="9" class="text-center">
+                            <span>Nenhum registro cadastrado</span>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">

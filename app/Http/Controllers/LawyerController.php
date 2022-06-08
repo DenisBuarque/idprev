@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Lawyer;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class LawyerController extends Controller
 {
@@ -73,6 +74,13 @@ class LawyerController extends Controller
             'oab' => 'required|string|max:20|min:3',
         ])->validate();
 
+        // salva a imagem de existir
+        if($request->hasFile('image') && $request->file('image')->isValid())
+        {
+            $file = $request->image->store('lawyer','public');
+            $data['image'] = $file;
+        }
+
         $lawyer = $this->lawyer->create($data);
         if($lawyer)
         {
@@ -126,6 +134,19 @@ class LawyerController extends Controller
             'name' => 'required|string|min:3|max:100',
             'oab' => 'required|string|max:20|min:3',
         ])->validate();
+
+        // atualiza a imagem
+        if($request->hasFile('image') && $request->file('image')->isValid())
+        {
+            if($record['image'] != null){
+                if(Storage::exists($record['image'])) {
+                    Storage::delete($record['image']);
+                }
+            }
+            
+            $new_file = $request->image->store('lawyer','public');
+            $data['image'] = $new_file;
+        }
 
         if($record->update($data)){
             return redirect('admin/lawyers')->with('success', 'Registro alterado com sucesso!');

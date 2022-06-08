@@ -36,6 +36,7 @@ class User extends Authenticatable
         'complement',
         'email',
         'password',
+        'image',
     ];
 
     /**
@@ -67,6 +68,11 @@ class User extends Authenticatable
     public function feedbackTickets()
     {
         return $this->hasMany(FeedbackTicket::class);
+    }
+
+    public function feedbackLeads()
+    {
+        return $this->hasMany(FeedbackLead::class);
     }
 
     public function tickets(){

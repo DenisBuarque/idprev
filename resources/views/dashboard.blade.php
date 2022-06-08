@@ -24,7 +24,7 @@
                     </a>
                 @else
                     <a class="small-box-footer">
-                        Sem permissão <i class="fas fa-arrow-circle-right"></i>
+                        &nbsp;
                     </a>
                 @endcan
 
@@ -40,12 +40,18 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 @can('list-lead')
+                    @if($waiting > 0)
                     <a href="{{ route('admin.leads.tag', ['tag' => 2]) }}" class="small-box-footer">
                         Listar registros <i class="fas fa-arrow-circle-right"></i>
                     </a>
+                    @else
+                        <a class="small-box-footer">
+                            &nbsp;
+                        </a>
+                    @endif
                 @else
                     <a class="small-box-footer">
-                        Sem permissão <i class="fas fa-arrow-circle-right"></i>
+                        &nbsp;
                     </a>
                 @endcan
             </div>
@@ -60,12 +66,18 @@
                     <i class="fas fa-thumbs-up"></i>
                 </div>
                 @can('list-lead')
+                    @if ($converted_lead > 0)
                     <a href="{{ route('admin.leads.tag', ['tag' => 3]) }}" class="small-box-footer">
                         Listar registros <i class="fas fa-arrow-circle-right"></i>
                     </a>
+                    @else
+                        <a class="small-box-footer">
+                            &nbsp;
+                        </a>
+                    @endif
                 @else
                     <a class="small-box-footer">
-                        Sem permissão <i class="fas fa-arrow-circle-right"></i>
+                        &nbsp;
                     </a>
                 @endcan
             </div>
@@ -80,12 +92,18 @@
                     <i class="fas fa-thumbs-down"></i>
                 </div>
                 @can('list-lead')
+                    @if($unconverted_lead > 0)
                     <a href="{{ route('admin.leads.tag', ['tag' => 4]) }}" class="small-box-footer">
                         Listar registros <i class="fas fa-arrow-circle-right"></i>
                     </a>
+                    @else
+                        <a class="small-box-footer">
+                            &nbsp;
+                        </a>
+                    @endif
                 @else
                     <a class="small-box-footer">
-                        Sem permissão <i class="fas fa-arrow-circle-right"></i>
+                        &nbsp;
                     </a>
                 @endcan
             </div>
@@ -132,7 +150,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($leads as $lead)
+                                    @forelse ($leads as $lead)
                                         <tr>
                                             <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
                                             <td>{{ $lead->name }}</td>
@@ -168,7 +186,13 @@
                                                 </td>
                                             @endcan
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center">
+                                                <span>Nenhum registro cadastrado</span>
+                                            </td>
+                                        </tr>
+                                        @endforelse
                                 </tbody>
                             </table>
                         </div>

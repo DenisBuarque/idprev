@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('lawyers', function (Blueprint $table) {
+        Schema::create('financial_photos', function (Blueprint $table) {
             $table->id();
-            $table->string('name',50);
-            $table->string('oab',20);
-            $table->string('image')->nullable();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger("financial_id");
+            $table->foreign('financial_id')->references("id")->on('financials')->onDelete("cascade");
+            $table->string('image');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lawyers');
+        Schema::dropIfExists('financial_photos');
     }
 };

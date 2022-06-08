@@ -35,21 +35,30 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        
-        $waiting = $this->lead->where('tag','2')->get()->count(); // esperando
-        $converted_lead = $this->lead->where('tag','3')->get()->count();
-        $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-        //$progress_in_order = $this->lead->where('situation','2')->get();
-        $tickets = $this->ticket->where('status','1')->get()->count();
-        $tickets_pendentes = $this->ticket->where('status','3')->get()->count();
-        $originating_customers = $this->lead->where('situation','3')->get()->count(); // clientes precedentes
-        $unfounded_customers = $this->lead->where('situation','4')->get()->count(); // clientes improcedentes
-        $resources = $this->lead->where('situation','5')->get()->count(); //recursos
+        $type_user = auth()->user()->type;
+
+        if($type_user == "F"){
+            $waiting = $this->lead->where('user_id',auth()->user()->id)->where('tag','2')->get()->count(); // esperando
+            $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
+            $tickets = $this->ticket->where('user_id',auth()->user()->id)->where('status','1')->get()->count();
+            $tickets_pendentes = $this->ticket->where('status','3')->get()->count();
+            $originating_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get()->count(); // clientes precedentes
+            $unfounded_customers = $this->lead->where('situation','4')->get()->count(); // clientes improcedentes
+            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get()->count(); //recursos
+        } else {
+            $waiting = $this->lead->where('tag','2')->get()->count(); // esperando
+            $converted_lead = $this->lead->where('tag','3')->get()->count();
+            $unconverted_lead = $this->lead->where('tag','4')->get()->count();
+            $tickets = $this->ticket->where('status','1')->get()->count();
+            $tickets_pendentes = $this->ticket->where('status','3')->get()->count();
+            $originating_customers = $this->lead->where('situation','3')->get()->count(); // clientes precedentes
+            $unfounded_customers = $this->lead->where('situation','4')->get()->count(); // clientes improcedentes
+            $resources = $this->lead->where('situation','5')->get()->count(); //recursos
+        }
 
         $users = $this->user->where('type','F')->get();
         $events = $this->event->all();
-
-        $type_user = auth()->user()->type;
 
         if($type_user == "F"){
             $leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag', [1])->orderBy('id','DESC')->get();

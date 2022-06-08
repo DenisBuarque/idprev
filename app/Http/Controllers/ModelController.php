@@ -7,16 +7,19 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\ModelDoc;
+use App\Models\Action;
 
 class ModelController extends Controller
 {
     private $model;
+    private $action;
 
-    public function __construct(ModelDoc $model)
+    public function __construct(ModelDoc $model, Action $action)
     {
         $this->middleware('auth');
         
         $this->model = $model;
+        $this->action = $action;
     }
     /**
      * Display a listing of the resource.
@@ -25,24 +28,23 @@ class ModelController extends Controller
      */
     public function index(Request $request)
     {
-        $search = "";
-        if(isset($request->search))
-        {
-            $search = $request->search;
-            $query = $this->model;
+        //$search = $request->search;
 
-            $columns = ['title'];
-            foreach($columns as $key => $value):
-                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
-            endforeach;
+        $query = $this->model->query();
 
-            $models = $query->orderBy('id','DESC')->get();
-
-        } else {
-            $models = $this->model->orderBy('id','DESC')->paginate(5);
+        if(isset($request->search)){
+            $query->where('title', 'LIKE', '%' . $request->search . '%');
         }
+
+        if(isset($request->action)){
+            $query->where('action_id',$request->action);
+        }
+
+        $models = $query->orderBy('id','DESC')->paginate(10);
+
+        $actions = $this->action->all();
         
-        return view('admin.document.models.index',['models' => $models, 'search' => $search]);
+        return view('admin.document.models.index',['models' => $models, 'actions' => $actions]);
     }
 
     /**
@@ -68,14 +70,14 @@ class ModelController extends Controller
 
         Validator::make($data, [
             'title' => 'required|string|min:3|max:100',
-            'document' => 'required|max:50000|mimes:pdf,doc,docx',
+            'document' => 'required|mimes:pdf,doc,docx',
         ])->validate();
 
         $data['slug'] = Str::slug($data['title'], '-');
 
         if($request->hasFile('document') && $request->file('document')->isValid())
         {
-            $file = $request->document->store('public/model_docs');
+            $file = $request->document->store('model_docs','public');
             $data['document'] = $file;
         }
 
@@ -99,17 +101,20 @@ class ModelController extends Controller
         //
     }
 
-    public function download($id)
+    public function download($slug)
     {
-        $record = $this->model->find($id);
-
-        if(Storage::exists($record['document'])){
-            return Storage::download($record['document']);
-        } 
-
-        return redirect('admin/document/models')->with('alert', 'Desculpe! Não encontramos o arquivo!');
+        $record = $this->model->where('slug',$slug)->first();
+        if($record){
+            if(Storage::exists($record['document'])){
+                return Storage::download($record['document']);
+            } else {
+                return redirect('admin/document/models')->with('alert', 'Desculpe! Arquivo não encontrado.');
+            }
+        } else {
+            return redirect('admin/document/models')->with('alert', 'Arquivo não existe!');
+        }
     }
-
+ 
     /**
      * Show the form for editing the specified resource.
      *
@@ -152,7 +157,7 @@ class ModelController extends Controller
                 Storage::delete($record['document']);
             } 
 
-            $new_file = $request->document->store('public/model_docs');
+            $new_file = $request->document->store('model_docs','public');
             $data['document'] = $new_file;
         }
 

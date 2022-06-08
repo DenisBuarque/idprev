@@ -5,8 +5,8 @@
 @section('content_header')
     <form method="GET" action="{{ route('admin.clients.term') }}">
         <div style="display: flex; justify-content: start;">
-            <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
+            <div class="input-group" style="width: 40%">
+                <input type="search" name="search" class="form-control" placeholder="Pesquisa"
                     required />
                 <span class="input-group-append">
                     <button type="submit" class="btn btn-info btn-flat">
@@ -30,16 +30,16 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Prazo</th>
-                        <th>Situação</th>
-                        <th>Nome</th>
                         <th>Franqueado</th>
-                        <th></th>
+                        <th>Cliente</th>
+                        <th>Situação</th>
+                        <th>Prazo</th>
+                        <th>Etiqueta</th>
                         <th>Anexos</th>
                         <th>Criado</th>
                         <th>Atualizado</th>
                         @can('edit-term')
-                            <th style='width: 60px' class='text-center'>Comts.</th>
+                            <th style='width: 60px' class='text-center'></th>
                             <th style='width: 60px' class='text-center'>Edit</th>
                         @endcan
                         @can('delete-term')
@@ -48,18 +48,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($leads as $lead)
+                    @forelse ($leads as $lead)
                         <tr>
                             <td>
-                                @php
-                                    $now = Carbon\Carbon::now()->format('Y-m-d');
-                                    if ($lead->term < $now) {
-                                        echo '<small class="badge badge-danger">' . $lead->term->format('d/m/Y') . '</small>';
-                                    } else {
-                                        echo $lead->term->format('d/m/Y');
-                                    }
-                                @endphp
+                                @if (isset($lead->user->image))
+                                    <img src="{{asset('storage/' . $lead->user->image) }}" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @else
+                                    <img src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Foto" class="img-circle mr-2" style="width: 28px; height: 28px;">
+                                @endif
+                                {{ $lead->user->name }}
                             </td>
+                            <td>{{ $lead->name }}</td>
                             <td>
                                 @php
                                     $array_situations = [1 => 'Andamento em ordem', 2 => 'Aguardando cumprimento', 3 => 'Finalizado procedente', 4 => 'Finalizado improcedente', 5 => 'Recursos'];
@@ -70,8 +69,16 @@
                                     }
                                 @endphp
                             </td>
-                            <td>{{ $lead->name }}</td>
-                            <td>{{ $lead->user->name }}</td>
+                            <td>
+                                @php
+                                    $now = Carbon\Carbon::now()->format('Y-m-d');
+                                    if ($lead->term < $now) {
+                                        echo '<small class="badge badge-danger">' . $lead->term->format('d/m/Y') . '</small>';
+                                    } else {
+                                        echo $lead->term->format('d/m/Y');
+                                    }
+                                @endphp
+                            </td>
                             <td>
                                 @php
                                     $array_tags = [1 => 'Novo', 2 => 'Aguardando', 3 => 'Convertido', 4 => 'Não convertido'];
@@ -97,16 +104,8 @@
                                             $anexos += 1;
                                         }
                                     }
-                                    
-                                    if ($anexos > $docs) {
-                                        $falta = $anexos - $docs;
-                                        echo $docs . ' <i class="fas fa-paperclip"></i> falta ' . $falta . ' doc.';
-                                    } else {
-                                        echo '<i class="fas fa-thumbs-up"></i> ' . $docs . ' anexo(s)';
-                                    }
-                                    
+                                    echo $docs. ' de ' . $anexos;
                                 @endphp
-
                             </td>
                             <td>{{ $lead->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $lead->updated_at->format('d/m/Y H:m:s') }}</td>
@@ -132,7 +131,14 @@
                                 </form>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="11" class="text-center">
+                                <span>Nenhum registro cadastro</span>
+                            </td>
+                        </tr>
+                    
+                    @endforelse
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">
