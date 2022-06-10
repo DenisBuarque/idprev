@@ -354,7 +354,18 @@ class LeadController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = $this->lead->find($id);
+        if($data->delete()){
+            /*if($data['image'] != null){
+                if(Storage::exists($data['image'])){
+                    Storage::delete($data['image']);
+                }
+            }*/
+
+            return redirect('admin/users')->with('success', 'Registro excluído com sucesso!');
+        } else {
+            return redirect('admin/users')->with('error', 'Erro ao excluir o registro!');
+        }
     }
 
     // realiza o upload da imagem do produto

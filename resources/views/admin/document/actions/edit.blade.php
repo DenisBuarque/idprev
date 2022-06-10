@@ -4,7 +4,7 @@
 
 @section('content_header')
     <div style="display: flex; justify-content: space-between">
-        <h4>Ação de Documento</h4>
+        <h4>Ação  Previdenciária</h4>
         <a href="{{ route('admin.document.actions.index') }}" class="btn btn-md bg-info">Listar Registros</a>
     </div>
 @stop

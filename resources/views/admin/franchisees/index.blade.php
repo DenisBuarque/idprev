@@ -7,7 +7,7 @@
         <div style="display: flex; justify-content: space-between;">
             @can('search-franchisee')
                 <div class="input-group" style="width: 40%">
-                    <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
+                    <input type="search" name="search" value="{{ $search }}" class="form-control"
                         required />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">

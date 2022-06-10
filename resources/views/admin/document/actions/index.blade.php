@@ -43,7 +43,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Lista de tipos de ações</h3>
+            <h3 class="card-title">Lista de ações previdenciárias</h3>
         </div>
         <div class="card-body table-responsive p-0">
             <table class="table table-striped table-hover">

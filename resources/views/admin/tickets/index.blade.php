@@ -126,13 +126,15 @@
                                                     @endif
                                                 @endforeach
                                             </td>
-                                            @can('edit-ticket')
+                                            @can('comments-ticket')
                                                 <td class='px-1'>
                                                     <a href="{{ route('admin.tickets.response', ['id' => $ticket->id]) }}"
                                                         class="btn btn-xs px-2 border btn-block">
                                                         <i class="fa fa-comments"></i> {{ count($ticket->feedbackTickets) }}
                                                     </a>
                                                 </td>
+                                            @endcan
+                                            @can('edit-ticket')
                                                 <td class='px-1'>
                                                     <a href="{{ route('admin.tickets.edit', ['id' => $ticket->id]) }}"
                                                         class="btn btn-info btn-xs btn-block">

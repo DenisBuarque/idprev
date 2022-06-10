@@ -216,13 +216,11 @@ class FranchiseeController extends Controller
     {
         $data = $this->user->find($id);
         if ($data->delete()) {
-
-            // deleta a imagem da pasta
             if($data['image'] != null){
                 if(Storage::exists($data['image'])){
                     Storage::delete($data['image']);
                 }
-            } 
+            }
             
             return redirect('admin/franchisees')->with('success', 'Registro excluído com sucesso!');
         } else {

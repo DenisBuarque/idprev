@@ -350,14 +350,14 @@
         </div>
     </div>
 
-    <div class="row row-cols-2 my-5">
+    <!-- div class="row row-cols-2 my-5">
         <div class="col">
             <canvas id="myChartLine"></canvas>
         </div>
         <div class="col">
             <canvas id="myChart"></canvas>
         </div>
-    </div>
+    </div -->
 
     <div class="card card-success">
         <div class="card-body">

@@ -265,7 +265,7 @@ return [
             'can'         => 'list-client'
         ],
         [
-            'text'        => 'Clientes em Prazo',
+            'text'        => 'Prazos',
             'url'         => 'admin/clients/term',
             'icon'        => 'fa fa-hourglass-end',
             'can'         => 'list-term',
@@ -308,7 +308,7 @@ return [
             'can'     => 'list-action',
             'submenu' => [
                 [
-                    'text' => 'Tipos de Ação',
+                    'text' => 'Ação Previdenc.',
                     'url'  => 'admin/document/actions',
                 ],
                 [

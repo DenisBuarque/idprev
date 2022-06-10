@@ -3,9 +3,9 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-<form method="GET" action="{{ route('admin.leads.index') }}">
+<form method="GET" action="{{ route('admin.administratives.index') }}">
     <div style="display: flex; justify-content: space-between;">
-        @can('search-lead')
+        @can('search-administrative')
             <div class="input-group" style="width: 40%">
                 <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Dados do cliente"
                     required />
@@ -17,7 +17,7 @@
                 </span>
             </div>
         @endcan
-        @can('create-lead')
+        @can('create-administrative')
             <a href="{{ route('admin.administratives.create') }}" class="btn bg-info">
                 <i class="fas fa-plus"></i> Adicionar Registro
             </a>
@@ -83,7 +83,7 @@
                                 <td>{{ $administrative->fees }}</td>
                                 <td>{{ $administrative->created_at->format('d/m/Y H:m:s') }}</td>
                                 <td>{{ $administrative->updated_at->format('d/m/Y H:m:s') }}</td>
-                                @can('edit-lead')
+                                @can('edit-administrative')
                                     <td class='px-1'>
                                         <a href="{{route('admin.administratives.edit',['id' => $administrative->id])}}"
                                             class="btn btn-info btn-xs btn-block">
@@ -91,7 +91,7 @@
                                         </a>
                                     </td>
                                 @endcan
-                                @can('delete-lead')
+                                @can('delete-administrative')
                                     <td class='px-1'>
                                         <form method="POST" action=""
                                             onsubmit="return(confirmaExcluir())">
