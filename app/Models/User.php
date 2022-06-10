@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->hasMany(Lead::class);
     }
 
+    public function administratives()
+    {
+        return $this->hasMany(Administrative::class);
+    }
+
     public function lawyers()
     {
         return $this->hasMany(lawyer::class);

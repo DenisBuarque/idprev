@@ -123,7 +123,7 @@
                 </thead>
                 <tbody>
                     @foreach ($leads as $lead)
-                        @if ($lead->financy->payment_confirmation == 's')
+                        @if ($lead->financy->payment_confirmation == 'S')
                             <tr>
                                 <td>{{ $lead->user->name }}</td>
                                 <td>{{ $lead->name }}</td>

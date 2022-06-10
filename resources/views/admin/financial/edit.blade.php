@@ -150,9 +150,9 @@
                                                         <small>Confirmação do pagamento pela matriz:</small>
                                                         <select name="payment_confirmation"
                                                             class="form-control @error('payment_confirmation') is-invalid @enderror">
-                                                            <option value="N" @if (old('payment_confirmation') == 'N') selected @endif>
+                                                            <option value="N" @if ($lead->financy->payment_confirmation == "N" or old('payment_confirmation') == 'N') selected @endif>
                                                                 Em analise, aguardando confirmação...</option>
-                                                            <option value="S" @if (old('payment_confirmation') == 'S') selected @endif>
+                                                            <option value="S" @if ($lead->financy->payment_confirmation == "S" or old('payment_confirmation') == 'S') selected @endif>
                                                                 Pagamento confirmado pela matriz, obrigado!</option>
                                                         </select>
                                                     </div>

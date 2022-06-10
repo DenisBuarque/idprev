@@ -342,10 +342,10 @@ return [
             'can'         => 'list-autofindos',
         ],
         [
-            'text'        => 'Obrigações',
-            'url'         => '',
+            'text'        => 'Administrativo',
+            'url'         => '/admin/administrative',
             'icon'        => 'fas fa-fw fa-address-card',
-            'can'         => 'list-obrigations'
+            'can'         => 'list-administrative'
         ],
         [
             'text'        => 'Serviços',

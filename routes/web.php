@@ -16,6 +16,7 @@ use App\Http\Controllers\LawyerController;
 use App\Http\Controllers\WorksheetController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\FinancialController;
+use App\Http\Controllers\AdministrativeController;
 use GuzzleHttp\Middleware;
 
 /*
@@ -169,3 +170,10 @@ Route::post('/admin/financial/store', [FinancialController::class, 'store'])->na
 Route::get('/admin/financial/edit/{id}', [FinancialController::class, 'edit'])->name('admin.financial.edit');
 Route::put('/admin/financial/update/{id}', [FinancialController::class, 'update'])->name('admin.financial.update');
 Route::delete('/admin/financial/delete/{id}', [FinancialController::class, 'destroy'])->name('admin.financial.destroy');
+
+Route::get('/admin/administrative', [AdministrativeController::class, 'index'])->name('admin.administratives.index');
+Route::get('/admin/administrative/create', [AdministrativeController ::class, 'create'])->name('admin.administratives.create');
+Route::post('/admin/administrative/store', [AdministrativeController::class, 'store'])->name('admin.administratives.store');
+Route::get('/admin/administrative/edit/{id}', [AdministrativeController::class, 'edit'])->name('admin.administratives.edit');
+Route::put('/admin/administrative/update/{id}', [AdministrativeController::class, 'update'])->name('admin.administratives.update');
+Route::delete('/admin/administrative/delete/{id}', [AdministrativeController::class, 'destroy'])->name('admin.administratives.destroy');

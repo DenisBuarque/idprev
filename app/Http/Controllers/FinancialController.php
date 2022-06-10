@@ -276,7 +276,12 @@ class FinancialController extends Controller
                 $record->photos()->createMany($images);
             }
 
-            return redirect('admin/financial')->with('success', 'Registro atualizado com sucesso!');
+            if($data['payment_confirmation'] == 'N'){
+                return redirect('admin/financial')->with('success', 'Registro atualizado com sucesso!');
+            } else {
+                return redirect('admin/financial/autofindos')->with('success', 'Registro atualizado com sucesso!');
+            }
+
         } else {
             return redirect('admin/financial')->with('error', 'Erro ao atuliazar o registro!');
         }
