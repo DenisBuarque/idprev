@@ -1,0 +1,72 @@
+db: idprevbanco
+user: idprevuser
+senha: T3V6gu_N1UynjUqB
+
+composer create-project laravel/laravel example-app
+
+cd example-app
+
+composer require jeroennoten/laravel-adminlte
+php artisan adminlte:install
+
+php artisan adminlte:install --only=main_views
+
+composer require laravel/ui
+
+
+
+git clone https://github.com/DenisBuarque/idprev.git
+
+mv public_html public_html_backup
+ls -la
+ln -s idprev/public public_html
+ls -la
+
+cd idprev
+
+composer
+wget https://getcomposer.org/installer
+wget https://getcomposer.org/download/latest-stable/composer.phar
+ls -la
+php installer
+chmod +x composer.phar
+ls -la
+rm -rf installer
+ls -la
+php composer.phar installer
+ls -la
+
+mv .env.exemple .env
+ls -la
+nano .env
+
+php artisan key:generate
+php artisan storage:link
+
+// caso precise somente em algums sevidores
+find * -type d -exec chmod 755 {} \;
+find * -type f -exec chmod 644 {} \;
+
+cd . ./
+chmod 755 idprev
+
+
+composer config platform-check false
+php artisan migrate
+
+//comando para limpar cache laravel
+php artisan clear-compiled
+php artisan auth:clear-resets
+php artisan cache:clear
+php artisan config:clear
+php artisan event:clear
+php artisan optimize:clear
+php artisan route:clear
+php artisan view:clear
+
+Acesso seu_projeto/vendor/composer/platform_ckeck.php
+
+
+// Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.0.2".
+composer install --ignore-platform-reqs
+composer update --ignore-platform-reqs
