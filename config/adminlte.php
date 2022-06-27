@@ -256,13 +256,13 @@ return [
             'text'        => 'Leads',
             'url'         => 'admin/leads',
             'icon'        => 'fa fa-check',
-            'can'         => 'list-lead'
+            'can'         => 'list-lead',
         ],
         [
             'text'        => 'Clientes',
             'url'         => 'admin/clients',
             'icon'        => 'fas fa-fw fa-users',
-            'can'         => 'list-client'
+            'can'         => 'list-client',
         ],
         [
             'text'        => 'Prazos',

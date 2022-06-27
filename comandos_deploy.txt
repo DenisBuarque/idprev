@@ -52,6 +52,8 @@ chmod 755 idprev
 
 
 composer config platform-check false
+composer check-platform-reqs
+
 php artisan migrate
 
 //comando para limpar cache laravel
@@ -70,3 +72,14 @@ Acesso seu_projeto/vendor/composer/platform_ckeck.php
 // Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.0.2".
 composer install --ignore-platform-reqs
 composer update --ignore-platform-reqs
+
+composer dump-autoload
+
+
+
+composer install --optimize-autoloader --no-dev
+
+php artisan config:cache
+
+php artisan route:cache
+

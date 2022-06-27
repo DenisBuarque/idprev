@@ -50,12 +50,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 Route::post('/dashboard/create', [DashboardController::class, 'store'])->middleware(['auth:sanctum', 'verified'])->name('dashboard.store');
 Route::post('/dashboard/feedback', [DashboardController::class, 'feedback'])->middleware(['auth:sanctum', 'verified'])->name('dashboard.feedback');
 
-/*Route::group(['middleware' => 'advisor'], function () {
-    Route::get('/franqueado/logout',[HomeController::class, 'logout'])->name('logout.franchisee');
-    Route::get('/franqueado', [HomeController::class, 'franchisee'])->name('site.franchisee');
-    Route::get('/cliente/{id}', [HomeController::class, 'detail'])->name('franchisee.client');
-});*/
-
 Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
 Route::get('/admin/user/create', [UserController::class, 'create'])->name('admin.users.create');
 Route::post('/admin/user/store', [UserController::class, 'store'])->name('admin.users.store');

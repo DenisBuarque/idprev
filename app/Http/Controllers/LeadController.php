@@ -7,7 +7,7 @@ use App\Models\Lead;
 use App\Models\ClientPhotos;
 use App\Models\User;
 use App\Models\Action;
-use App\models\ModelDoc;
+use App\Models\ModelDoc;
 use App\Models\FeedbackLead;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Storage;
 
 class LeadController extends Controller
 {
-    private $lead;
     private $user;
+    private $lead;
     private $action;
     private $feedback;
 
