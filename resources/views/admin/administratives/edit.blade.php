@@ -221,7 +221,7 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group m-0">
-                            <small>Concessão do beneficio: *</small>
+                            <small>Sessação do beneficio: *</small>
                             <input type="date" name="concessao_date" id="concessao_date" value="{{ $administrative->concessao_date->format("Y-m-d") ?? old('concessao_date') }}" class="form-control @error('concessao_date') is-invalid @enderror"
                                 maxlength="2" />
                                 @error('concessao_date')

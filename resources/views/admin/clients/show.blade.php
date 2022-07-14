@@ -41,11 +41,12 @@
                         <div class="card-body box-profile">
                             <div class="text-center">
                                 @if (isset($lead->user->image))
-                                    <img class="profile-user-img img-fluid img-circle"
-                                        src="{{ asset('storage/' . $lead->user->image) }}" alt="Franqueado">
+                                    <img class="profile-user-img img-fluid img-circle" src="{{ asset('storage/' . $lead->user->image) }}" alt="Franqueado">
+                                @else
+                                    <img class="profile-user-img img-fluid img-circle" src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Franqueado">
                                 @endif
                             </div>
-                            <h3 class="profile-username text-center">{{ $lead->name }}</h3>
+                            <h3 class="profile-username text-center">{{ $lead->user->name }}</h3>
                             <p class="text-muted text-center">Franqueado</p>
 
                             <ul class="list-group list-group-unbordered mb-3">
@@ -53,13 +54,13 @@
                                     <b>Comentários lead</b> <a class="float-right">{{ count($feedbackLeads) }}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Advogados</b> <a
-                                        class="float-right">{{ count($lead->user->lawyers) }}</a>
+                                    <b>Advogado(s)</b> <a
+                                        class="float-right">{{ count($lead->lawyers) }}</a>
                                 </li>
                             </ul>
 
                             <ul class="users-list">
-                                @foreach ($lead->user->lawyers as $lawyer)
+                                @foreach ($lead->lawyers as $lawyer)
                                 <li>
                                     @if (isset($lawyer->image))
                                         <img src="{{asset('storage/' . $lawyer->image) }}" alt="Foto">
@@ -106,12 +107,6 @@
                                 Nº {{ $lead->process }}<br />
                                 Tribunal: {{ $lead->court }}<br />
                                 Vara: {{ $lead->stick }}<br />
-
-                                @if ($lead->situation == 2)
-                                    Prazo: {{ $lead->term->format('d/m/Y') }}<br />
-                                    Responsável: {{ $lead->responsible }}<br />
-                                @endif
-
                                 @isset($lead->date_fulfilled)
                                     Data Cumprimento: {{ $lead->date_fulfilled->format('d/m/Y') }}<br />
                                 @endisset
@@ -141,7 +136,7 @@
                                 @foreach ($models as $model)
                                     @if ($model->action_id == $lead->action)
                                         <li>
-                                            <a href="{{ Storage::url($model->document) }}" target="_blank"
+                                            <a href="" target="blank"
                                                 title="Clique para baixar o documento" class="btn-link text-secondary">
                                                 {{ $model->title }}
                                             </a>
@@ -154,9 +149,9 @@
                             <ul class="list-unstyled">
                                 @foreach ($lead->photos as $key => $photo)
                                     <li>
-                                        <a href="{{ Storage::url($photo->image) }}" target="_blank"
+                                        <a href="{{ Storage::url($photo->image) }}" target="blank"
                                             class="btn-link text-secondary">
-                                            {{ $key + 1 }} documento anexado<br />
+                                            {{ $photo->image }}<br />
                                         </a>
                                     </li>
                                 @endforeach

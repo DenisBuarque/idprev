@@ -86,7 +86,7 @@ class WorksheetController extends Controller
 
         if($request->hasFile('arquivo') && $request->file('arquivo')->isValid())
         {
-            $worksheet = $request->arquivo->store('public/worksheets');
+            $worksheet = $request->arquivo->store('worksheets','public');
             $data['arquivo'] = $worksheet;
         }
 
@@ -147,11 +147,11 @@ class WorksheetController extends Controller
 
         if($request->hasFile('arquivo') && $request->file('arquivo')->isValid())
         {
-            if(Storage::exists($record['arquivo'])){
-                Storage::delete($record['arquivo']);
+            if(Storage::disk('public')->exists($record['arquivo'])){
+                Storage::disk('public')->delete($record['arquivo']);
             } 
 
-            $new_worksheet = $request->arquivo->store('public/worksheets');
+            $new_worksheet = $request->arquivo->store('worksheets','public');
             $data['arquivo'] = $new_worksheet;
         }
 
@@ -174,8 +174,8 @@ class WorksheetController extends Controller
         
         if($data->delete())
         {
-            if(Storage::exists($data['arquivo'])){
-                Storage::delete($data['arquivo']);
+            if(Storage::disk('public')->exists($data['arquivo'])){
+                Storage::disk('public')->delete($data['arquivo']);
             } 
             return redirect('admin/worksheets')->with('success', 'Registro excluído com sucesso!');
         } else {

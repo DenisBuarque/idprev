@@ -12,7 +12,7 @@
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success mb-2" role="alert" style="max-width: 700px; margin: auto;">
+        <div class="alert alert-success mb-2" role="alert" style="max-width: 800px; margin: auto;">
             {{ session('success') }}
         </div>
     @endif
@@ -20,7 +20,7 @@
     <form method="POST" action="{{ route('admin.services.update', ['id' => $service->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        <div class="card card-info" style="max-width: 700px; margin: auto">
+        <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
                 <h3 class="card-title">Formulário edição de serviço:</h3>
             </div>

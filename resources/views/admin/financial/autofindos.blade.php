@@ -7,7 +7,7 @@
         <div style="display: flex; justify-content: start;">
             @can('search-financial')
                 <div class="input-group" style="width: 40%">
-                    <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
+                    <input type="search" name="search" class="form-control" placeholder="Pesquisa."
                         required />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
@@ -109,10 +109,10 @@
                     <tr>
                         <th>Franqueado</th>
                         <th>Cliente</th>
-                        <th>Confirmação Matriz</th>
-                        <th>Valor Total</th>
-                        <th>Data Pagamento.</th>
-                        <th>Valor Rececebimento.</th>
+                        <th>Valor causa</th>
+                        <th>Pagamento</th>
+                        <th>Recebido</th>
+                        <th>Confirmação</th>
                         @can('edit-financial')
                             <th style='width: 60px' class='text-center'>Edit</th>
                         @endcan
@@ -122,67 +122,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($leads as $lead)
-                        @if ($lead->financy->payment_confirmation == 'S')
-                            <tr>
-                                <td>{{ $lead->user->name }}</td>
-                                <td>{{ $lead->name }}</td>
-                                <td>
-                                    @if ($lead->financy->payment_confirmation == 'N')
-                                            <small class="badge badge-danger">Não confirmado</small>
-                                        @else
-                                            <small class="badge badge-success">Confirmado</small>
-                                        @endif
+                    @foreach ($financials as $financial)
+                        <tr>
+                            <td>{{ $financial->user->name }}</td>
+                            <td>{{ $financial->lead->name }}</td>
+                            <td>{{ number_format($financial->value_total, 2, ',', '.') }}</td>
+                            <td>{{  \Carbon\Carbon::parse($financial->receipt_date)->format('d/m/Y') }}</td>
+                            <td>{{ number_format($financial->payment_amount, 2, ',', '.') }}</td>
+                            <td>{{  \Carbon\Carbon::parse($financial->confirmation_date)->format('d/m/Y') }}</td>
+                            @can('edit-financial')
+                                <td class='px-1'>
+                                    <a href="{{ route('admin.financial.edit', ['id' => $financial->lead_id]) }}"
+                                        class="btn btn-info btn-xs btn-block">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
                                 </td>
-                                <td>
-                                    @if (isset($lead->financy->value_total))
-                                        {{ number_format($lead->financy->value_total, 2, ',', '.') }}
-                                    @else
-                                        <small class="badge badge-warning">Aguardando</small>
-                                    @endif
+                            @endcan
+                            @can('delete-financial')
+                                <td class='px-1'>
+                                    <form method="POST" action="{{ route('admin.financial.destroy', ['id' => $financial->id]) }}"
+                                        onsubmit="return(confirmaExcluir())">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-xs btn-block">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
-                                <td>
-                                    @if (isset($lead->financy->receipt_date))
-                                        {{ $lead->financy->receipt_date->format('d/m/Y') }}
-                                    @else
-                                        <small class="badge badge-warning">Aguardando</small>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if (isset($lead->financy->payment_amount))
-                                        {{ number_format($lead->financy->payment_amount, 2, ',', '.') }}
-                                    @else
-                                        <small class="badge badge-warning">Aguardando</small>
-                                    @endif
-                                </td>
-                                @can('edit-financial')
-                                    <td class='px-1'>
-                                        <a href="{{ route('admin.financial.edit', ['id' => $lead->id]) }}"
-                                            class="btn btn-info btn-xs btn-block">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    </td>
-                                @endcan
-                                @can('delete-financial')
-                                    <td class='px-1'>
-                                        <form method="POST" action="{{ route('admin.financial.destroy', ['id' => $lead->id]) }}"
-                                            onsubmit="return(confirmaExcluir())">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-xs btn-block">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                @endcan
-                            </tr>
-                        @endif
+                            @endcan
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">
-                @if (!$search && $leads)
-                    {{ $leads->links() }}
+                @if ($financials)
+                    {{ $financials->links() }}
                 @endif
             </div>
         </div>

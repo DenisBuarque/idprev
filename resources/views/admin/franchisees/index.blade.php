@@ -65,7 +65,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($users as $user)
+                    @forelse ($users as $user)
                         <tr>
                             <td>
                                 @if (isset($user->image))
@@ -102,7 +102,13 @@
                                 </td>
                             @endcan
                         </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="8" class="text-center p-3">
+                            <span>Nenhum registro encontrado.</span>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">

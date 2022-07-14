@@ -4,17 +4,28 @@
 
 @section('content_header')
     <form method="GET" action="{{ route('admin.leads.index') }}">
+        
         <div style="display: flex; justify-content: space-between;">
-            <div class="input-group" style="width: 30%">
-                <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa:"
-                    required />
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">
-                        <i class="fa fa-search mr-"></i>
-                        Buscar
-                    </button>
-                </span>
-            </div>
+            @can('search-lead')
+                <div class="input-group" style="width: 40%">
+                    @can('list-user')
+                        <select name="franchisee" class="form-control mr-1">
+                            <option></option>
+                            @foreach($franchisees as $franchisee)
+                                <option value="{{ $franchisee->id }}">{{ $franchisee->name }}</option>
+                            @endforeach
+                        </select>
+                    @endcan
+                    <input type="search" name="search" class="form-control" placeholder="Cliente" />
+                    <span class="input-group-append">
+                        <button type="submit" class="btn btn-info btn-flat">
+                            <i class="fa fa-search mr-"></i>
+                            Buscar
+                        </button>
+                    </span>
+                </div>
+            @endcan
+
             <a href="{{ route('admin.leads.create') }}" class="btn bg-info">
                 <i class="fas fa-plus"></i> Adicionar Registro
             </a>
@@ -64,9 +75,15 @@
                     <i class="fas fa-thumbs-up"></i>
                 </div>
                 @can('list-client')
+                    @if($converted_lead > 0)
                     <a href="{{ route('admin.clients.tag', ['tag' => 3]) }}" class="small-box-footer">
                         Listar registros <i class="fas fa-arrow-circle-right"></i>
                     </a>
+                    @else
+                        <a class="small-box-footer">
+                            &nbsp;
+                        </a>
+                    @endif
                 @else
                     <a class="small-box-footer">
                         &nbsp;
@@ -84,9 +101,15 @@
                     <i class="fas fa-thumbs-down"></i>
                 </div>
                 @can('list-client')
-                    <a href="{{ route('admin.clients.tag', ['tag' => 4]) }}" class="small-box-footer">
-                        Listar registros <i class="fas fa-arrow-circle-right"></i>
-                    </a>
+                    @if($unconverted_lead > 0)
+                        <a href="{{ route('admin.clients.tag', ['tag' => 4]) }}" class="small-box-footer">
+                            Listar registros <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    @else
+                        <a class="small-box-footer">
+                            &nbsp;
+                        </a>
+                    @endif
                 @else
                     <a class="small-box-footer">
                         &nbsp;
@@ -148,7 +171,12 @@
                                 @endif
                                 {{ $lead->user->name }}
                             </td>
-                            <td>{{ $lead->name }}</td>
+                            <td>
+                                <spna>{{ $lead->name }}</span><br />
+                                @isset($lead->address)
+                                    <small>{{ $lead->address }}, nº {{ $lead->number }}, {{ $lead->district }}, {{ $lead->city }}, {{ $lead->state }}</small>
+                                @endisset
+                            </td>
                             <td>{{ $lead->phone }}</td>
                             <td>
                                 @php

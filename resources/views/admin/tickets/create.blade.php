@@ -32,7 +32,7 @@
                     <div class="col-md-12">
 
                         <p>Estamos a sua disposição para melhor lhe atender, descreva sua dúvida, elogio ou reclamação que
-                            em breve responderemos seu ticket de contato.</p>
+                            em breve responderemos seu ticket de atendimento.</p>
 
                         <div class="form-group m-0">
                             <textarea name="description" placeholder="Digite aqui a descrição do seu comentário."

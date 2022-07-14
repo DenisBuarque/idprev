@@ -43,8 +43,7 @@
                         <div class="form-group m-0">
                             <small>Telefones: *</small>
                             <input type="text" name="phone" value="{{ old('phone') }}"
-                                class="form-control @error('phone') is-invalid @enderror" maxlength="50"
-                                placeholder="Ex: 82 99925-8977, 98854-7889 ..." />
+                                class="form-control @error('phone') is-invalid @enderror" maxlength="50" />
                             @error('phone')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
@@ -79,7 +78,7 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Número: *</small>
                             <input type="text" name="number" value="{{ old('number') }}"
                                 class="form-control @error('number') is-invalid @enderror" placeholder="nº" maxlength="5" />
@@ -89,7 +88,7 @@
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Bairro: *</small>
                             <input type="text" name="district" id="district" value="{{ old('district') }}"
                                 class="form-control @error('district') is-invalid @enderror" maxlength="50" />
@@ -99,7 +98,7 @@
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Cidade: *</small>
                             <input type="text" name="city" id="city" value="{{ old('city') }}"
                                 class="form-control @error('city') is-invalid @enderror" maxlength="50" />
@@ -109,7 +108,7 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Estado: *</small>
                             <input type="text" name="state" id="state" value="{{ old('state') }}"
                                 class="form-control @error('state') is-invalid @enderror" maxlength="2" />
@@ -118,20 +117,13 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Franqueado: *</small>
-                            <select name="user_id" class="form-control @error('user_id') is-invalid @enderror">
-                                <option value="">Selecione um franqueado</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('user_id')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-info my-2" style="max-width: 800px; margin: auto">
+            <div class="card-body">
+                <div class="row">        
                     <div class="col-sm-4">
                         <div class="form-group m-0">
                             <small>Etiqueta: *</small>
@@ -166,26 +158,29 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group m-0">
-                            <small>Tipo de Ação:</small>
-                            <select name="action" class="form-control" onchange="showDocuments(this.value)">
-                                <option value="">Selecione um tipo</option>
+                            <small>Tipo de Ação: *</small>
+                            <select name="action" class="form-control @error('action') is-invalid @enderror" onchange="showDocuments(this.value)">
+                                <option value="">Selecione</option>
                                 @foreach ($actions as $action)
                                     <option value="{{ $action->id }}"
-                                        @if (old('action') == $action->is) selected @endif>{{ $action->name }}</option>
+                                        @if (old('action') == $action->id) selected @endif>{{ $action->name }}</option>
                                 @endforeach
                             </select>
+                            @error('action')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <div class="form-group m-0">
                             <small>Processo Nº:</small>
                             <input type="text" name="process" id="process" value="{{ old('process') }}"
                                 class="form-control" maxlength="30" />
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <div class="form-group m-0">
-                            <small>Financeiro:</small>
+                            <small>Valor da causa:</small>
                             <input type="text" name="financial" id="financial" onkeyup="moeda(this);"
                                 value="{{ old('financial') }}" class="form-control" maxlength="13"
                                 placeholder="0,00" />
@@ -199,43 +194,70 @@
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <small>Vara:</small>
                             <input type="text" name="stick" id="stick" value="{{ old('stick') }}" class="form-control"
                                 maxlength="50" />
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <small>Prazo:</small>
-                            <input type="date" name="term" id="term" value="{{ old('term') }}"
-                                class="form-control @error('phone') is-invalid @enderror" />
-                        </div>
-                        @error('term')
-                            <div class="text-red">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <small>Anexo de documentos do cliente:</small>
-                            <br />
-                            <input type="file" name="photos[]" multiple />
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <div id="todo-list"></div>
-                    </div>
-
                     <div class="col-sm-12">
                         <div class="form-group">
                             <small>Comentários:</small>
                             <textarea name="comments" class="form-control">{{ old('comments') }}</textarea>
                         </div>
                     </div>
-
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <input type="checkbox" name="confirmed" value="true" /> Lembre-me de entrar em contato novamente.
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="card card-info" style="max-width: 800px; margin: auto">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group m-0">
+                            <small>Franqueados: *</small>
+                            <select name="user_id" onchange="showLawyers(this.value)" class="form-control @error('user_id') is-invalid @enderror">
+                                <option value="">Selecione...</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('user_id')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="list-lawyers"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-info my-2" style="max-width: 800px; margin: auto">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <span>Adicione como anexo todos do modelos do documentos solicitados:</span>
+                            <br />
+                            <input type="file" name="photos[]" multiple />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="todo-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-info" style="max-width: 800px; margin: auto">
+
             <div class="card-footer">
                 <a href="{{ route('admin.clients.index') }}" type="submit" class="btn btn-default">Cancelar</a>
                 <button id="button" type="submit" onClick="ocultarExibir()" class="btn btn-md btn-info float-right">
@@ -288,7 +310,28 @@
                     document.getElementById("todo-list").innerHTML = xmlhttp.responseText;
                 }
             }
-            xmlhttp.open("GET", "/admin/lead/documents/" + id, true);
+            xmlhttp.open("GET", "/admin/client/documents/" + id, true);
+            xmlhttp.send();
+        }
+
+        function showLawyers(id) 
+        {
+            if (id == "") {
+                document.getElementById("list-lawyers").innerHTML = "";
+                return;
+            }
+            if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else { // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    document.getElementById("list-lawyers").innerHTML = xmlhttp.responseText;
+                }
+            }
+            xmlhttp.open("GET", "/admin/client/lawyers/" + id, true);
             xmlhttp.send();
         }
 

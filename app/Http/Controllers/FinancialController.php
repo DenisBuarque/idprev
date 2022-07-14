@@ -37,16 +37,18 @@ class FinancialController extends Controller
         $type_user = auth()->user()->type;
 
         if($type_user == "F"){
-            $total = $this->financial->where('user_id',auth()->user()->id)->sum('value_total');
-            $received = $this->financial->where('user_id',auth()->user()->id)->where('payment_confirmation','=','S')->sum('payment_amount');
-            $unreceived = $this->financial->where('user_id',auth()->user()->id)->where('payment_confirmation','=','N')->sum('payment_amount');
-            $fees = $this->financial->where('user_id',auth()->user()->id)->where('payment_confirmation','=','N')->sum('fees');
+            $total = $this->financial->where('confirmation','=','N')->where('user_id',auth()->user()->id)->sum('value_total');
+            $received = $this->financial->where('user_id',auth()->user()->id)->where('confirmation','=','S')->sum('payment_amount');
+            $fees = $this->financial->where('user_id',auth()->user()->id)->where('confirmation','=','S')->where('fees_received','S')->sum('fees');
+            $unreceived = $this->financial->where('user_id',auth()->user()->id)->where('confirmation','=','N')->sum('fees');
         } else {
-            $total = $this->financial->sum('value_total');
-            $received = $this->financial->where('payment_confirmation','=','S')->sum('payment_amount');
-            $unreceived = $this->financial->where('payment_confirmation','=','N')->sum('payment_amount');
-            $fees = $this->financial->where('payment_confirmation','=','N')->sum('fees');
+            $total = $this->financial->where('confirmation','=','N')->sum('value_total');
+            $received = $this->financial->where('confirmation','=','S')->sum('payment_amount');
+            $fees = $this->financial->where('confirmation','=','S')->where('fees_received','S')->sum('fees');
+            $unreceived = $this->financial->where('confirmation','=','N')->sum('fees');
         }
+
+        $financials = $this->financial->all();
 
         $search = "";
         if (isset($request->search)) 
@@ -79,7 +81,8 @@ class FinancialController extends Controller
             'total' => $total, 
             'received' => $received,
             'unreceived' => $unreceived,
-            'fees' => $fees
+            'fees' => $fees,
+            'financials' => $financials
         ]);
     }
 
@@ -88,18 +91,17 @@ class FinancialController extends Controller
         $type_user = auth()->user()->type;
 
         if($type_user == "F"){
-            $total = $this->financial->where('user_id',auth()->user()->id)->sum('value_total');
-            $received = $this->financial->where('user_id',auth()->user()->id)->where('payment_confirmation','=','S')->sum('payment_amount');
-            $unreceived = $this->financial->where('user_id',auth()->user()->id)->where('payment_confirmation','=','N')->sum('payment_amount');
-            $fees = $this->financial->where('user_id',auth()->user()->id)->where('payment_confirmation','=','N')->sum('fees');
+            $total = $this->financial->where('confirmation','=','N')->where('user_id',auth()->user()->id)->sum('value_total');
+            $received = $this->financial->where('user_id',auth()->user()->id)->where('confirmation','=','S')->sum('payment_amount');
+            $fees = $this->financial->where('user_id',auth()->user()->id)->where('confirmation','=','S')->where('fees_received','S')->sum('fees');
+            $unreceived = $this->financial->where('user_id',auth()->user()->id)->where('confirmation','=','N')->sum('fees');
         } else {
-            $total = $this->financial->sum('value_total');
-            $received = $this->financial->where('payment_confirmation','=','S')->sum('payment_amount');
-            $unreceived = $this->financial->where('payment_confirmation','=','N')->sum('payment_amount');
-            $fees = $this->financial->where('payment_confirmation','=','N')->sum('fees');
+            $total = $this->financial->where('confirmation','=','N')->sum('value_total');
+            $received = $this->financial->where('confirmation','=','S')->sum('payment_amount');
+            $fees = $this->financial->where('confirmation','=','S')->where('fees_received','S')->sum('fees');
+            $unreceived = $this->financial->where('confirmation','=','N')->sum('fees');
         }
 
-        $search = "";
         if (isset($request->search)) 
         {
             $search = $request->search;
@@ -117,16 +119,16 @@ class FinancialController extends Controller
             }
             
         } else {
+
             if($type_user == "F"){
-                $leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('situation',[3])->orderBy('id', 'DESC')->paginate(10);
+                $financials = $this->financial->where('user_id',auth()->user()->id)->orderBy('id', 'DESC')->paginate(10);
             } else {
-                $leads = $this->lead->whereIn('situation',[3])->orderBy('id', 'DESC')->paginate(10);
+                $financials = $this->financial->orderBy('id', 'DESC')->paginate(10);
             }
         }
 
         return view('admin.financial.autofindos', [
-            'leads' => $leads, 
-            'search' => $search, 
+            'financials' => $financials,
             'total' => $total, 
             'received' => $received,
             'unreceived' => $unreceived,
@@ -139,9 +141,15 @@ class FinancialController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        return view('admin.financial.create');
+        $actions = $this->action->all();
+        $lead = $this->lead->find($id);
+        //$user = $this->lead->user();
+        return view('admin.financial.create',[
+            'actions' => $actions,
+            'lead' => $lead
+        ]);
     }
 
     /**
@@ -159,22 +167,16 @@ class FinancialController extends Controller
             'receipt_date' => 'required|date',
             'bank' => 'required|string',
             'value_total' => 'required|string',
-            //'photos' => 'sometimes|required|max:50000|mimes:jpg,jpeg,gif,png',
-            /*'value_client' => 'required|string',
+            'value_client' => 'required|string',
             'fees' => 'required|string',
-            'fees_received' => 'required|string',
-            'payday' => 'required|date',
-            'payment_amount' => 'required|string',
-            'payment_bank' => 'required|string',
-            'confirmation_date' => 'required|date',
-            'people' => 'required|string',
-            'contact' => 'required|string',
-            'payment_confirmation' => 'required|string'*/
+            'fees_received' => 'required|string'
+            //'photos' => 'sometimes|required|max:50000|mimes:jpg,jpeg,gif,png',
         ])->validate();
 
         $data['value_total'] = str_replace(['.', ','], ['', '.'], $request->value_total);
         $data['value_client'] = str_replace(['.', ','], ['', '.'], $request->value_client);
         $data['fees'] = str_replace(['.', ','], ['', '.'], $request->fees);
+
         if(isset($data['payment_amount'])){
             $data['payment_amount'] = str_replace(['.',','], ['','.'], $request->payment_amount);
         } else {
@@ -245,17 +247,10 @@ class FinancialController extends Controller
             'receipt_date' => 'required|date',
             'bank' => 'required|string',
             'value_total' => 'required|string',
-            //'photos' => 'sometimes|required|mimes:jpg,jpeg,gif,png',
-            /*'value_client' => 'required|string',
+            'value_client' => 'required|string',
             'fees' => 'required|string',
-            'fees_received' => 'required|string',
-            'payday' => 'required|date',
-            'payment_amount' => 'required|string',
-            'payment_bank' => 'required|string',
-            'confirmation_date' => 'required|date',
-            'people' => 'required|string',
-            'contact' => 'required|string',
-            'payment_confirmation' => 'required|string'*/
+            'fees_received' => 'required|string'
+            //'photos' => 'sometimes|required|mimes:jpg,jpeg,gif,png',
         ])->validate();
 
         $data['value_total'] = str_replace(['.',','], ['','.'], $request->value_total);
@@ -276,10 +271,10 @@ class FinancialController extends Controller
                 $record->photos()->createMany($images);
             }
 
-            if($data['payment_confirmation'] == 'N'){
+            if($data['confirmation'] == 'N'){
                 return redirect('admin/financial')->with('success', 'Registro atualizado com sucesso!');
             } else {
-                return redirect('admin/financial/autofindos')->with('success', 'Registro atualizado com sucesso!');
+                return redirect('admin/financial')->with('success', 'Registro atualizado com sucesso!');
             }
 
         } else {
@@ -295,7 +290,7 @@ class FinancialController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return redirect('admin/financial')->with('alert', 'Por segurança não estamos excluindo esse registro!');
     }
 
     // realiza o upload da imagem do produto

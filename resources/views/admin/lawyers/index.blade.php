@@ -6,9 +6,14 @@
     <form method="GET" action="{{ route('admin.lawyers.index') }}">
         <div style="display: flex; justify-content: space-between;">
             @can('search-lawyer')
-                <div class="input-group" style="width: 30%">
-                    <input type="search" name="search" value="{{ $search }}" class="form-control"
-                        placeholder="Nome advogado ou OAB" required />
+                <div class="input-group" style="width: 40%">
+                    <select name="franchisee" class="form-control mr-1">
+                        <option></option>
+                        @foreach($franchisees as $franchisee)
+                            <option value="{{ $franchisee->id }}">{{ $franchisee->name }}</option>
+                        @endforeach
+                    </select>
+                    <input type="search" name="search" class="form-control" />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
                             <i class="fa fa-search mr-1"></i>
@@ -44,7 +49,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Lista de advogados relacionado aos franqueado:</h3>
+            <h3 class="card-title">Lista de advogados relacionado aos franqueados:</h3>
         </div>
         <div class="card-body table-responsive p-0">
             <table class="table table-striped table-hover">
@@ -110,7 +115,7 @@
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">
-                @if (!$search && $lawyers)
+                @if ($lawyers)
                     {{ $lawyers->links() }}
                 @endif
             </div>

@@ -43,7 +43,7 @@ class FileController extends Controller
             $files = $this->file->orderBy('id','DESC')->paginate(5);
         }
         
-        return view('admin.training.files.index',['files' => $files, 'search' => $search]);
+        return view('admin.files.index',['files' => $files, 'search' => $search]);
     }
 
     /**
@@ -53,7 +53,7 @@ class FileController extends Controller
      */
     public function create()
     {
-        return view('admin.training.files.create');
+        return view('admin.files.create');
     }
 
     /**
@@ -82,9 +82,9 @@ class FileController extends Controller
         $material = $this->file->create($data);
         if($material)
         {
-            return redirect('admin/training/files')->with('success', 'Registro inserido com sucesso!');
+            return redirect('admin/file/create')->with('success', 'Registro inserido com sucesso!');
         } else {
-            return redirect('admin/training/file/create')->with('error', 'Erro ao inserir o registro!');
+            return redirect('admin/file/create')->with('error', 'Erro ao inserir o registro!');
         }
     }
 
@@ -103,11 +103,11 @@ class FileController extends Controller
     {
         $record = $this->file->find($id);
 
-        if(Storage::exists($record['arquivo'])){
-            return Storage::download($record['arquivo']);
+        if(Storage::disk('public')->exists($record['arquivo'])){
+            return Storage::disk('public')->download($record['arquivo']);
         } 
 
-        return redirect('admin/training/files')->with('alert', 'Desculpe! Não encontramos o arquivo!');
+        return redirect('admin/files')->with('alert', 'Desculpe! Não encontramos o arquivo!');
     }
 
     /**
@@ -120,9 +120,9 @@ class FileController extends Controller
     {
         $file = $this->file->find($id);
         if($file){
-            return view('admin.training.files.edit',['file' => $file]);
+            return view('admin.files.edit',['file' => $file]);
         } else {
-            return redirect('admin/training/files')->with('alert', 'Desculpe! Não encontramos o registro!');
+            return redirect('admin/files')->with('alert', 'Desculpe! Não encontramos o registro!');
         }
     }
 
@@ -147,8 +147,8 @@ class FileController extends Controller
 
         if($request->hasFile('arquivo') && $request->file('arquivo')->isValid())
         {
-            if(Storage::exists($record['arquivo'])){
-                Storage::delete($record['arquivo']);
+            if(Storage::disk('public')->exists($record['arquivo'])){
+                Storage::disk('public')->delete($record['arquivo']);
             } 
 
             $new_file = $request->arquivo->store('files','public');
@@ -157,9 +157,9 @@ class FileController extends Controller
 
         if($record->update($data))
         {
-            return redirect('admin/training/files')->with('success', 'Registro alterado com sucesso!');
+            return redirect('admin/files')->with('success', 'Registro alterado com sucesso!');
         } else {
-            return redirect('admin/training/files')->with('error', 'Erro ao alterar o registro!');
+            return redirect('admin/files')->with('error', 'Erro ao alterar o registro!');
         }
     }
 
@@ -175,12 +175,12 @@ class FileController extends Controller
         
         if($data->delete())
         {
-            if(Storage::exists($data['arquivo'])){
-                Storage::delete($data['arquivo']);
+            if(Storage::disk('public')->exists($data['arquivo'])){
+                Storage::disk('public')->delete($data['arquivo']);
             } 
-            return redirect('admin/training/files')->with('success', 'Registro excluído com sucesso!');
+            return redirect('admin/files')->with('success', 'Registro excluído com sucesso!');
         } else {
-            return redirect('admin/training/files')->with('alert', 'Erro ao excluir o registro!');
+            return redirect('admin/files')->with('alert', 'Erro ao excluir o registro!');
         }
     }
 

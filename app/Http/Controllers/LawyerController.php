@@ -28,24 +28,25 @@ class LawyerController extends Controller
      */
     public function index(Request $request)
     {
-        $search = "";
-        if(isset($request->search))
-        {
-            $search = $request->search;
-            $query = $this->lawyer;
+        $franchisees = $this->user->where('type','F')->get();
 
-            $columns = ['name','oab'];
-            foreach($columns as $key => $value):
-                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
-            endforeach;
+        // inicia a consulta
+        $query = $this->lawyer->query();
 
-            $lawyers = $query->orderBy('id','DESC')->get();
-
-        } else {
-            $lawyers = $this->lawyer->orderBy('id','DESC')->paginate(10);
+        if ($request->has('franchisee')) {
+            $query->orWhere('user_id', '=', $request->franchisee);
         }
+
+        if (isset($request->search)) {
+            $query->orWhere('name', 'LIKE', '%'.$request->search.'%');
+        }
+
+        $lawyers = $query->orderBy('id','DESC')->paginate(10);
         
-        return view('admin.lawyers.index',['lawyers' => $lawyers, 'search' => $search]);
+        return view('admin.lawyers.index',[
+            'franchisees' => $franchisees,
+            'lawyers' => $lawyers
+        ]);
     }
 
     /**

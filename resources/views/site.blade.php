@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel</title>
+    <title>Id Prev</title>
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,6 @@
         h3 {
             font-family: 'Bebas Neue', cursive !important;
         }
-
     </style>
 </head>
 
@@ -23,62 +22,31 @@
     <header class=""
         style="background-image: url('/images/banner-principal-2.jpg'); background-size: cover;">
         <div class="p-3 md:container md:m-auto">
+
             <div class="flex w-full justify-between">
                 <div class="w-48 h-16 pt-3">
                     <a href=""><img src="{{ asset('images/logotipo.png') }}" alt="Logotipo Id Preve" /></a>
                 </div>
                 <div class="flex h-16 items-center justify-center">
                     <img src="{{ asset('images/icons/whatsapp.png') }}" alt="Whatsapp" class="w-6 mr-1" />
-                    <h3 class="text-xl text-white">82 9.1234-5678</h3>
+                    <h3 class="text-xl text-white">82 9 8811-2009</h3>
                 </div>
             </div>
-            <div class="flex flex-col my-10 md:flex-row md:my-24">
-                <div class="w-full mb-10 md:mb-0 md:flex-1">
-                    <h1 class="text-white text-5xl border-l-8 border-blue-800 pl-5 leading-none">Assessoria e <span
-                            class="text-blue-800">Gerenciamento de Processos</span> Jurídicos</h1>
-                    <p class="text-white mt-4 text-xl font-bold md:ml-5">Lorem ipsum dolor sit amet consectetur,
-                        adipisicing elit.
-                        Optio inventore exercitationem. Lorem ipsum dolor, sit amet consectetur adipisicing elit.</p>
-                    <a href="#"
-                        class="text-white px-5 py-3 shadow-sm mt-4 block text-center rounded-md bg-blue-800 md:ml-5 md:w-48">Mais
-                        Informações</a>
-                </div>
-                <div class="flex md:flex-1 md:justify-end">
-                    <form method="POST" action="{{ route('login.franchisee') }}"
-                        class="flex flex-col bg-white w-full p-5 rounded-lg shadow-sm md:w-3/4">
-                        @csrf
-                        <h3 class="text-2xl mb-3">Entre com seus <span class="text-blue-700">dados para
-                                companhar</span> a lista de clientes.</h3>
-                        @error('error')
-                            <div class="p-2 text-white bg-red-600 mb-3 rounded shadow-md">{{ $message }}</div>
-                        @enderror
-                        <input type="email" name="email"
-                            class="border border-gray-500 bg-white p-2 rounded w-full @error('error') border-red-600 @enderror"
-                            placeholder="E-mail" required />
 
-                        <input type="password" name="password"
-                            class="border border-gray-500 bg-white p-2 rounded w-full mt-3 @error('error') border-red-600 @enderror"
-                            placeholder="Senha" required />
-                        <div class="flex justify-between mt-3">
-                            <a href="#" class="text-blue-700 mt-5">Não tem conta?</a>
-                            <button type="submit"
-                                class="bg-blue-700 p-2 w-40 text-center rounded-md text-white">Entrar</button>
-                        </div>
-                    </form>
+            <div class="flex my-10 md:my-48">
+
+                <div class="w-full text-center mb-10 md:mb-0 md:flex-1">
+                    <h1 class="text-white text-5xl leading-none">Problemas com <span class="text-blue-800">INSS</span></h1>
+                    <p class="text-white mt-4 text-xl font-bold md:ml-5">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Optio inventore exercitationem.</p>
+                    <br />
+                    <a href="https://wa.me/5582988112009" target="blank"
+                        class="text-white px-5 py-3 shadow-sm mt-4 m-auto text-center rounded-md bg-green-700 md:ml-5 md:w-48">Fale pelo Whatsapp</a>
                 </div>
+
             </div>
             <div class="flex justify-center">
                 <a href="#" target="_blank" class="m-3">
-                    <img src="{{ asset('images/icons/facebook.png') }}" alt="Facebook" class="w-8" />
-                </a>
-                <a href="#" target="_blank" class="m-3">
-                    <img src="{{ asset('images/icons/youtube.png') }}" alt="Youtube" class="w-8" />
-                </a>
-                <a href="#" target="_blank" class="m-3">
                     <img src="{{ asset('images/icons/instagram.png') }}" alt="Instagram" class="w-8" />
-                </a>
-                <a href="#" target="_blank" class="m-3">
-                    <img src="{{ asset('images/icons/twitter.png') }}" alt="Twitter" class="w-8" />
                 </a>
             </div>
         </div>
@@ -95,7 +63,7 @@
                 <h1
                     class="text-5xl leading-tight mb-10 text-center md:text-left md:border-l-8 md:border-blue-600 md:pl-5">
                     Seja nosso franqueado e <span class="text-blue-700">tenha seus processos e clientes</span> a um
-                    clike.
+                    click.
                 </h1>
                 <p class="text-gray-500 mb-10 text-xl text-center md:text-left md:ml-6">Lorem ipsum dolor sit amet
                     consectetur adipisicing elit.
@@ -153,23 +121,23 @@
     </section>
     <!-- end -->
 
-    <!-- dispositivos de acesso -->
-    <section class="flex px-2 py-10 flex-col md:flex-row md:py-20">
-        <div class="w-full justify-center items-center md:flex-1">
-            <img src="{{ asset('images/layout-responsivo.jpg') }}" alt="Responsivo Layout"
-                class="w-full m-auto md:max-w-lg" />
-        </div>
-        <div class="flex flex-col py-10 md:flex-1 md:my-0">
-            <h3 class="text-gray-600 text-2xl text-center md:text-left ml-0 md:ml-8">Clientes e Franqueados</h3>
-            <h1
-                class="text-5xl leading-tight mb-10 text-center md:text-left md:border-l-8 md:border-blue-600 md:pl-5 md:max-w-md">
-                Acompanhe seus processos pelo nosso <span class="text-blue-600">site ou App.</span></h1>
-            <p class="text-center md:text-left">Em breve baixo nosso app nas lojas:</p>
-            <div class="flex justify-center md:text-left md:justify-start">
-                <img src="{{ asset('images/play-store.png') }}" alt="Play Store" class="mr-2 w-40" />
-                <img src="{{ asset('images/app-store.png') }}" alt="App Store" class="w-40" />
+    <!-- testemunhais -->
+    <section class="py-12 md:container md:m-auto">
+
+        @foreach ($testimonies as $value)    
+            <div class="flex mb-4">
+                @if (isset($value->image))
+                <img src="{{asset('storage/'.$value->image)}}" alt="Photo" class="bg-gray-500 rounded-full w-48 h-48 mr-8 border" />
+                @else
+                    <img src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Photo" class="bg-gray-500 rounded-full w-48 h-48 mr-8 border" />
+                @endif
+                <div class="flex flex-col items-start justify-center">
+                    <strong class="text-2xl">{{$value->name}}</strong>
+                    <p>{{$value->description}}</p>
+                </div>
             </div>
-        </div>
+        @endforeach
+        
     </section>
     <!-- end -->
 

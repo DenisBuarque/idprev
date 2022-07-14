@@ -95,8 +95,10 @@
                                         <th>Aberto</th>
                                         <th>Código</th>
                                         <th>Status</th>
-                                        @can('edit-ticket')
+                                        @can('comments-ticket')
                                             <th style='width: 60px' class='text-center'></th>
+                                        @endcan
+                                        @can('edit-ticket')
                                             <th style='width: 60px' class='text-center'>Edit</th>
                                         @endcan
                                         @can('delete-ticket')

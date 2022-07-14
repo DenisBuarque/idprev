@@ -15,4 +15,9 @@ class Lawyer extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function leads()
+    {
+        return $this->belongsToMany(lead::class);
+    }
 }

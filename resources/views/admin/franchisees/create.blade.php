@@ -47,7 +47,7 @@
                             <small>Telefone: *</small>
                             <input type="text" name="phone" value="{{ old('phone') }}"
                                 class="form-control @error('phone') is-invalid @enderror" placeholder="Ex: 82 90000-0000"
-                                maxlength="13" onkeypress="mascara(this, '## #####-####')" />
+                                maxlength="13" />
                             @error('phone')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror

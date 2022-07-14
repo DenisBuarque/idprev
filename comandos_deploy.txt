@@ -36,7 +36,7 @@ ls -la
 php composer.phar installer
 ls -la
 
-mv .env.exemple .env
+mv .env.example .env
 ls -la
 nano .env
 
@@ -83,3 +83,13 @@ php artisan config:cache
 
 php artisan route:cache
 
+
+
+
+echo "# idprev" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/DenisBuarque/idprev.git
+git push -u origin main

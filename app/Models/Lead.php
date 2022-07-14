@@ -9,7 +9,7 @@ class Lead extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','phone','email','zip_code','address','number','district','city','state','tag','process','situation','financial','action','court','stick','term','user_id','responsible','date_fulfilled','greeting'];
+    protected $fillable = ['name','phone','email','zip_code','address','number','district','city','state','tag','process','situation','financial','action','court','stick','term','user_id','responsible','date_fulfilled','greeting','confirmed'];
 
     public function user()
     {
@@ -30,6 +30,14 @@ class Lead extends Model
         return $this->hasOne(Financial::class);
     }
 
+    public function lawyers()
+    {
+        return $this->belongsToMany(lawyer::class);
+    }
+
+    public function terms(){
+        return $this->hasMany(Term::class);
+    }
 
     protected $casts = [
         'created_at' => 'datetime',

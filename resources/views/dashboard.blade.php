@@ -40,10 +40,10 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 @can('list-lead')
-                    @if($waiting > 0)
-                    <a href="{{ route('admin.leads.tag', ['tag' => 2]) }}" class="small-box-footer">
-                        Listar registros <i class="fas fa-arrow-circle-right"></i>
-                    </a>
+                    @if ($waiting > 0)
+                        <a href="{{ route('admin.leads.tag', ['tag' => 2]) }}" class="small-box-footer">
+                            Listar registros <i class="fas fa-arrow-circle-right"></i>
+                        </a>
                     @else
                         <a class="small-box-footer">
                             &nbsp;
@@ -67,9 +67,9 @@
                 </div>
                 @can('list-lead')
                     @if ($converted_lead > 0)
-                    <a href="{{ route('admin.leads.tag', ['tag' => 3]) }}" class="small-box-footer">
-                        Listar registros <i class="fas fa-arrow-circle-right"></i>
-                    </a>
+                        <a href="{{ route('admin.leads.tag', ['tag' => 3]) }}" class="small-box-footer">
+                            Listar registros <i class="fas fa-arrow-circle-right"></i>
+                        </a>
                     @else
                         <a class="small-box-footer">
                             &nbsp;
@@ -92,10 +92,10 @@
                     <i class="fas fa-thumbs-down"></i>
                 </div>
                 @can('list-lead')
-                    @if($unconverted_lead > 0)
-                    <a href="{{ route('admin.leads.tag', ['tag' => 4]) }}" class="small-box-footer">
-                        Listar registros <i class="fas fa-arrow-circle-right"></i>
-                    </a>
+                    @if ($unconverted_lead > 0)
+                        <a href="{{ route('admin.leads.tag', ['tag' => 4]) }}" class="small-box-footer">
+                            Listar registros <i class="fas fa-arrow-circle-right"></i>
+                        </a>
                     @else
                         <a class="small-box-footer">
                             &nbsp;
@@ -127,8 +127,8 @@
                             <h3 class="card-title">Lista de leads de atendimento</h3>
                             <div class="card-tools">
                                 @can('create-lead')
-                                    <a href="" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-lead"><i
-                                            class="fa fa-plus mr-2"></i> Adicionar novo lead</a>
+                                    <a href="" class="btn btn-sm btn-info" data-toggle="modal"
+                                        data-target="#modal-lead"><i class="fa fa-plus mr-2"></i> Adicionar novo lead</a>
                                 @endcan
                             </div>
                         </div>
@@ -192,7 +192,7 @@
                                                 <span>Nenhum registro cadastrado</span>
                                             </td>
                                         </tr>
-                                        @endforelse
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -260,8 +260,8 @@
                                     <div class="col-sm-10">
                                         <div class="form-group m-0">
                                             <small>Endereço:</small>
-                                            <input type="text" name="address" id="address" value="{{ old('address') }}"
-                                                class="form-control" maxlength="250" />
+                                            <input type="text" name="address" id="address"
+                                                value="{{ old('address') }}" class="form-control" maxlength="250" />
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
@@ -281,15 +281,15 @@
                                     <div class="col-sm-5">
                                         <div class="form-group m-0">
                                             <small>Cidade:</small>
-                                            <input type="text" name="city" id="city" value="{{ old('city') }}"
-                                                class="form-control" maxlength="50" />
+                                            <input type="text" name="city" id="city"
+                                                value="{{ old('city') }}" class="form-control" maxlength="50" />
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group m-0">
                                             <small>Estado:</small>
-                                            <input type="text" name="state" id="state" value="{{ old('state') }}"
-                                                class="form-control" maxlength="2" />
+                                            <input type="text" name="state" id="state"
+                                                value="{{ old('state') }}" class="form-control" maxlength="2" />
                                         </div>
                                     </div>
                                 </div>
@@ -351,35 +351,124 @@
     </div>
 
     <!-- div class="row row-cols-2 my-5">
-        <div class="col">
-            <canvas id="myChartLine"></canvas>
-        </div>
-        <div class="col">
-            <canvas id="myChart"></canvas>
-        </div>
-    </div -->
+            <div class="col">
+                <canvas id="myChartLine"></canvas>
+            </div>
+            <div class="col">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div -->
 
-    <div class="card card-success">
-        <div class="card-body">
+
+    <div class="content">
+        <div class="container-fluid">
 
             <div class="row">
+                <div class="col-md-4">
 
-                @foreach ($events as $event)
-                    <div class="col-md-12 col-lg-6 col-xl-4">
-                        <div class="card mb-2">
-                            <img class="card-img-top" src="{{ asset('storage/' . $event->image) }}"
-                                alt="{{ $event->title }}">
-                            <div class="d-flex flex-column justify-content-end mt-2 p-3">
-                                <h4 class="text-primary mb-3">{{ $event->title }}</h4>
-                                <strong>Data: {{ $event->date_event->format('d/m/Y') }}</strong>
-                                <p>{!! $event->description !!}</p>
+                    <div class="timeline">
+
+                        <div class="time-label">
+                            <span class="bg-red">Confira os eventos:</span>
+                        </div>
+                        @foreach ($events as $event)
+                            <div>
+                                <i class="fas fa-user bg-green"></i>
+                                <div class="timeline-item">
+                                    @isset($event->image)
+                                        <img src="{{asset('storage/'.$event->image)}}" alt="Photo" style="width: 100%;" /> 
+                                    @endisset
+                                    <span class="time"><i class="fas fa-clock"></i> {{ $event->date_event->format('d/m/Y') }}</span>
+                                    <h3 class="timeline-header no-border"><strong>{{ $event->title }}</strong></h3>
+                                    <p class="p-3">{{ $event->description }}</p>
+                                </div>
                             </div>
+                        @endforeach
+                        <div class="time-label">
+                            <span class="bg-red">...</span>
                         </div>
                     </div>
-                @endforeach
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Prazos não cumpridos</h3>
+                            <div class="card-tools"></div>
+                        </div>
+                        <div class="card-body p-0" style="display: block;">
+                            <table class="table">
+                                <tbody>
+                                    @forelse ($terms_cumpridos as $item)
+                                        <tr>
+                                            <td>
+                                                @php
+                                                    $hoje = \Carbon\Carbon::parse(now())->format('Y-m-d');
+                                                @endphp
+                                                @if ($hoje > $item->term)
+                                                    <span>{{ \Carbon\Carbon::parse($item->term)->format('d/m/Y') }}</span>
+                                                    <small class="badge badge-danger">Prazo vencido</small>
+                                                @else
+                                                    <span>{{ \Carbon\Carbon::parse($item->term)->format('d/m/Y') }}</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{route('admin.terms.edit', ['id' => $item->id])}}">{{ $item->lead->name }}</a><br />
+                                                <small>{{ $item->comments }}</small>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td class="text-center" colspan="2">
+                                                <span>Nenhum prazo a cumprir</span>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+        
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Pagamento vencidos</h3>
+                            <div class="card-tools"></div>
+                        </div>
+                        <div class="card-body p-0" style="display: block;">
+                            @php
+                                $hoje = \Carbon\Carbon::parse(now())->format('Y-m-d');
+                            @endphp
+                            <table class="table">
+                                <tbody>
+                                    @foreach ($financials as $value)
+                                        @if ($hoje > $value->receipt_date && $value->confirmation == "N")    
+                                            <tr>
+                                                <td>
+                                                    <span>{{\Carbon\Carbon::parse($value->receipt_date)->format('d/m/Y')}}</span>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('admin.financial.edit', ['id' => $value->lead_id]) }}">{{$value->lead->name}}</a>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
+
     </div>
+
 
 @stop
 

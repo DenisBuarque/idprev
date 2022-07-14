@@ -208,7 +208,13 @@ class AdministrativeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $record = $this->administrative->find($id);
+        if($record){
+            $record->delete();
+            return redirect('admin/administrative')->with('success', 'Registro excluir com sucesso!');
+        }
+
+        return redirect('admin/administrative')->with('error', 'Erro ao ecluir o registro!');
     }
 
     // realiza o upload da imagem do produto

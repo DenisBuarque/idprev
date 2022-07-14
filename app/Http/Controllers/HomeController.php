@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Advisor;
 use App\Models\Service;
+use App\Models\Testimonie;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -13,18 +14,20 @@ class HomeController extends Controller
     private $client;
     private $advisor;
     private $service;
+    private $testimonie;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(Advisor $advisor, Client $client, Service $service)
+    public function __construct(Advisor $advisor, Client $client, Service $service, Testimonie $testimonie)
     {
         //$this->middleware('auth:advisor');
         $this->advisor = $advisor;
         $this->client = $client;
         $this->service = $service;
+        $this->testimonie = $testimonie;
     }
 
     /**
@@ -34,8 +37,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $testimonies = $this->testimonie->all();
         $services = $this->service->where('active','yes')->get();
-        return view('site',['services' => $services]);
+        return view('site',['services' => $services, 'testimonies' => $testimonies]);
     }
 
     public function login(Request $request)

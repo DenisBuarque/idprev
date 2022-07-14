@@ -33,6 +33,10 @@ class Client extends Model
         return $this->hasMany(ClientPhotos::class);
     }
 
+    public function terms(){
+        return $this->belongsTo(Term::class);
+    }
+
     protected $casts = [
         'term' => 'datetime'
     ];

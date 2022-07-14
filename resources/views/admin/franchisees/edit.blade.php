@@ -41,7 +41,6 @@
                         <div class="form-group m-0">
                             <small>Telefone: *</small>
                             <input type="text" name="phone" value="{{ $user->phone ?? old('phone') }}"
-                                onkeypress="mascara(this, '## #####-####')"
                                 class="form-control @error('phone') is-invalid @enderror" placeholder="Ex: 82 90000-0000"
                                 maxlength="13" />
                             @error('phone')

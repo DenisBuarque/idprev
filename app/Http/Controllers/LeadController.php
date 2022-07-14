@@ -36,67 +36,63 @@ class LeadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
+
+    public function index(Request $request) {
+
         $type_user = auth()->user()->type;
-        
+
         if($type_user == "F"){
             $leads_total = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag',[1,2])->count();
             $waiting = $this->lead->where('user_id',auth()->user()->id)->where('tag','2')->get()->count();
             $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
             $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
-            $originating_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get();
-            $unfounded_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get();
-            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get();
+            //$originating_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get();
+            //$unfounded_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get();
+            //$resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get();
         } else {
             $leads_total = $this->lead->whereIn('tag',[1,2])->count();
             $waiting = $this->lead->where('tag','2')->get()->count();
             $converted_lead = $this->lead->where('tag','3')->get()->count();
             $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-            $originating_customers = $this->lead->where('situation','3')->get();
-            $unfounded_customers = $this->lead->where('situation','4')->get();
-            $resources = $this->lead->where('situation','5')->get();
+            //$originating_customers = $this->lead->where('situation','3')->get();
+            //$unfounded_customers = $this->lead->where('situation','4')->get();
+            //$resources = $this->lead->where('situation','5')->get();
         }
-        
-        $users = $this->user->all();
-        
-        $search = "";
-        if(isset($request->search))
-        {
-            $search = $request->search;
-            $query = $this->lead;
 
-            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
-            foreach($columns as $key => $value):
-                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
-            endforeach;
+        //$users = $this->user->all();
+        $franchisees = $this->user->where('type','F')->get();
 
-            if($type_user == "F"){ // se for franqueado
-                $leads = $query->where('user_id',auth()->user()->id)->whereIn('tag',[1,2])->orderBy('id','DESC')->get();
-            }else{ // se for admin.
-                $leads = $query->whereIn('tag',[1,2])->orderBy('id','DESC')->get();
-            }
+        // inicia a consulta
+        $query = $this->lead->query();
 
-        } else {
-
-            if($type_user == "F"){ // se for franqueado
-                $leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag',[1,2])->orderBy('id','DESC')->paginate(10);
-            } else { // se for admin.
-                $leads = $this->lead->whereIn('tag',[1,2])->orderBy('id','DESC')->paginate(10);
-            }
+        if ($request->has('franchisee')) {
+            $query->orWhere('user_id', '=', $request->franchisee);
         }
-        
+
+        if (isset($request->search)) {
+            $columns = ['name','phone','email','address','district','city','state'];
+            foreach ($columns as $key => $value) {
+                $query->orWhere($value, 'LIKE', '%' . $request->search . '%');
+            }
+        } 
+
+        if($type_user == "F") {
+            $leads = $query->where('user_id',auth()->user()->id)->whereIn('tag',[1,2])->orderBy('id','DESC')->paginate(10);
+        } else { 
+            $leads = $query->whereIn('tag',[1,2])->orderBy('id','DESC')->paginate(10);
+        }
+
         return view('admin.leads.index',[
-            'leads' => $leads, 
-            'search' => $search,
+            'leads_total' => $leads_total,
             'waiting' => $waiting,
             'converted_lead' => $converted_lead, 
             'unconverted_lead' => $unconverted_lead, 
-            'originating_customers' => $originating_customers,
-            'unfounded_customers' => $unfounded_customers,
-            'resources' => $resources,
-            'users' => $users,
-            'leads_total' => $leads_total
+            //'originating_customers' => $originating_customers,
+            //'unfounded_customers' => $unfounded_customers,
+            //'resources' => $resources,
+            //'users' => $users,
+            'leads' => $leads, 
+            'franchisees' => $franchisees
         ]);
     }
 
@@ -109,31 +105,32 @@ class LeadController extends Controller
             $waiting = $this->lead->where('user_id',auth()->user()->id)->where('tag','2')->get()->count();
             $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
             $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
-            $originating_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get();
-            $unfounded_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get();
-            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get();
+            //$originating_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get();
+            //$unfounded_customers = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get();
+            //$resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get();
         } else {
             $leads_total = $this->lead->whereIn('tag',[1,2])->count();
             $waiting = $this->lead->where('tag','2')->get()->count();
             $converted_lead = $this->lead->where('tag','3')->get()->count();
             $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-            $originating_customers = $this->lead->where('situation','3')->get();
-            $unfounded_customers = $this->lead->where('situation','4')->get();
-            $resources = $this->lead->where('situation','5')->get();
+            //$originating_customers = $this->lead->where('situation','3')->get();
+            //$unfounded_customers = $this->lead->where('situation','4')->get();
+            //$resources = $this->lead->where('situation','5')->get();
         }
         
         $search = '';
+        $franchisees = $this->user->where('type','F')->get();
 
         $leads = $this->lead->where('tag',$tag)->orderBy('id','DESC')->get();
         return view('admin.leads.tag',[
-            'leads' => $leads, 
-            'search' => $search,
+            'leads_total' => $leads_total,
             'waiting' => $waiting,
             'converted_lead' => $converted_lead, 
             'unconverted_lead' => $unconverted_lead, 
-            'originating_customers' => $originating_customers,
-            'unfounded_customers' => $unfounded_customers,
-            'leads_total' => $leads_total
+            //'originating_customers' => $originating_customers,
+            //'unfounded_customers' => $unfounded_customers,
+            'leads' => $leads,
+            'franchisees' => $franchisees
         ]);
     }
 
@@ -173,8 +170,7 @@ class LeadController extends Controller
 
         $create = $this->feedback->create($data);
         if ($create) {
-            return redirect('admin/lead/show/'.$data['lead_id'])->with('success', 'Comentário adicionado com sucesso!');;
-            //return redirect('admin/leads')->with('success', 'Seu ticket foi enviado, aguardo sua resposta!');
+            return redirect('admin/lead/show/'.$data['lead_id'])->with('success', 'Comentário adicionado com sucesso!');
         } else {
             return redirect('admin/leads')->with('error', 'Erro ao inserido o ticket!');
         }
@@ -356,15 +352,9 @@ class LeadController extends Controller
     {
         $data = $this->lead->find($id);
         if($data->delete()){
-            /*if($data['image'] != null){
-                if(Storage::exists($data['image'])){
-                    Storage::delete($data['image']);
-                }
-            }*/
-
-            return redirect('admin/users')->with('success', 'Registro excluído com sucesso!');
+            return redirect('admin/leads')->with('success', 'Registro excluído com sucesso!');
         } else {
-            return redirect('admin/users')->with('error', 'Erro ao excluir o registro!');
+            return redirect('admin/leads')->with('error', 'Erro ao excluir o registro!');
         }
     }
 

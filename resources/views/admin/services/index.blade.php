@@ -6,9 +6,9 @@
     <form method="GET" action="{{ route('admin.services.index') }}">
         <div style="display: flex; justify-content: space-between;">
             @can('search-service')
-                <div class="input-group" style="width: 30%">
-                    <input type="search" name="search" value="{{ $search }}" class="form-control"
-                        placeholder="Título do serviço" required />
+                <div class="input-group" style="width: 40%">
+                    <input type="search" name="search" class="form-control"
+                        placeholder="Título" required />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
                             <i class="fa fa-search"></i> Buscar

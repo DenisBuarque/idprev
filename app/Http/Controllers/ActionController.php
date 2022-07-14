@@ -43,7 +43,7 @@ class ActionController extends Controller
             $actions = $this->action->orderBy('id','DESC')->paginate(10);
         }
         
-        return view('admin.document.actions.index',['actions' => $actions, 'search' => $search]);
+        return view('admin.actions.index',['actions' => $actions, 'search' => $search]);
     }
 
     /**
@@ -53,7 +53,7 @@ class ActionController extends Controller
      */
     public function create()
     {
-        return view('admin.document.actions.create');
+        return view('admin.actions.create');
     }
 
     /**
@@ -72,9 +72,9 @@ class ActionController extends Controller
 
         $action = $this->action->create($data);
         if($action) {
-            return redirect('admin/document/action/create')->with('success', 'Registro inserido com sucesso!');
+            return redirect('admin/action/create')->with('success', 'Registro inserido com sucesso!');
         } else {
-            return redirect('admin/document/action/create')->with('error', 'Erro ao inserir o registro!');
+            return redirect('admin/action/create')->with('error', 'Erro ao inserir o registro!');
         }
     }
 
@@ -99,9 +99,9 @@ class ActionController extends Controller
     {
         $action = $this->action->find($id);
         if($action){
-            return view('admin.document.actions.edit',['action' => $action]);
+            return view('admin.actions.edit',['action' => $action]);
         } else {
-            return redirect('admin/document/actions')->with('alert', 'Desculpe! Não encontramos o registro!');
+            return redirect('admin/actions')->with('alert', 'Desculpe! Não encontramos o registro!');
         }
     }
 
@@ -122,9 +122,9 @@ class ActionController extends Controller
         ])->validate();
 
         if($record->update($data)){
-            return redirect('admin/document/actions')->with('success', 'Registro alterado com sucesso!');
+            return redirect('admin/actions')->with('success', 'Registro alterado com sucesso!');
         } else {
-            return redirect('admin/document/actions')->with('error', 'Erro ao alterar o registro!');
+            return redirect('admin/actions')->with('error', 'Erro ao alterar o registro!');
         }
     }
 
@@ -138,9 +138,9 @@ class ActionController extends Controller
     {
         $data = $this->action->find($id);
         if($data->delete()){
-            return redirect('admin/document/actions')->with('success', 'Registro excluído com sucesso!');
+            return redirect('admin/actions')->with('success', 'Registro excluído com sucesso!');
         } else {
-            return redirect('admin/document/actions')->with('alert', 'Erro ao excluir o registro!');
+            return redirect('admin/actions')->with('alert', 'Erro ao excluir o registro!');
         }
     }
 }

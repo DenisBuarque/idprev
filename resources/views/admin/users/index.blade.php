@@ -8,7 +8,7 @@
             @can('search-user')
                 <div class="input-group" style="width: 40%">
                     <input type="search" name="search" value="{{ $search }}" class="form-control"
-                        placeholder="Nome do usuário" required />
+                        placeholder="Nome" required />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
                             <i class="fa fa-search"></i> Buscar
@@ -52,7 +52,6 @@
                     <tr>
                         <th>Nome</th>
                         <th>E-mail</th>
-                        <th>Status</th>
                         <th>Criado</th>
                         <th>Atualizado</th>
                         @can('edit-user')
@@ -64,7 +63,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($users as $user)
+                    @forelse ($users as $user)
                         <tr>
                             <td>
                                 @if (isset($user->image))
@@ -75,18 +74,11 @@
                                 {{ $user->name }}
                             </td>
                             <td>{{ $user->email }}</td>
-                            <td>
-                                @if ($user->type == 'A')
-                                    Administrador
-                                @else
-                                    Franqueado
-                                @endif
-                            </td>
                             <td>{{ $user->created_at->format('d/m/Y H:m:s') }}</td>
                             <td>{{ $user->updated_at->format('d/m/Y H:m:s') }}</td>
                             @can('edit-user')
                                 <td class="px-1">
-                                    <a href="{{ route('admin.users.edit', ['id' => $user->id]) }}"
+                                    <a href="{{ route('admin.users.edit', ['id' => $user->id]) }}" title="Alterar registro"
                                         class="btn btn-info btn-xs btn-block">
                                         <i class="fas fa-edit"></i>
                                     </a>
@@ -98,14 +90,20 @@
                                         action="{{ route('admin.users.destroy', ['id' => $user->id]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-block btn-xs">
+                                        <button type="submit" class="btn btn-danger btn-block btn-xs" title="Excluir registro">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
                                 </td>
                             @endcan
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center p-3">
+                                <span>Nenhum registro encontrado.</span>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

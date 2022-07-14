@@ -5,10 +5,18 @@
 @section('content_header')
     <form method="GET" action="{{ route('admin.leads.index') }}">
         <div style="display: flex; justify-content: space-between;">
+
             @can('search-lead')
                 <div class="input-group" style="width: 40%">
-                    <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Dados do cliente"
-                        required />
+                    @can('list-user')
+                        <select name="franchisee" class="form-control mr-1">
+                            <option></option>
+                            @foreach($franchisees as $franchisee)
+                                <option value="{{ $franchisee->id }}">{{ $franchisee->name }}</option>
+                            @endforeach
+                        </select>
+                    @endcan
+                    <input type="search" name="search" class="form-control" placeholder="Cliente" />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
                             <i class="fa fa-search mr-"></i>
@@ -17,6 +25,7 @@
                     </span>
                 </div>
             @endcan
+
             @can('create-lead')
                 <a href="{{ route('admin.leads.create') }}" class="btn bg-info">
                     <i class="fas fa-plus"></i> Adicionar Registro
@@ -71,32 +80,6 @@
             </div>
         </div>
         <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>{{ $unconverted_lead }}</h3>
-                    <p>Leads não convertidos</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-thumbs-down"></i>
-                </div>
-                @can('list-client')
-                    @if($unconverted_lead > 0)
-                    <a href="{{ route('admin.clients.tag', ['tag' => 4]) }}" class="small-box-footer">
-                        Listar registros <i class="fas fa-arrow-circle-right"></i>
-                    </a>
-                    @else
-                        <a class="small-box-footer">
-                            &nbsp;
-                        </a>
-                    @endif
-                @else
-                    <a class="small-box-footer">
-                        &nbsp;
-                    </a>
-                @endcan
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
                     <h3>{{ $converted_lead }}</h3>
@@ -122,8 +105,34 @@
                 @endcan
             </div>
         </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ $unconverted_lead }}</h3>
+                    <p>Leads não convertidos</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-thumbs-down"></i>
+                </div>
+                @can('list-client')
+                    @if($unconverted_lead > 0)
+                    <a href="{{ route('admin.clients.tag', ['tag' => 4]) }}" class="small-box-footer">
+                        Listar registros <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                    @else
+                        <a class="small-box-footer">
+                            &nbsp;
+                        </a>
+                    @endif
+                @else
+                    <a class="small-box-footer">
+                        &nbsp;
+                    </a>
+                @endcan
+            </div>
+        </div>
+        
     </div>
-
 
     @if (session('success'))
         <div id="message" class="alert alert-success mb-2" role="alert">
@@ -175,7 +184,12 @@
                                 @endif
                                 {{ $lead->user->name }}
                             </td>
-                            <td>{{ $lead->name }}</td>
+                            <td>
+                                <spna>{{ $lead->name }}</span><br />
+                                @isset($lead->address)
+                                    <small>{{ $lead->address }}, nº {{ $lead->number }}, {{ $lead->district }}, {{ $lead->city }}, {{ $lead->state }}</small>
+                                @endisset
+                            </td>
                             <td>{{ $lead->phone }}</td>
                             <td>
                                 @php
@@ -236,7 +250,7 @@
                 </tbody>
             </table>
             <div class="mt-3 mr-3 ml-3">
-                @if (!$search && $leads)
+                @if ($leads)
                     {{ $leads->links() }}
                 @endif
             </div>

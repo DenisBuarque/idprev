@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'Id Prev',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>Id</b>Prev',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'AdminLTE',
+    'logo_img_alt' => 'IdPrev',
 
     /*
     |--------------------------------------------------------------------------
@@ -287,39 +287,41 @@ return [
             ],
         ],
         [
-            'text'    => 'Treinamento',
-            'icon'    => 'fa fa-trophy',
-            'can'     => 'list-file',
-            'submenu' => [
-                [
-                    'text' => 'Arquivos',
-                    'url'  => 'admin/training/files',
-                ],
-                [
-                    'text' => 'Eventos',
-                    'url'  => 'admin/training/events',
-                    'can'     => 'list-event',
-                ],
-            ],
+            'text'        => 'Ações Previdenciarias',
+            'url'         => 'admin/actions',
+            'icon'        => 'fa fa-bullhorn',
+            'can'         => 'list-action',
         ],
         [
             'text'    => 'Documentos',
             'icon'    => 'fa fa-file-pdf',
-            'can'     => 'list-action',
+            'can'     => 'list-document',
             'submenu' => [
                 [
-                    'text' => 'Ação Previdenc.',
-                    'url'  => 'admin/document/actions',
-                ],
-                [
-                    'text' => 'Modelos Documentos',
-                    'url'  => 'admin/document/models',
+                    'text' => 'Modelos de Documentos',
+                    'url'  => 'admin/models',
                     'can'     => 'list-document',
                 ],
                 [
                     'text' => 'Planilhas de Cálculo',
                     'url'  => 'admin/worksheets',
                     'can'     => 'list-worksheet',
+                ],
+            ],
+        ],
+        [
+            'text'    => 'Treinamento',
+            'icon'    => 'fa fa-trophy',
+            'can'     => 'list-file',
+            'submenu' => [
+                [
+                    'text' => 'Arquivos',
+                    'url'  => 'admin/files',
+                ],
+                [
+                    'text' => 'Eventos',
+                    'url'  => 'admin/events',
+                    'can'     => 'list-event',
                 ],
             ],
         ],
@@ -351,7 +353,13 @@ return [
             'text'        => 'Serviços',
             'url'         => 'admin/services',
             'icon'        => 'fas fa-flag',
-            'can'         => 'list-services',
+            'can'         => 'list-service',
+        ],
+        [
+            'text'        => 'Testemunhal',
+            'url'         => 'admin/testimonies',
+            'icon'        => 'fa fa-comments',
+            'can'         => 'list-testimonie',
         ],
         
         /*[

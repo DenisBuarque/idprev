@@ -7,7 +7,7 @@
         <div style="display: flex; justify-content: start;">
             @can('search-financial')
                 <div class="input-group" style="width: 40%">
-                    <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Pesquisa."
+                    <input type="search" name="search" class="form-control" placeholder="Cliente"
                         required />
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">
@@ -58,7 +58,7 @@
             <div class="small-box bg-warning">
                 <div class="inner">
                     <h3>{{ number_format($fees, 2, ',', '.') }}</h3>
-                    <p>Honorários a Pagar</p>
+                    <p>Honorários recebidos</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-clock"></i>
@@ -72,7 +72,7 @@
             <div class="small-box bg-danger">
                 <div class="inner">
                     <h3>{{ number_format($unreceived, 2, ',', '.') }}</h3>
-                    <p>A receber</p>
+                    <p>Honorários a pagar</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-thumbs-down"></i>
@@ -82,9 +82,7 @@
                 </a>
             </div>
         </div>
-
     </div>
-
 
     @if (session('success'))
         <div id="message" class="alert alert-success mb-2" role="alert">
@@ -100,94 +98,152 @@
         </div>
     @endif
 
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Financeiro</h3>
-        </div>
-        <div class="card-body table-responsive p-0">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Franqueado</th>
-                        <th>Cliente</th>
-                        <th>Confirmação Matriz</th>
-                        <th>Valor Total</th>
-                        <th>Data Pagamento.</th>
-                        <th>Valor Rececebimento.</th>
-                        @can('edit-financial')
-                            <th style='width: 60px' class='text-center'>Edit</th>
-                        @endcan
-                        @can('delete-financial')
-                            <th style='width: 50px' class='text-center'>Del</th>
-                        @endcan
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($leads as $lead)
-                        @if ($lead->financy->payment_confirmation == 'N')
+
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-6">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Financeiro</h3>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-striped table-hover">
+                        <thead>
                             <tr>
-                                <td>{{ $lead->user->name }}</td>
-                                <td>{{ $lead->name }}</td>
-                                <td>
-                                    @if ($lead->financy->payment_confirmation == 'N')
-                                            <small class="badge badge-danger">Não confirmado</small>
-                                        @else
-                                            <small class="badge badge-success">Confirmado</small>
-                                        @endif
-                                </td>
-                                <td>
-                                    @if (isset($lead->financy->value_total))
-                                        {{ number_format($lead->financy->value_total, 2, ',', '.') }}
-                                    @else
-                                        <small class="badge badge-warning">Aguardando</small>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if (isset($lead->financy->receipt_date))
-                                        {{ $lead->financy->receipt_date->format('d/m/Y') }}
-                                    @else
-                                        <small class="badge badge-warning">Aguardando</small>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if (isset($lead->financy->payment_amount))
-                                        {{ number_format($lead->financy->payment_amount, 2, ',', '.') }}
-                                    @else
-                                        <small class="badge badge-warning">Aguardando</small>
-                                    @endif
-                                </td>
+                                <th>Franqueado</th>
+                                <th>Cliente</th>
+                                <th>Confirmação Matriz</th>
+                                <th>Valor</th>
+                                <th>Pagamento</th>
+                                <th style='width: 100px' class='text-center'></th>
                                 @can('edit-financial')
-                                    <td class='px-1'>
-                                        <a href="{{ route('admin.financial.edit', ['id' => $lead->id]) }}"
-                                            class="btn btn-info btn-xs btn-block">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    </td>
+                                    <th style='width: 60px' class='text-center'>Edit</th>
                                 @endcan
                                 @can('delete-financial')
-                                    <td class='px-1'>
-                                        <form method="POST" action="{{ route('admin.financial.destroy', ['id' => $lead->id]) }}"
-                                            onsubmit="return(confirmaExcluir())">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-xs btn-block">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
+                                    <th style='width: 60px' class='text-center'>Del</th>
                                 @endcan
                             </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($leads as $lead)
+                                @if (isset($lead->financy->confirmation) && $lead->financy->confirmation == "N")
+                                    <tr>
+                                        <td>
+                                            <span>{{ $lead->user->name }}</span><br/>
+                                            <small>{{ $lead->user->phone }}</small>
+                                        </td>
+                                        <td>
+                                            <span>{{ $lead->name }}</span><br/>
+                                            <small>{{ $lead->phone }}</small>
+                                        </td>
+                                        <td>
+                                            @if (isset($lead->financy->confirmation))
+                                                @if ($lead->financy->confirmation == 'S')
+                                                    <span>Confirmado pela matriz.</span>
+                                                @else
+                                                    <span>Em analise, aguardando confirmação.</span>
+                                                @endif
+                                            @else
+                                                <span>Aguardando</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (isset($lead->financy->value_total))
+                                                <span>{{ number_format($lead->financy->value_total, 2, ',', '.') }}</span>
+                                            @else
+                                                <span>Aguardando</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (isset($lead->financy->receipt_date))
+                                                <span>{{ \Carbon\Carbon::parse($lead->financy->receipt_date)->format('d/m/Y') }}</span>
+                                            @else
+                                                <span>Aguardando</span>
+                                            @endif
+                                        </td>
+                                        <td class='px-1'>
+                                            @if (isset($lead->financy->lead_id))
+                                                <a href="{{ route('admin.financial.edit', ['id' => $lead->id]) }}"
+                                                    class="btn btn-warning btn-xs btn-block" title="Acessar financeiro">
+                                                    Financeiro
+                                                </a>
+                                            @else
+                                                <a href="{{ route('admin.financial.create', ['id' => $lead->id]) }}"
+                                                    class="btn btn-default btn-xs btn-block" title="Acessar financeiro">
+                                                    Financeiro
+                                                </a>
+                                            @endif
+                                        </td>
+                                        @can('edit-financial')
+                                            <td class='px-1'>
+                                                <a href="{{ route('admin.clients.edit', ['id' => $lead->id]) }}"
+                                                    class="btn btn-info btn-xs btn-block">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </td>
+                                        @endcan
+                                        @can('delete-financial')
+                                            <td class='px-1'>
+                                                <form method="POST"
+                                                    action="{{ route('admin.financial.destroy', ['id' => $lead->id]) }}"
+                                                    onsubmit="return(confirmaExcluir())">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-xs btn-block">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        @endcan
+                                    </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="mt-3 mr-3 ml-3">
+                        @if (!$search && $leads)
+                            {{ $leads->links() }}
                         @endif
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="mt-3 mr-3 ml-3">
-                @if (!$search && $leads)
-                    {{ $leads->links() }}
-                @endif
+                    </div>
+                </div>
             </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-6">
+
+            <div class="card card-info">
+                <div class="card-header">
+                    <h3 class="card-title">Pagamento vencidos</h3>
+                    <div class="card-tools"></div>
+                </div>
+                <div class="card-body p-0" style="display: block;">
+                    @php
+                        $hoje = \Carbon\Carbon::parse(now())->format('Y-m-d');
+                    @endphp
+                    <table class="table">
+                        <tbody>
+                            @foreach ($financials as $value)
+                                @if ($hoje > $value->receipt_date && $value->confirmation == "N")    
+                                    <tr>
+                                        <td>
+                                            <span>{{\Carbon\Carbon::parse($value->receipt_date)->format('d/m/Y')}}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{$value->lead->name}}</span>
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
+
+
 @stop
 
 @section('css')

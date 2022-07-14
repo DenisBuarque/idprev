@@ -33,18 +33,18 @@ class ModelController extends Controller
         $query = $this->model->query();
 
         if(isset($request->search)){
-            $query->where('title', 'LIKE', '%' . $request->search . '%');
+            $query->orWhere('title', 'LIKE', '%' . $request->search . '%');
         }
 
-        if(isset($request->action)){
-            $query->where('action_id',$request->action);
+        if($request->has('action')){
+            $query->orWhere('action_id', $request->action);
         }
 
         $models = $query->orderBy('id','DESC')->paginate(10);
 
         $actions = $this->action->all();
         
-        return view('admin.document.models.index',['models' => $models, 'actions' => $actions]);
+        return view('admin.models.index',['models' => $models, 'actions' => $actions]);
     }
 
     /**
@@ -55,7 +55,7 @@ class ModelController extends Controller
     public function create()
     {
         $actions = \App\Models\Action::all();
-        return view('admin.document.models.create',['actions' => $actions]);
+        return view('admin.models.create',['actions' => $actions]);
     }
 
     /**
@@ -84,9 +84,9 @@ class ModelController extends Controller
         $document = $this->model->create($data);
         if($document)
         {
-            return redirect('admin/document/model/create')->with('success', 'Registro inserido com sucesso!');
+            return redirect('admin/model/create')->with('success', 'Registro inserido com sucesso!');
         } else {
-            return redirect('admin/document/model/create')->with('error', 'Erro ao inserir o registro!');
+            return redirect('admin/model/create')->with('error', 'Erro ao inserir o registro!');
         }
     }
 
@@ -108,10 +108,10 @@ class ModelController extends Controller
             if(Storage::exists($record['document'])){
                 return Storage::download($record['document']);
             } else {
-                return redirect('admin/document/models')->with('alert', 'Desculpe! Arquivo não encontrado.');
+                return redirect('admin/models')->with('alert', 'Desculpe! Arquivo não encontrado.');
             }
         } else {
-            return redirect('admin/document/models')->with('alert', 'Arquivo não existe!');
+            return redirect('admin/models')->with('alert', 'Arquivo não existe!');
         }
     }
  
@@ -126,9 +126,9 @@ class ModelController extends Controller
         $actions = \App\Models\Action::all();
         $model = $this->model->find($id);
         if($model){
-            return view('admin.document.models.edit',['model' => $model, 'actions' => $actions]);
+            return view('admin.models.edit',['model' => $model, 'actions' => $actions]);
         } else {
-            return redirect('admin/document/models')->with('alert', 'Desculpe! Não encontramos o registro!');
+            return redirect('admin/models')->with('alert', 'Desculpe! Não encontramos o registro!');
         }
     }
 
@@ -153,8 +153,8 @@ class ModelController extends Controller
 
         if($request->hasFile('document') && $request->file('document')->isValid())
         {
-            if(Storage::exists($record['document'])){
-                Storage::delete($record['document']);
+            if(Storage::disk('public')->exists($record['document'])){
+                Storage::disk('public')->delete($record['document']);
             } 
 
             $new_file = $request->document->store('model_docs','public');
@@ -163,9 +163,9 @@ class ModelController extends Controller
 
         if($record->update($data))
         {
-            return redirect('admin/document/models')->with('success', 'Registro alterado com sucesso!');
+            return redirect('admin/models')->with('success', 'Registro alterado com sucesso!');
         } else {
-            return redirect('admin/document/models')->with('error', 'Erro ao alterar o registro!');
+            return redirect('admin/models')->with('error', 'Erro ao alterar o registro!');
         }
     }
 
@@ -180,12 +180,13 @@ class ModelController extends Controller
         $data = $this->model->find($id);
         if($data->delete())
         {
-            if(Storage::exists($data['document'])){
-                Storage::delete($data['document']);
-            } 
-            return redirect('admin/document/models')->with('success', 'Registro excluído com sucesso!');
+            if(Storage::disk('public')->exists($data['document'])){
+                Storage::disk('public')->delete($data['document']);
+            }
+
+            return redirect('admin/models')->with('success', 'Registro excluído com sucesso!');
         } else {
-            return redirect('admin/document/models')->with('alert', 'Erro ao excluir o registro!');
+            return redirect('admin/models')->with('alert', 'Erro ao excluir o registro!');
         }
     }
 }

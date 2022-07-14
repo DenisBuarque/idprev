@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Ticket;
 use App\Models\FeedbackLead;
 use App\Models\Event;
+use App\Models\Term;
+use App\Models\Financial;
 
 class DashboardController extends Controller
 {
@@ -16,8 +18,11 @@ class DashboardController extends Controller
     private $lead;
     private $ticket;
     private $event;
+    private $term;
+    private $financial;
 
-    public function __construct(User $user, Lead $lead, Ticket $ticket, FeedbackLead $feedback, Event $event)
+
+    public function __construct(User $user, Lead $lead, Ticket $ticket, FeedbackLead $feedback, Event $event, Term $term, Financial $financial)
     {
         $this->middleware('auth');
         
@@ -26,6 +31,8 @@ class DashboardController extends Controller
         $this->ticket = $ticket;
         $this->feedback = $feedback;
         $this->event = $event;
+        $this->term = $term;
+        $this->financial = $financial;
     }
 
     /**
@@ -59,6 +66,8 @@ class DashboardController extends Controller
 
         $users = $this->user->where('type','F')->get();
         $events = $this->event->all();
+        $terms_cumpridos = $this->term->where('tag','=','1')->get();
+        $financials = $this->financial->all();
 
         if($type_user == "F"){
             $leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag', [1])->orderBy('id','DESC')->get();
@@ -78,6 +87,8 @@ class DashboardController extends Controller
             'users'                 => $users,
             'events'                => $events,
             'tickets_pendentes'     => $tickets_pendentes,
+            'terms_cumpridos'       => $terms_cumpridos,
+            'financials'            => $financials
         ]);
     }
 

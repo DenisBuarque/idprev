@@ -21,9 +21,6 @@
         </div>
     @endif
 
-
-
-
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -33,8 +30,10 @@
                         <div class="card-body box-profile">
                             <div class="text-center">
                                 @if (isset($ticket->user->image))
-                                    <img class="profile-user-img img-fluid img-circle"
+                                    <img class="profile-user-img img-fluid img-circle" style="width: 150px; height: 150px;"
                                         src="{{ asset('storage/' . $ticket->user->image) }}" alt="Franqueado">
+                                @else
+                                    <img class="profile-user-img img-fluid img-circle" style="width: 150px; height: 150px;" src="https://dummyimage.com/28x28/b6b7ba/fff" alt="Franqueado">
                                 @endif
                             </div>
                             <h3 class="profile-username text-center">{{ $ticket->user->name }}</h3>
@@ -44,15 +43,19 @@
                                 <li class="list-group-item">
                                     <b>Comentários ticket</b> <a class="float-right">{{ count($feedbacks) }}</a>
                                 </li>
-                                <li class="list-group-item">
-                                    <b>Contato</b> <a class="float-right">{{ $ticket->user->phone }}</a>
-                                </li>
+                                @isset($ticket->user->phone)    
+                                    <li class="list-group-item">
+                                        <b>Contato</b> <a class="float-right">{{ $ticket->user->phone }}</a>
+                                    </li>
+                                @endisset
                                 <li class="list-group-item">
                                     <b>Membro desde</b> <a class="float-right">{{ $ticket->user->created_at->format('d/m/Y') }}</a>
                                 </li>
-                                <li class="list-group-item">
-                                    <b>Advogados</b> <a class="float-right">{{ count($ticket->user->lawyers) }}</a>
-                                </li>
+                                @if (count($ticket->user->lawyers) > 0)    
+                                    <li class="list-group-item">
+                                        <b>Advogados</b> <a class="float-right">{{ count($ticket->user->lawyers) }}</a>
+                                    </li>
+                                @endif
                             </ul>
 
                             <ul class="users-list">

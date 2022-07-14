@@ -42,7 +42,7 @@ class EventController extends Controller
             $events = $this->event->orderBy('id','DESC')->paginate(5);
         }
         
-        return view('admin.training.events.index',['events' => $events, 'search' => $search]);
+        return view('admin.events.index',['events' => $events, 'search' => $search]);
     }
 
     /**
@@ -52,7 +52,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        return view('admin.training.events.create');
+        return view('admin.events.create');
     }
 
     /**
@@ -83,9 +83,9 @@ class EventController extends Controller
         $event = $this->event->create($data);
         if($event)
         {
-            return redirect('admin/training/events')->with('success', 'Registro inserido com sucesso!');
+            return redirect('admin/events')->with('success', 'Registro inserido com sucesso!');
         } else {
-            return redirect('admin/training/event/create')->with('error', 'Erro ao inserir o registro!');
+            return redirect('admin/event/create')->with('error', 'Erro ao inserir o registro!');
         }
     }
 
@@ -110,9 +110,9 @@ class EventController extends Controller
     {
         $event = $this->event->find($id);
         if($event){
-            return view('admin.training.events.edit',['event' => $event]);
+            return view('admin.events.edit',['event' => $event]);
         } else {
-            return redirect('admin/training/events')->with('alert', 'Desculpe! Não encontramos o registro!');
+            return redirect('admin/events')->with('alert', 'Desculpe! Não encontramos o registro!');
         }
     }
 
@@ -138,8 +138,8 @@ class EventController extends Controller
 
         if($request->hasFile('image') && $request->file('image')->isValid())
         {
-            if(Storage::exists($record['image'])){
-                Storage::delete($record['image']);
+            if(Storage::disk('public')->exists($record['image'])){
+                Storage::disk('public')->delete($record['image']);
             } 
 
             $new_file = $request->image->store('events','public');
@@ -148,9 +148,9 @@ class EventController extends Controller
 
         if($record->update($data))
         {
-            return redirect('admin/training/events')->with('success', 'Registro alterado com sucesso!');
+            return redirect('admin/events')->with('success', 'Registro alterado com sucesso!');
         } else {
-            return redirect('admin/training/events')->with('error', 'Erro ao alterar o registro!');
+            return redirect('admin/events')->with('error', 'Erro ao alterar o registro!');
         }
     }
 
@@ -165,13 +165,13 @@ class EventController extends Controller
         $data = $this->event->find($id);
         if($data->delete())
         {
-            if(Storage::exists($data['image'])){
-                Storage::delete($data['image']);
+            if(Storage::disk('public')->exists($data['image'])){
+                Storage::disk('public')->delete($data['image']);
             } 
 
-            return redirect('admin/training/events')->with('success', 'Registro excluído com sucesso!');
+            return redirect('admin/events')->with('success', 'Registro excluído com sucesso!');
         } else {
-            return redirect('admin/training/events')->with('alert', 'Erro ao excluir o registro!');
+            return redirect('admin/events')->with('alert', 'Erro ao excluir o registro!');
         }
     }
 }

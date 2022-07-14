@@ -14,7 +14,7 @@
     <form method="POST" action="{{ route('admin.worksheets.update', ['id' => $worksheet->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        <div class="card card-info" style="max-width: 700px; margin: auto">
+        <div class="card card-info" style="max-width: 800px; margin: auto">
             <div class="card-header">
                 <h3 class="card-title">Formulário edição de planilha:</h3>
             </div>

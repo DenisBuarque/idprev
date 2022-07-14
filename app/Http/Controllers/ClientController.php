@@ -8,6 +8,8 @@ use App\Models\ClientPhotos;
 use App\Models\User;
 use App\Models\Action;
 use App\models\ModelDoc;
+use App\Models\lawyer;
+use App\Models\Term;
 use App\Models\FeedbackLead;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -22,8 +24,19 @@ class ClientController extends Controller
     private $feedback;
     private $clientPhotos;
     private $model;
+    private $lawyer;
+    private $term;
 
-    public function __construct(Lead $lead, User $user, Action $action, ModelDoc $model, FeedbackLead $feedback, ClientPhotos $clientPhotos)
+    public function __construct(
+        Lead $lead, 
+        User $user, 
+        Action $action, 
+        ModelDoc $model, 
+        FeedbackLead $feedback, 
+        ClientPhotos $clientPhotos, 
+        Lawyer $lawyer,
+        Term $term
+        )
     {   
         $this->middleware('auth');
         
@@ -33,6 +46,8 @@ class ClientController extends Controller
         $this->model = $model;
         $this->feedback = $feedback;
         $this->clientPhotos = $clientPhotos;
+        $this->lawyer = $lawyer;
+        $this->term = $term;
     }
 
     /**
@@ -48,74 +63,51 @@ class ClientController extends Controller
             $waiting = $this->lead->where('user_id',auth()->user()->id)->where('tag','2')->get()->count();
             $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
             $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
-            $progress = $this->lead->where('user_id',auth()->user()->id)->where('situation','1')->get()->count();
-            $awaiting_fulfillment = $this->lead->where('user_id',auth()->user()->id)->where('situation','2')->get()->count();
-            $procedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get()->count();
-            $improcedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get()->count();
-            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get()->count();
+            $progress = $this->lead->where('user_id',auth()->user()->id)->where('situation','1')->where('tag','3')->get()->count();
+            $awaiting_fulfillment = $this->lead->where('user_id',auth()->user()->id)->where('situation','2')->where('tag','3')->get()->count();
+            $procedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->where('tag','3')->get()->count();
+            $improcedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->where('tag','3')->get()->count();
+            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->where('tag','3')->get()->count();
         } else {
             $waiting = $this->lead->where('tag','2')->get()->count();
             $converted_lead = $this->lead->where('tag','3')->get()->count();
             $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-            $progress = $this->lead->where('situation','1')->get()->count();
-            $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
-            $procedente = $this->lead->where('situation','3')->get()->count();
-            $improcedente = $this->lead->where('situation','4')->get()->count();
-            $resources = $this->lead->where('situation','5')->get()->count();  
+            $progress = $this->lead->where('situation','1')->where('tag','3')->get()->count();
+            $awaiting_fulfillment = $this->lead->where('situation','2')->where('tag','3')->get()->count();
+            $procedente = $this->lead->where('situation','3')->where('tag','3')->get()->count();
+            $improcedente = $this->lead->where('situation','4')->where('tag','3')->get()->count();
+            $resources = $this->lead->where('situation','5')->where('tag','3')->get()->count();  
         }
 
+        $models = $this->model->all(); // modelos de docs...
+        $franchisees = $this->user->where('type','F')->get();
+        $terms = $this->term->all();
+        $terms_cumpridos = $this->term->where('tag','=','1')->get();
+
+        // inicia a consulta
         $query = $this->lead->query();
 
-        if(isset($request->search)){
-            //$query->where('title', 'LIKE', '%' . $request->search . '%');
-
-            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
-            foreach($columns as $key => $value):
-                $query->orWhere($value, 'LIKE', '%'.$request->search.'%');
-            endforeach;
-
+        if ($request->has('franchisee')) {
+            $query->orWhere('user_id', '=', $request->franchisee)->whereIn('tag',[3]);
         }
 
-        if(isset($request->situation)){
-            $query->where('situation',$request->situation);
+        if ($request->has('situation')) {
+            $query->orWhere('situation', '=', $request->situation)->whereIn('tag',[3]);
         }
 
-        //$leads = $query->orderBy('id','DESC')->paginate(10);
+        if (isset($request->search)) {
+            $columns = ['name','phone','email','address','district','city','state'];
+            foreach ($columns as $key => $value) {
+                $query->orWhere($value, 'LIKE', '%' . $request->search . '%')->whereIn('tag',[3]);
+            }
+        }
 
+        // Monta a lista de clientes leads
         if($type_user == "F"){
-            $leads = $query->where('user_id',auth()->user()->id)->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
-            //$leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
+            $leads = $query->where('user_id',auth()->user()->id)->whereIn('tag',[3])->whereIn('situation',[1,2,4,5])->orderBy('id','DESC')->paginate(10);
         }else {
-            $leads = $query->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
-            //$leads = $this->lead->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
+            $leads = $query->whereIn('tag',[3])->whereIn('situation',[1,2,4,5])->orderBy('id','DESC')->paginate(10);
         }
-        
-        $models = $this->model->all();
-
-        /*
-        $search = "";
-        if(isset($request->search))
-        {
-            $search = $request->search;
-            $query = $this->lead;
-
-            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
-            foreach($columns as $key => $value):
-                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
-            endforeach;
-            if($type_user == "F"){
-                $leads = $query->where('user_id',auth()->user()->id)->whereIn('tag',[3])->orderBy('id','DESC')->get();
-            } else {
-                $leads = $query->whereIn('tag',[3])->orderBy('id','DESC')->get();
-            }
-
-        } else {
-            if($type_user == "F"){
-                $leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
-            }else {
-                $leads = $this->lead->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
-            }
-        }*/
         
         return view('admin.clients.index',[
             'leads' => $leads, 
@@ -128,6 +120,9 @@ class ClientController extends Controller
             'improcedente' => $improcedente,
             'resources' => $resources,
             'models' => $models,
+            'franchisees' => $franchisees,
+            'terms' => $terms,
+            'terms_cumpridos' => $terms_cumpridos
         ]);
     }
 
@@ -139,28 +134,29 @@ class ClientController extends Controller
             $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
             $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
             $progress = $this->lead->where('user_id',auth()->user()->id)->where('situation','1')->get()->count();
-            $awaiting_fulfillment = $this->lead->where('user_id',auth()->user()->id)->where('situation','2')->get()->count();
-            $procedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get()->count();
-            $improcedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get()->count();
-            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get()->count();
+            $awaiting_fulfillment = $this->lead->where('user_id',auth()->user()->id)->where('situation','2')->where('tag','3')->get()->count();
+            $procedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->where('tag','3')->get()->count();
+            $improcedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->where('tag','3')->get()->count();
+            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->where('tag','3')->get()->count();
             $leads = $this->lead->where('user_id',auth()->user()->id)->where('tag',$tag)->orderBy('id','DESC')->get();
         } else {
             $waiting = $this->lead->where('tag','2')->get()->count();
             $converted_lead = $this->lead->where('tag','3')->get()->count();
             $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-            $progress = $this->lead->where('situation','1')->get()->count();
-            $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
-            $procedente = $this->lead->where('situation','3')->get()->count();
-            $improcedente = $this->lead->where('situation','4')->get()->count();
-            $resources = $this->lead->where('situation','5')->get()->count();
+            $progress = $this->lead->where('situation','1')->where('tag','3')->get()->count();
+            $awaiting_fulfillment = $this->lead->where('situation','2')->where('tag','3')->get()->count();
+            $procedente = $this->lead->where('situation','3')->get()->where('tag','3')->count();
+            $improcedente = $this->lead->where('situation','4')->where('tag','3')->get()->count();
+            $resources = $this->lead->where('situation','5')->where('tag','3')->get()->count();
             $leads = $this->lead->where('tag',$tag)->orderBy('id','DESC')->get();
         }
 
         $models = $this->model->all();
-        $search = "";
+        $franchisees = $this->user->where('type','F')->get();
+        $terms = $this->term->all();
+        $terms_cumpridos = $this->term->where('tag','=','1')->get();
+
         return view('admin.clients.tag',[
-            'leads' => $leads, 
-            'search' => $search,
             'waiting' => $waiting,
             'converted_lead' => $converted_lead, 
             'unconverted_lead' => $unconverted_lead,
@@ -170,151 +166,17 @@ class ClientController extends Controller
             'improcedente' => $improcedente,
             'resources' => $resources,
             'models' => $models,
+            'franchisees' => $franchisees,
+            'leads' => $leads,
+            'terms' => $terms,
+            'terms_cumpridos' => $terms_cumpridos,
+            'tag' => $tag
         ]);
-    }
-
-    public function situation($situation)
-    {
-        $type_user = auth()->user()->type;
-        if($type_user == 'F'){   
-            $waiting = $this->lead->where('user_id',auth()->user()->id)->where('tag','2')->get()->count();
-            $converted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','3')->get()->count();
-            $unconverted_lead = $this->lead->where('user_id',auth()->user()->id)->where('tag','4')->get()->count();
-            $progress = $this->lead->where('user_id',auth()->user()->id)->where('situation','1')->get()->count();
-            $awaiting_fulfillment = $this->lead->where('user_id',auth()->user()->id)->where('situation','2')->get()->count();
-            $procedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','3')->get()->count();
-            $improcedente = $this->lead->where('user_id',auth()->user()->id)->where('situation','4')->get()->count();
-            $resources = $this->lead->where('user_id',auth()->user()->id)->where('situation','5')->get()->count();
-            $leads = $this->lead->where('user_id',auth()->user()->id)->where('situation',$situation)->orderBy('id','DESC')->get();
-        } else {
-            $waiting = $this->lead->where('tag','2')->get()->count();
-            $converted_lead = $this->lead->where('tag','3')->get()->count();
-            $unconverted_lead = $this->lead->where('tag','4')->get()->count();
-            $progress = $this->lead->where('situation','1')->get()->count();
-            $awaiting_fulfillment = $this->lead->where('situation','2')->get()->count();
-            $procedente = $this->lead->where('situation','3')->get()->count();
-            $improcedente = $this->lead->where('situation','4')->get()->count();
-            $resources = $this->lead->where('situation','5')->get()->count();
-            $leads = $this->lead->where('situation',$situation)->orderBy('id','DESC')->get();
-        }
-        $models = $this->model->all();
-
-        $search = "";
-
-        return view('admin.clients.situation',[
-            'leads' => $leads, 
-            'search' => $search,
-            'waiting' => $waiting,
-            'converted_lead' => $converted_lead, 
-            'unconverted_lead' => $unconverted_lead,
-            'progress' => $progress,
-            'awaiting_fulfillment' => $awaiting_fulfillment,
-            'procedente' => $procedente,
-            'improcedente' => $improcedente,
-            'resources' => $resources,
-            'models' => $models,
-        ]);
-    }
-
-    public function converted(Request $request)
-    {
-        $type_user = auth()->user()->type;
-
-        $search = "";
-        if(isset($request->search))
-        {
-            $search = $request->search;
-            $query = $this->lead;
-
-            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
-            foreach($columns as $key => $value):
-                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
-            endforeach;
-
-            $leads = $query->whereIn('tag',[3])->orderBy('id','DESC')->get();
-
-        } else {
-            $leads = $this->lead->whereIn('tag',[3])->orderBy('id','DESC')->paginate(10);
-        }
-        
-        return view('admin.clients.converted',['leads' => $leads, 'search' => $search]);
-    }
-
-    public function unconverted(Request $request)
-    {
-        $type_user = auth()->user()->type;
-
-        $search = "";
-        if(isset($request->search))
-        {
-            $search = $request->search;
-            $query = $this->lead;
-
-            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
-            foreach($columns as $key => $value):
-                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
-            endforeach;
-
-            $leads = $query->whereIn('tag',[4])->orderBy('id','DESC')->get();
-
-        } else {
-            $leads = $this->lead->whereIn('tag',[4])->orderBy('id','DESC')->paginate(10);
-        }
-        
-        return view('admin.clients.converted',['leads' => $leads, 'search' => $search]);
-    }
-
-    public function term(Request $request)
-    {
-        $type_user = auth()->user()->type;
-
-        $models = $this->model->all();
-        $search = "";
-        if(isset($request->search))
-        {
-            $search = $request->search;
-            $query = $this->lead;
-
-            $columns = ['name','phone','email','address','district','city','state','process','court','stick','term'];
-            foreach($columns as $key => $value):
-                $query = $query->orWhere($value, 'LIKE', '%'.$search.'%');
-            endforeach;
-
-            if($type_user == 'F'){
-                $leads = $query->where('user_id',auth()->user()->id)->whereIn('situation',[2])->orderBy('id','DESC')->get();
-            } else {
-                $leads = $query->whereIn('situation',[2])->orderBy('id','DESC')->get();
-            }
-
-        } else {
-            if($type_user == 'F'){
-                $leads = $this->lead->where('user_id',auth()->user()->id)->whereIn('situation',[2])->orderBy('id','DESC')->paginate(10);
-            } else {
-                $leads = $this->lead->whereIn('situation',[2])->orderBy('id','DESC')->paginate(10);
-            }
-            
-        }
-        
-        return view('admin.clients.term',[
-            'leads' => $leads, 
-            'search' => $search,
-            'models' => $models
-        ]);
-    }
-
-    public function edit_term($id)
-    {
-        $lead = $this->lead->find($id);
-        if($lead){
-            return view('admin.clients.edit_term',['lead' => $lead]);
-        } else {
-            return redirect('admin/client/term/edit')->with('alert', 'Desculpe! Não encontramos o registro!');
-        }
     }
 
     public function documents($id)
     {
-        $documents = $this->modeldoc->where('action_id',$id)->get();
+        $documents = $this->model->where('action_id',$id)->get();
         return view('admin.clients.documents',['documents' => $documents]);
     }
 
@@ -354,12 +216,6 @@ class ClientController extends Controller
             'action' => 'required',
         ])->validate();
 
-        if($data['situation'] == 2){
-            Validator::make($data, [
-                'term' => 'required',
-            ])->validate();
-        }
-
         if(isset($data['financial'])):
             $data['financial'] = str_replace(['.', ','], ['', '.'], $data['financial']);
         else:
@@ -368,6 +224,12 @@ class ClientController extends Controller
 
         if(empty($data['user_id'])){
             $data['user_id'] = null;
+        }
+
+        if($request->has('confirmed')){
+            $data['confirmed'] = true;
+        } else {
+            $data['confirmed'] = false;
         }
 
         $lead = $this->lead->create($data);
@@ -383,6 +245,14 @@ class ClientController extends Controller
             if($request->hasFile('photos')){
                 $images = $this->imageUpload($request,'image');
                 $lead->photos()->createMany($images);
+            }
+
+            // adiciona os advogados se estiver checked.
+            if(isset($data['lawyer']) && count($data['lawyer']))
+            {
+                foreach($data['lawyer'] as $key => $value):
+                    $lead->lawyers()->attach($value);
+                endforeach;
             }
 
             return redirect('admin/clients')->with('success', 'Registro inserido com sucesso!');
@@ -422,13 +292,16 @@ class ClientController extends Controller
         $actions = $this->action->all();
         $models = $this->model->all();
         $users = $this->user->where('type','F')->get();
+        $lawyers = $this->lawyer->all();
         $lead = $this->lead->find($id);
         if($lead){
             return view('admin.clients.edit',[
                 'lead' => $lead, 
                 'users' => $users, 
                 'actions' => $actions,
-                'models' => $models]
+                'models' => $models, 
+                'lawyers' => $lawyers
+                ]
             );
         } else {
             return redirect('admin/clients')->with('alert', 'Desculpe! Não encontramos o registro!');
@@ -478,12 +351,6 @@ class ClientController extends Controller
             'action' => 'required',
         ])->validate();
 
-        if($data['situation'] == 2){
-            Validator::make($data, [
-                'term' => 'required',
-            ])->validate();
-        }
-
         if(isset($data['financial'])):
             $data['financial'] = str_replace(['.', ','], ['', '.'], $data['financial']);
         else:
@@ -492,6 +359,27 @@ class ClientController extends Controller
 
         if(empty($data['user_id'])){
             $data['user_id'] = null;
+        }
+
+        if($request->has('confirmed')){
+            $data['confirmed'] = true;
+        } else {
+            $data['confirmed'] = false;
+        }
+
+        // atualiza as permissões
+        $permissions = $record->lawyers;
+        if(count($permissions)){
+            foreach($permissions as $key => $value):
+                $record->lawyers()->detach($value->id);
+            endforeach;
+        }
+
+        if(isset($data['lawyer']) && count($data['lawyer']))
+        {
+            foreach($data['lawyer'] as $key => $value):
+                $record->lawyers()->attach($value);
+            endforeach;
         }
 
         if($record->update($data)):
@@ -507,6 +395,13 @@ class ClientController extends Controller
                 $images = $this->imageUpload($request,'image');
                 $record->photos()->createMany($images);
             }
+
+            /*if(isset($data['lawyer']) && count($data['lawyer']))
+            {
+                foreach($data['lawyer'] as $key => $value):
+                    $record->lawyers()->attach($value);
+                endforeach;
+            }*/
             
             return redirect('admin/clients')->with('success', 'Registro alterado com sucesso!');
         else:
@@ -540,7 +435,22 @@ class ClientController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = $this->lead->find($id);
+        $photos = $this->clientPhotos->where('lead_id', $id)->get();
+        
+        if($data->delete()) {
+
+            foreach($photos as $photo){
+                $photo->delete();
+                if(Storage::disk('public')->exists($photo->image)){
+                    Storage::disk('public')->delete($photo->image);
+                }
+            }
+
+            return redirect('admin/clients')->with('success', 'Registro excluído com sucesso!');
+        } else {
+            return redirect('admin/clients')->with('error', 'Erro ao excluir o registro!');
+        }
     }
 
     // realiza o upload da imagem do produto
@@ -554,7 +464,7 @@ class ClientController extends Controller
         return $uploadedImage;
     }
 
-    // remove a imagem do produto
+    // remove a imagem
     public function remove(Request $request)
     {
         $photo = $request->get('photo');

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('financials', function (Blueprint $table) {
             $table->id();
-            $table->char('payment_confirmation',1);
+            $table->char('confirmation',1);
             $table->string('precatory',50)->nullable();
             $table->date('receipt_date')->nullable();
             $table->integer('bank')->nullable();

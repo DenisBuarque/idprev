@@ -31,10 +31,10 @@ return new class extends Migration
             $table->string('action',50)->nullable();
             $table->string('court',50)->nullable(); //tribunal
             $table->string('stick',50)->nullable(); //vara
-            $table->date('term')->nullable(); // prazo
             $table->string('responsible')->nullable();
             $table->date('date_fulfilled')->nullable();
             $table->text('greeting')->nullable();
+            $table->boolean('confirmed')->nullable();
 
             $table->unsignedBigInteger('user_id')->nullable()->default(NULL);
             $table->foreign('user_id')->references('id')->on('users');

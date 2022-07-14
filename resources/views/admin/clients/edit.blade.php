@@ -51,10 +51,10 @@
                     <div class="col-sm-3">
                         <div class="form-group m-0">
                             <small>Cep: *</small>
-                            <input type="text" name="zip_code" id="zip_code" value="{{ $lead->zip_code ?? old('zip_code') }}"
-                                class="form-control" maxlength="9" onkeypress="mascara(this, '#####-###')"
-                                onblur="pesquisacep(this.value);" />
-                                @error('zip_code')
+                            <input type="text" name="zip_code" id="zip_code"
+                                value="{{ $lead->zip_code ?? old('zip_code') }}" class="form-control @error('zip_code') is-invalid @enderror" maxlength="9"
+                                onkeypress="mascara(this, '#####-###')" onblur="pesquisacep(this.value);" />
+                            @error('zip_code')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
@@ -62,9 +62,9 @@
                     <div class="col-sm-9">
                         <div class="form-group m-0">
                             <small>Endereço: *</small>
-                            <input type="text" name="address" id="address" value="{{ $lead->address ?? old('address') }}"
-                                class="form-control" maxlength="250" />
-                                @error('address')
+                            <input type="text" name="address" id="address"
+                                value="{{ $lead->address ?? old('address') }}" class="form-control @error('address') is-invalid @enderror" maxlength="250" />
+                            @error('address')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
@@ -73,8 +73,8 @@
                         <div class="form-group">
                             <small>Número: *</small>
                             <input type="text" name="number" value="{{ $lead->number ?? old('number') }}"
-                                class="form-control" placeholder="nº" maxlength="5" />
-                                @error('number')
+                                class="form-control @error('number') is-invalid @enderror" placeholder="nº" maxlength="5" />
+                            @error('number')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
@@ -83,8 +83,8 @@
                         <div class="form-group">
                             <small>Bairro: *</small>
                             <input type="text" name="district" id="district"
-                                value="{{ $lead->district ?? old('district') }}" class="form-control" maxlength="50" />
-                                @error('district')
+                                value="{{ $lead->district ?? old('district') }}" class="form-control @error('district') is-invalid @enderror" maxlength="50" />
+                            @error('district')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
@@ -93,8 +93,8 @@
                         <div class="form-group">
                             <small>Cidade: *</small>
                             <input type="text" name="city" id="city" value="{{ $lead->city ?? old('city') }}"
-                                class="form-control" maxlength="50" />
-                                @error('city')
+                                class="form-control @error('city') is-invalid @enderror" maxlength="50" />
+                            @error('city')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
@@ -102,17 +102,115 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <small>Estado: *</small>
-                            <input type="text" name="state" id="state" value="{{ $lead->state ?? old('state') }}"
-                                class="form-control" maxlength="2" />
-                                @error('state')
+                            <input type="text" name="state" id="state"
+                                value="{{ $lead->state ?? old('state') }}" class="form-control @error('state') is-invalid @enderror" maxlength="2" />
+                            @error('state')
                                 <div class="text-red">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-info my-2" style="max-width: 900px; margin: auto">
+            <div class="card-body">
+                <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group m-0">
+                            <small>Etiqueta: *</small>
+                            <select name="tag" class="form-control">
+                                <option value="2" @if ($lead->tag == 2 || old('tag') == 2) selected @endif>Aguardando
+                                </option>
+                                <option value="3" @if ($lead->tag == 3 || old('tag') == 3) selected @endif>Convertido
+                                </option>
+                                <option value="4" @if ($lead->tag == 4 || old('tag') == 4) selected @endif>Não Convertido
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group m-0">
+                            <small>Situação: *</small>
+                            <select name="situation" class="form-control">
+                                <option value="1" @if ($lead->situation == 1 || old('situation') == 1) selected @endif>Andamento em ordem
+                                </option>
+                                <option value="2" @if ($lead->situation == 2 || old('situation') == 2) selected @endif>Aguardando
+                                    cumprimento</option>
+                                <option value="3" @if ($lead->situation == 3 || old('situation') == 3) selected @endif>Finalizado
+                                    Procedente</option>
+                                <option value="4" @if ($lead->situation == 4 || old('situation') == 4) selected @endif>Finalizado
+                                    Improcedente</option>
+                                <option value="5" @if ($lead->situation == 5 || old('situation') == 5) selected @endif>Recursos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group m-0">
+                            <small>Tipo de Ação: *</small>
+                            <select name="action" class="form-control @error('action') is-invalid @enderror" onchange="showDocuments(this.value)">
+                                <option value="">Selecione a ação</option>
+                                @foreach ($actions as $action)
+                                    @if ($action->id == $lead->action or old('action') == $action->id)
+                                        <option value="{{ $action->id }}" selected>{{ $action->name }}</option>
+                                    @else
+                                        <option value="{{ $action->id }}">{{ $action->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('action')
+                                <div class="text-red">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group m-0">
+                            <small>Processo Nº:</small>
+                            <input type="text" name="process" id="process"
+                                value="{{ $lead->process ?? old('process') }}" class="form-control" maxlength="30" />
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group m-0">
+                            <small>Valor da causa:</small>
+                            <input type="text" name="financial" id="financial" onkeyup="moeda(this);"
+                                value="{{ $lead->financial ? number_format($lead->financial, 2, ',', '.') : old('financial') }}"
+                                class="form-control" maxlength="13" placeholder="0,00" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group m-0">
+                            <small>Tribunal:</small>
+                            <input type="text" name="court" id="court"
+                                value="{{ $lead->court ?? old('court') }}" class="form-control" maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <small>Vara:</small>
+                            <input type="text" name="stick" id="stick"
+                                value="{{ $lead->stick ?? old('stick') }}" class="form-control" maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <input type="checkbox" name="confirmed" value="true"
+                                @if ($lead->confirmed == 1) checked @endif /> Lembre-me de entrar em contato
+                            novamente.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-info" style="max-width: 900px; margin: auto">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group m-0">
                             <small>Franqueado: *</small>
-                            <select name="user_id" class="form-control @error('phone') is-invalid @enderror">
+                            <select name="user_id" onchange="showLawyers(this.value)"
+                                class="form-control @error('phone') is-invalid @enderror">
                                 <option value="">Selecione um franqueado</option>
                                 @foreach ($users as $user)
                                     @if ($user->id == $lead->user_id)
@@ -127,105 +225,59 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Etiqueta: *</small>
-                            <select name="tag" class="form-control">
-                                <option value="2" @if ($lead->tag == 2 || old('tag') == 2) selected @endif>Aguardando</option>
-                                <option value="3" @if ($lead->tag == 3 || old('tag') == 3) selected @endif>Convertido</option>
-                                <option value="4" @if ($lead->tag == 4 || old('tag') == 4) selected @endif>Não Convertido</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Situação: *</small>
-                            <select name="situation" class="form-control">
-                                <option value="1" @if ($lead->situation == 1 || old('situation') == 1) selected @endif>Andamento em ordem</option>
-                                <option value="2" @if ($lead->situation == 2 || old('situation') == 2) selected @endif>Aguardando cumprimento</option>
-                                <option value="3" @if ($lead->situation == 3 || old('situation') == 3) selected @endif>Finalizado Procedente</option>
-                                <option value="4" @if ($lead->situation == 4 || old('situation') == 4) selected @endif>Finalizado Improcedente</option>
-                                <option value="5" @if ($lead->situation == 5 || old('situation') == 5) selected @endif>Recursos</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Tipo de Ação: *</small>
-                            <select name="action" class="form-control" onchange="showDocuments(this.value)">
-                                <option value="">Selecione a ação</option>
-                                @foreach ($actions as $action)
-                                    @if ($action->id == $lead->action or old('action') == $action->id)
-                                        <option value="{{ $action->id }}" selected>{{ $action->name }}</option>
-                                    @else
-                                        <option value="{{ $action->id }}">{{ $action->name }}</option>
+                    <div class="col-md-12">
+                        <div id="list-lawyers">
+                            <small class="d-block mt-2">Advogado(s) do franqueado:</small>
+                            @foreach ($lawyers as $lawyer)
+                                @if ($lawyer->user_id == $lead->user_id)
+                                    @php
+                                        $checked = "";
+                                    @endphp
+                                    @if($lead->lawyers)
+                                        @foreach($lead->lawyers as $key => $permission)
+                                            @if($permission->id == $lawyer->id)
+                                                @php 
+                                                    $checked = "checked"; 
+                                                @endphp
+                                            @endif
+                                        @endforeach
                                     @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Processo Nº:</small>
-                            <input type="text" name="process" id="process" value="{{ $lead->process ?? old('process') }}"
-                                class="form-control" maxlength="30" />
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Financeiro:</small>
-                            <input type="text" name="financial" id="financial" onkeyup="moeda(this);"
-                                value="{{ $lead->financial ? number_format($lead->financial,2,',','.') : old('financial') }}" class="form-control" maxlength="13"
-                                placeholder="0,00" />
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group m-0">
-                            <small>Tribunal:</small>
-                            <input type="text" name="court" id="court" value="{{ $lead->court ?? old('court') }}"
-                                class="form-control" maxlength="50" />
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <small>Vara:</small>
-                            <input type="text" name="stick" id="stick" value="{{ $lead->stick ?? old('stick') }}"
-                                class="form-control" maxlength="50" />
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <small>Prazo:</small>
-                            @if (!empty($lead->ter))
-                                <input type="date" name="term" id="term" value="{{$lead->term->format('Y-m-d')}}" class="form-control @error('term') is-invalid @enderror" />
-                            @else
-                                <input type="date" name="term" id="term" class="form-control @error('term') is-invalid @enderror" />
-                            @endif
-                            @error('term')
-                                <div class="text-red">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <small>Anexo de documentos do cliente:</small>
-                            <br />
-                            <input type="file" name="photos[]" multiple />
-                        </div>
-                    </div>
 
-                    <div class="col-md-12">
-                        <div id="todo-list">
-                            @foreach ($models as $model)
-                                @if ($model->id == $lead->action)
-                                    <span>{{$model->name}} - <a href="{{ Storage::url($model->document) }}" target="_blank">Download</a></span><br/>
+                                    <span class="d-block"><input type="checkbox" name="lawyer[]" value="{{ $lawyer->id }}" {{ $checked }} /> {{ $lawyer->name }}</span>
                                 @endif
                             @endforeach
                         </div>
                     </div>
-
                 </div>
             </div>
+        </div>
+
+        <div class="card card-info my-2" style="max-width: 900px; margin: auto">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <span>Adicione como anexo todos do modelos do documentos solicitados:</span>
+                            <br />
+                            <input type="file" name="photos[]" multiple />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="todo-list">
+                            @foreach ($models as $model)
+                                @if ($model->id == $lead->action)
+                                    <span>{{ $model->name }} - <a href="{{ Storage::url($model->document) }}"
+                                            target="_blank">Download</a></span><br />
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-info" style="max-width: 900px; margin: auto">
+
             <div class="card-footer">
                 <a href="{{ route('admin.clients.index') }}" type="submit" class="btn btn-default">Cancelar</a>
                 <button id="button" type="submit" onClick="ocultarExibir()" class="btn btn-md btn-info float-right">
@@ -239,7 +291,40 @@
                 </a>
             </div>
         </div>
+
     </form>
+
+    @if ($lead->photos && count($lead->photos))
+        <div class="card card-info mt-2" style="max-width: 900px; margin: auto;">
+            <div class="card-footer bg-white">
+                <ul class="mailbox-attachments d-flex align-items-stretch clearfix">
+                    @foreach ($lead->photos as $file)
+                        <li>
+                            <span class="mailbox-attachment-icon"><i class="far fa-file-pdf"></i></span>
+                            <div class="mailbox-attachment-info">
+                                <a href="{{ Storage::url($file->image) }}" target="blank"
+                                    class="mailbox-attachment-name">
+                                    <i class="fas fa-paperclip"></i> {{ $file->image }}
+                                </a>
+                                <span class="mailbox-attachment-size clearfix mt-1">
+                                    <form method="POST" action="{{ route('admin.clients.delete.file') }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <span>12455 byts</span>
+                                        <input type="hidden" name="photo" value="{{ $file->image }}">
+                                        <button type="submit" class="btn btn-default btn-sm float-right">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </span>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
+
     <br />
 
 @stop
@@ -260,6 +345,15 @@
             document.getElementById("spinner").style.display = "block";
         }
 
+        function confirmaExcluir() {
+            var conf = confirm("Deseja mesmo excluir? Os dados serão perdidos e não poderam ser recuperados.");
+            if (conf) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         function showDocuments(id) {
             if (id == "") {
                 document.getElementById("todo-list").innerHTML = "";
@@ -277,6 +371,26 @@
                 }
             }
             xmlhttp.open("GET", "/admin/lead/documents/" + id, true);
+            xmlhttp.send();
+        }
+
+        function showLawyers(id) {
+            if (id == "") {
+                document.getElementById("list-lawyers").innerHTML = "";
+                return;
+            }
+            if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else { // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    document.getElementById("list-lawyers").innerHTML = xmlhttp.responseText;
+                }
+            }
+            xmlhttp.open("GET", "/admin/client/lawyers/" + id, true);
             xmlhttp.send();
         }
 

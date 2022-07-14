@@ -93,7 +93,7 @@
                                 @endcan
                                 @can('delete-administrative')
                                     <td class='px-1'>
-                                        <form method="POST" action=""
+                                        <form method="POST" action="{{route('admin.administratives.destroy',['id' => $administrative->id])}}"
                                             onsubmit="return(confirmaExcluir())">
                                             @csrf
                                             @method('DELETE')
@@ -106,7 +106,7 @@
                             </tr>
                     @empty
                     <tr>
-                        <td class="text-center" colspan="8">
+                        <td class="text-center" colspan="10">
                             Nenhum registro encontrado
                         </td>
                     </tr>

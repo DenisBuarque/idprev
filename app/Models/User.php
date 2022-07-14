@@ -51,12 +51,12 @@ class User extends Authenticatable
         'two_factor_secret',
     ];
 
-    public function leads()
+    public function leads ()
     {
         return $this->hasMany(Lead::class);
     }
 
-    public function clients(){
+    public function clients () {
         return $this->hasMany(Lead::class);
     }
 
@@ -65,34 +65,38 @@ class User extends Authenticatable
         return $this->hasMany(Administrative::class);
     }
 
-    public function lawyers()
+    public function lawyers ()
     {
         return $this->hasMany(lawyer::class);
     }
     
-    public function feedbackTickets()
+    public function feedbackTickets ()
     {
         return $this->hasMany(FeedbackTicket::class);
     }
 
-    public function feedbackLeads()
+    public function feedbackLeads ()
     {
         return $this->hasMany(FeedbackLead::class);
     }
 
-    public function tickets(){
+    public function tickets () {
         return $this->hasMany(Ticket::class);
     }
 
-    public function permissions()
+    public function permissions ()
     {
         return $this->belongsToMany(Permission::class);
     }
 
-    public function hasPermissions($value)
+    public function hasPermissions ($value)
     {
         $p = $this->permissions;
         return $value->intersect($p)->count();
+    }
+
+    public function financials () {
+        return $this->hasMany(Financial::class);
     }
 
     /**
